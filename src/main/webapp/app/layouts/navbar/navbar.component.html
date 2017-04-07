@@ -1,0 +1,149 @@
+<div [ngSwitch]="isAuthenticated()">
+    <nav class="navbar navbar-toggleable-md jh-navbar">
+        <div class="jh-logo-container float-left">
+            <a class="jh-navbar-toggler hidden-lg-up float-right" href="javascript:void(0);" data-toggle="collapse"
+               data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+               aria-label="Toggle navigation" (click)="toggleNavbar()">
+                <i class="fa fa-bars"></i>
+            </a>
+            <a class="navbar-brand logo float-left" routerLink="/" (click)="cfollapseNavbar()">
+                <span class="logo-img"></span>
+                <span jhiTranslate="global.title" class="navbar-title">Devizion</span> <span class="navbar-version">{{version}}</span>
+            </a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed"
+        >
+            <!-- administrators and moderators navigation menu -->
+            <ul class="navbar-nav">
+                <!-- home navbar menu option -->
+                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
+                        <span jhiTranslate="global.menu.home">Home</span>
+                    </a>
+                </li>
+                <!-- home navbar menu option -->
+
+
+                <li *ngFor="let userMenuOption of userMenuOptions" ngbDropdown class="nav-item dropdown pointer"
+                    [id]="userMenuOption.id">
+                    <a class="nav-link dropdown-toggle"
+                       ngbDropdownToggle
+                       routerLinkActive="active"
+                       [routerLink]="userMenuOption.href"
+                       id="services-menu">
+                        {{userMenuOption.name}}
+                    </a>
+                    <ul *ngIf="userMenuOption.childNodes" class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
+                        <li *ngFor="let childNode of userMenuOption.childNodes">
+                            <a class="dropdown-item" routerLinkActive="active" [routerLink]="childNode.href"
+                               (click)="collapseNavbar()">
+                                {{childNode.name}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div  id="admin-list" [@menu-position]="menuState" *jhiHasAnyAuthority="'ROLE_ADMIN'">
+        <div id="admin-menu-toggle" [@arrow-position]='menuState' (click)="toggleMenuState()">
+            <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+        </div>
+        <ngb-accordion closeOthers="true">
+
+            <ngb-panel *ngFor="let adminMenuOption of adminMenuOptions; let i = index" [id]="adminMenuOption.id">
+
+                <template ngbPanelTitle>
+                    <a class="admin-menu-item-title" href="javascript:void(0)"
+                       [jhiTranslate]="adminMenuOption.translateVar">
+                        {{adminMenuOption.name}}
+                    </a>
+                </template>
+                <!--  navbar menu option -->
+                <template ngbPanelContent>
+                    <ul class="menu-child-content">
+                        <li *ngFor="let childOption of adminMenuOption.childNodes; let j = index">
+                            <a *ngIf="i!=0||j!=0" routerLinkActive="active" [routerLink]="childOption.href"
+                               [jhiTranslate]="childOption.translateVar">
+                                {{childOption.name}}
+                            </a>
+                            <!-- h2database link has to have the href instead of routerLink-->
+                            <a *ngIf="i==0&&j==0" [href]="childOption.href"
+                               [jhiTranslate]="childOption.translateVar">
+                                {{childOption.name}}
+                            </a>
+                        </li>
+                    </ul>
+                </template>
+            </ngb-panel>
+
+            <ngb-panel id="accountMenuItem">
+                <template ngbPanelTitle>
+                    <a class="admin-menu-item-title" href="javascript:void(0)"
+                       jhiTranslate="global.menu.account.main">
+                        Account
+                    </a>
+                </template>
+                <template ngbPanelContent>
+                    <ul class="menu-child-content">
+                        <li>
+                            <a routerLinkActive="active" routerLink="settings"
+                               jhiTranslate="global.menu.account.settings">
+                                Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a routerLinkActive="active" routerLink="password"
+                               jhiTranslate="global.menu.account.password">
+                                Password
+                            </a>
+                        </li>
+
+                        <li *ngSwitchCase="true">
+                            <a routerLinkActive="active" (click)="logout()" id="logout" routerLink="settings"
+                               jhiTranslate="global.menu.account.logout">
+                                Sign out
+                            </a>
+                        </li>
+
+                        <li *ngSwitchCase="false">
+                            <a routerLinkActive="active" (click)="login()" routerLink="settings" id="login"
+                               jhiTranslate="global.menu.account.login">
+                                Sign in
+                            </a>
+                        </li>
+
+                        <li *ngSwitchCase="false">
+                            <a routerLinkActive="active" routerLink="register"
+                               jhiTranslate="global.menu.account.register">
+                                Register
+                            </a>
+                        </li>
+                    </ul>
+                </template>
+            </ngb-panel>
+
+
+            <!-- languadge panel -->
+            <ngb-panel id="languageMenuItem" *ngIf="languages && languages.length > 1">
+                <template ngbPanelTitle>
+                    <a class="admin-menu-item-title" href="javascript:void(0)" jhiTranslate="global.menu.language">
+                        Language
+                    </a>
+                </template>
+                <template ngbPanelContent title="Language">
+                    <ul class="menu-child-content">
+                        <li *ngFor="let language of languages">
+                            <a [jhiActiveMenu]="language" href="javascript:void(0);"
+                               (click)="changeLanguage(language);">{{language | findLanguageFromKey}}</a>
+                        </li>
+                    </ul>
+                </template>
+            </ngb-panel>
+            <!-- languadge panel -->
+        </ngb-accordion>
+    </div>
+</div>
+
+

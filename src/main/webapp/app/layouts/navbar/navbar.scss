@@ -1,0 +1,113 @@
+/* ==========================================================================
+Navbar
+========================================================================== */
+@import "../../../content/scss/variables";
+
+#admin-list {
+    z-index: 10;
+    width: 18rem;
+    #admin-menu-wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    #admin-menu-toggle {
+        position: absolute;
+        width: 10%;
+        height: 10%;
+        top: 45%;
+        font-size: 2rem;
+        z-index: 11;
+        left: -5%;
+        cursonr: pointer
+    }
+
+    .admin-menu-item-title {
+        text-decoration: none;
+    }
+    .menu-child-content {
+        margin: 0;
+        padding: 0;
+        li {
+            list-style: none;
+            display: block;
+            padding: 0.7rem 0.5rem;
+            a {
+                text-decoration: none;
+            }
+        }
+    }
+
+}
+
+/* <-------------------------------- MY CODE ENDS HERE ---------------------------------->*/
+#admin-list {
+    position: absolute;
+    right: 0;
+    top: 4rem;
+}
+
+.navbar-version {
+    font-size: 10px;
+    color: #ccc
+}
+
+.jh-navbar.administrator-menu {
+    padding: .2em 1em;
+    .profile-image {
+        margin: -10px 0px;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+    }
+    .dropdown-item.active, .dropdown-item.active:focus, .dropdown-item.active:hover {
+        background-color: #353d47;
+    }
+    .dropdown-toggle::after {
+        margin-left: 0.15em;
+    }
+    ul.navbar-nav {
+        padding: 0.5em;
+    }
+    a.nav-link {
+        margin-left: 1.5rem;
+        color: $nav-menu-link-item;
+        font-weight: 400;
+    }
+    .jh-navbar-toggler {
+        color: #ccc;
+        font-size: 1.5em;
+        padding: 10px;
+        &:hover {
+            color: #fff;
+        }
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .jh-logo-container {
+        width: 100%;
+    }
+}
+
+.navbar-title {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+Logo styles
+========================================================================== */
+.navbar-brand {
+    &.logo {
+        padding: 5px 15px;
+        .logo-img {
+            height: 45px;
+            width: 70px;
+            display: inline-block;
+            vertical-align: middle;
+            background: url("../../../content/images/logo-jhipster.png") no-repeat center center;
+            background-size: contain;
+        }
+    }
+}

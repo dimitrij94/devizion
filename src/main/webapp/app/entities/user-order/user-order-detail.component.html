@@ -1,0 +1,41 @@
+
+<div *ngIf="userOrder">
+    <h2><span jhiTranslate="devizionApp.userOrder.detail.title">User Order</span> {{userOrder.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="devizionApp.userOrder.orderNotes">Order Notes</span></dt>
+        <dd>
+            <span>{{userOrder.orderNotes}}</span>
+        </dd>
+        <dt><span jhiTranslate="devizionApp.userOrder.orderedAt">Ordered At</span></dt>
+        <dd>
+            <span>{{userOrder.orderedAt | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span jhiTranslate="devizionApp.userOrder.orderedProduct">Ordered Product</span></dt>
+        <dd>
+            <div *ngIf="userOrder.orderedProduct">
+                <a [routerLink]="['/product', userOrder.orderedProduct?.id]">{{userOrder.orderedProduct?.id}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="devizionApp.userOrder.custumer">Custumer</span></dt>
+        <dd>
+            <div *ngIf="userOrder.custumer">
+                <a [routerLink]="['/custumer', userOrder.custumer?.id]">{{userOrder.custumer?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'user-order/'+ userOrder.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

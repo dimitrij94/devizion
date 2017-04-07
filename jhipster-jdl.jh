@@ -1,0 +1,24 @@
+
+entity Product{
+	productName String required
+    productPrice Float required
+	productDescription String required
+}
+entity UserOrder{
+	orderNotes String
+	orderedAt LocalDate
+}
+entity Custumer{
+    custumerName String
+    custumerSurname String
+    custumerContactNumber String
+}
+relationship OneToMany{
+	Custumer{custumerOrders} to UserOrder
+}
+relationship OneToMany{
+	Product to UserOrder{orderedProduct}
+}
+
+// Set service options to all except few
+service all with serviceImpl 

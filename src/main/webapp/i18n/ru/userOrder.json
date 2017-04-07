@@ -1,0 +1,24 @@
+{
+    "devizionApp": {
+        "userOrder" : {
+            "home": {
+                "title": "User Orders",
+                "createLabel": "Создать новый User Order",
+                "createOrEditLabel": "Создать или отредактировать User Order"
+            },
+            "created": "Новый User Order создан с идентификатором {{ param }}",
+            "updated": "User Order обновлен с идентификатором {{ param }}",
+            "deleted": "User Order удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить User Order {{ id }}?"
+            },
+            "detail": {
+                "title": "User Order"
+            },
+            "orderNotes": "Order Notes",
+            "orderedAt": "Ordered At",
+            "orderedProduct": "Ordered Product",
+            "custumer": "Custumer"
+        }
+    }
+}

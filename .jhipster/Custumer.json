@@ -1,0 +1,30 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "custumerOrders",
+            "otherEntityName": "userOrder",
+            "otherEntityRelationshipName": "custumer"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "custumerName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "custumerSurname",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "custumerContactNumber",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170406065253",
+    "entityTableName": "custumer",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

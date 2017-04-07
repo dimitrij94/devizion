@@ -1,0 +1,32 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "orderedProduct",
+            "otherEntityName": "product",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "custumer",
+            "otherEntityName": "custumer",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "orderNotes",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "orderedAt",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20170406065252",
+    "entityTableName": "user_order",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl"
+}
