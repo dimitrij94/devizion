@@ -1,16 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {JhiLanguageService} from 'ng-jhipster';
-import {ProfileService} from '../profiles/profile.service'; // FIXME barrel doesn't work here
-import {JhiLanguageHelper, Principal, LoginModalService, LoginService} from '../../shared';
+import {Component, OnInit} from "@angular/core";
+import {Router} from "@angular/router";
+import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {JhiLanguageService} from "ng-jhipster";
+import {ProfileService} from "./../profiles/profile.service";
+import {JhiLanguageHelper, LoginModalService, LoginService, Principal} from "../../shared";
 
-import {VERSION, DEBUG_INFO_ENABLED} from '../../app.constants';
-import {trigger, state, transition, style, animate} from '@angular/animations';
+import {DEBUG_INFO_ENABLED, VERSION} from "../../app.constants";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
-interface UserMenuOption {
-    id: string;
+export interface UserMenuOption {
     name: string;
+    id?: string;
+    routerLink?: string;
     href?: string;
     translateVar: string;
     childNodes?: UserMenuOption[];
@@ -43,104 +44,119 @@ export class NavbarComponent implements OnInit {
     modalRef: NgbModalRef;
     version: string;
     menuState = 'menu-closed';
-    adminMenuOptions: UserMenuOption[] = [
-        {
-            id: 'administrationMenuItem',
-            name: 'Адміністрування',
-            href: undefined,
-            translateVar: 'global.menu.admin.main',
-            childNodes: [
-                {
-                    id: '',
-                    name: 'Database',
-                    href: '/h2-console',
-                    translateVar: 'global.menu.admin.database',
-                    childNodes: undefined
-                },
-                {
-                    id: '',
-                    name: 'User management',
-                    href: 'user-management',
-                    translateVar: 'global.menu.admin.userManagement',
-                    childNodes: undefined
-                },
-                {
-                    id: '',
-                    name: 'Configuration',
-                    href: 'jhi-configuration',
-                    translateVar: 'global.menu.admin.configuration',
-                    childNodes: undefined
-                },
-                {
-                    id: '',
-                    name: 'Health',
-                    href: 'jhi-health',
-                    translateVar: 'global.menu.admin.health',
-                    childNodes: undefined
-                },
-                {
-                    id: '',
-                    name: 'Audits',
-                    href: 'audits',
-                    translateVar: 'global.menu.admin.audits',
-                    childNodes: undefined
-                },
-                {
-                    id: '',
-                    name: 'API',
-                    href: 'docs',
-                    translateVar: 'global.menu.admin.apidocs',
-                    childNodes: undefined
-                },
-                {
-                    id: '',
-                    name: 'Logs',
-                    href: 'logs',
-                    translateVar: 'global.menu.admin.logs',
-                    childNodes: undefined
-                }
-            ]
-        },
-        {
-            id: 'entitiesMenuItem',
-            name: 'Сущности',
-            href: undefined,
-            translateVar: 'global.menu.entities.main',
-            childNodes: [
-                {
-                    id: '',
-                    name: 'Custumer',
-                    href: 'custumer',
-                    translateVar: 'global.menu.entities.custumer',
-                    childNodes: undefined
-                },
-                {
-                    id: '',
-                    name: 'User Order',
-                    href: 'user-order',
-                    translateVar: 'global.menu.entities.userOrder',
-                    childNodes: undefined
-                },
-                {
-                    id: '',
-                    name: 'Product',
-                    href: 'product',
-                    translateVar: 'global.menu.entities.product',
-                    childNodes: undefined
-                }
-            ]
-        }
-    ];
+
+    adminMenuItem: UserMenuOption = {
+        id: 'administrationMenuItem',
+        name: 'Адміністрування',
+        translateVar: 'global.menu.admin.main',
+        childNodes: [
+            {
+                id: '',
+                name: 'User management',
+                routerLink: 'user-management',
+                translateVar: 'global.menu.admin.userManagement',
+                childNodes: undefined
+            },
+            {
+                id: '',
+                name: 'Configuration',
+                routerLink: 'jhi-configuration',
+                translateVar: 'global.menu.admin.configuration',
+                childNodes: undefined
+            },
+            {
+                id: '',
+                name: 'Health',
+                routerLink: 'jhi-health',
+                translateVar: 'global.menu.admin.health',
+                childNodes: undefined
+            },
+            {
+                id: '',
+                name: 'Audits',
+                routerLink: 'audits',
+                translateVar: 'global.menu.admin.audits',
+                childNodes: undefined
+            },
+            {
+                id: '',
+                name: 'API',
+                routerLink: 'docs',
+                translateVar: 'global.menu.admin.apidocs',
+                childNodes: undefined
+            },
+            {
+                id: '',
+                name: 'Logs',
+                routerLink: 'logs',
+                translateVar: 'global.menu.admin.logs',
+                childNodes: undefined
+            }
+        ]
+    };
+    entitiesMenuItem: UserMenuOption = {
+        id: 'entitiesMenuItem',
+        name: 'Сущности',
+        href: undefined,
+        translateVar: 'global.menu.entities.main',
+        childNodes: [
+            {
+                id: '',
+                name: 'Custumer',
+                routerLink: 'custumer',
+                translateVar: 'global.menu.entities.custumer',
+                childNodes: undefined
+            },
+            {
+                id: '',
+                name: 'User Order',
+                routerLink: 'user-order',
+                translateVar: 'global.menu.entities.userOrder',
+                childNodes: undefined
+            },
+            {
+                id: '',
+                name: 'Product',
+                routerLink: 'product',
+                translateVar: 'global.menu.entities.product',
+                childNodes: undefined
+            }
+        ]
+    };
+    profileMenuItem: UserMenuOption = {
+        id: 'admin-menu-profile-item',
+        name: 'Profile',
+        translateVar: 'global.menu.account.main',
+        childNodes: [
+            {
+                routerLink: 'settings',
+                name: 'Settings',
+                translateVar: 'global.menu.account.settings',
+            },
+            {
+                routerLink: 'password',
+                name: 'Password',
+                translateVar: 'global.menu.account.password',
+            },
+            {
+                routerLink: 'register',
+                name: 'Register',
+                translateVar: 'global.menu.account.register'
+            }
+        ]
+    };
     userMenuOptions: UserMenuOption[] = [
         {
-            id: 'services-menu-item', name: 'Послуги', href: 'javascript:void(0)',
+            id: 'services-menu-item',
+            name: 'Послуги',
+            translateVar: '',
             childNodes: [
-                {id: undefined, name: 'Широкоформатний друк', href: './services/printing', translateVar: ''},
-                {id: undefined, name: 'Дизайн', href: '/services/design', translateVar: ''}
-            ], translateVar: ''
+                {id: undefined, name: 'Широкоформатний друк', routerLink: './services/printing', translateVar: ''},
+                {id: undefined, name: 'Дизайн', routerLink: '/services/design', translateVar: ''}
+            ]
         },
-        {id: 'portfolio-menu-item', name: 'Портфоліо', href: 'javascript:void(0)', translateVar: ''},
-        {id: 'about-us-menu-item', name: 'Про нас', href: 'javascript:void(0)', translateVar: ''}
+        {id: 'portfolio-menu-item', name: 'Портфоліо', translateVar: ''},
+        {id: 'about-us-menu-item', name: 'Про нас', translateVar: ''}
 
     ];
 
@@ -200,4 +216,6 @@ export class NavbarComponent implements OnInit {
     toggleMenuState() {
         this.menuState = this.menuState === 'menu-opened' ? 'menu-closed' : 'menu-opened';
     }
+
+
 }

@@ -1,0 +1,11 @@
+<div class="navbar-admin-menu-item">
+    <h4><a [routerLink]="item.childNodes ? item.routerLink:  null"
+           routerLinkActive="active"
+           href="javascript:void(0)"
+           [jhiTranslate]="item.translateVar">{{item.title}}</a></h4>
+
+    <jhi-navbar-admin-menu-item
+        *ngFor="let childItem of item.childNodes"
+        [item]="childItem">
+    </jhi-navbar-admin-menu-item>
+</div>
