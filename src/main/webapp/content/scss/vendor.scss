@@ -1,11 +1,14 @@
 /* after changing this file run 'yarn run webpack:build:vendor' or 'yarn install' or 'yarn run webpack:build' */
-$fa-font-path: '~font-awesome/fonts';
 
 /***************************
 put Sass variables here:
 eg $input-color: red;
 ****************************/
-$color :white;
-@import './../../../node_modules/bootstrap/scss/bootstrap';
-@import './../../../node_modules/font-awesome/scss/font-awesome';
 
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+//@import '~font-awesome/scss/font-awesome';
+
+$fa-font-path: '~font-awesome/fonts';
+
+@import '~bootstrap/scss/bootstrap';
+@import '~font-awesome/scss/font-awesome';

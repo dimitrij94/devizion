@@ -37,10 +37,16 @@ public class Product implements Serializable {
     @Column(name = "product_description", nullable = false)
     private String productDescription;
 
+    @Column(name = "product_image_uri")
+    private String productImageUri;
+
     @OneToMany(mappedBy = "orderedProduct")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<UserOrder> userOrders = new HashSet<>();
+
+    @ManyToOne
+    private ProductCategory productCategory;
 
     public Long getId() {
         return id;
@@ -89,6 +95,19 @@ public class Product implements Serializable {
         this.productDescription = productDescription;
     }
 
+    public String getProductImageUri() {
+        return productImageUri;
+    }
+
+    public Product productImageUri(String productImageUri) {
+        this.productImageUri = productImageUri;
+        return this;
+    }
+
+    public void setProductImageUri(String productImageUri) {
+        this.productImageUri = productImageUri;
+    }
+
     public Set<UserOrder> getUserOrders() {
         return userOrders;
     }
@@ -112,6 +131,19 @@ public class Product implements Serializable {
 
     public void setUserOrders(Set<UserOrder> userOrders) {
         this.userOrders = userOrders;
+    }
+
+    public ProductCategory getProductCategory() {
+        return productCategory;
+    }
+
+    public Product productCategory(ProductCategory productCategory) {
+        this.productCategory = productCategory;
+        return this;
+    }
+
+    public void setProductCategory(ProductCategory productCategory) {
+        this.productCategory = productCategory;
     }
 
     @Override
@@ -141,6 +173,7 @@ public class Product implements Serializable {
             ", productName='" + productName + "'" +
             ", productPrice='" + productPrice + "'" +
             ", productDescription='" + productDescription + "'" +
+            ", productImageUri='" + productImageUri + "'" +
             '}';
     }
 }

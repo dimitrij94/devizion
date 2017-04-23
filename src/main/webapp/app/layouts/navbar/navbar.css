@@ -1,14 +1,148 @@
 /* ==========================================================================
 Navbar
 ========================================================================== */
-#admin-list {
+/* after changing this file run 'yarn run webpack:build:vendor' or 'yarn install' or 'yarn run webpack:build' */
+/***************************
+put Sass variables here:
+eg $input-color: red;
+****************************/
+/*
+@import '/node_modules/bootstrap/scss/bootstrap';
+@import '/node_modules/font-awesome/scss/font-awesome';
+
+*/
+/*
+#navbar-super-wraper {
+    overflow: hidden;
+    &>nav{
+        height: 50px;
+        padding:0;
+        div:nth-child(1){
+            height: 50px;
+            display: block!important;
+
+            ul{
+                float:right;
+            }
+        }
+    }
+}
+*/
+#home-menu-item {
+  border-bottom: 4px solid #facc22; }
+  #home-menu-item:hover {
+    border-bottom: 4px solid #faaf1f; }
+
+#services-menu-item {
+  border-bottom: 4px solid #e30070; }
+  #services-menu-item:hover {
+    border-bottom: 4px solid #b90062; }
+
+#portfolio-menu-item {
+  border-bottom: 4px solid #00a2ff; }
+  #portfolio-menu-item:hover {
+    border-bottom: 4px solid #088fff; }
+
+.user-menu-item {
+  color: black; }
+  .user-menu-item:link {
+    color: black; }
+  .user-menu-item:hover {
+    color: black; }
+  .user-menu-item:visited {
+    color: black; }
+  .user-menu-item:active {
+    color: black; }
+  .user-menu-item:hover {
+    color: white; }
+    .user-menu-item:hover:link {
+      color: white; }
+    .user-menu-item:hover:hover {
+      color: white; }
+    .user-menu-item:hover:visited {
+      color: white; }
+    .user-menu-item:hover:active {
+      color: white; }
+
+.active-services {
+  -moz-box-shadow: 0 0 0px 1000px #e30070 inset;
+  -webkit-box-shadow: 0 0 0px 1000px #e30070 inset;
+  box-shadow: 0 0 0px 1000px #e30070 inset;
+  color: #ffffff; }
+  .active-services:link {
+    color: #ffffff; }
+  .active-services:hover {
+    color: white; }
+  .active-services:visited {
+    color: #ffffff; }
+  .active-services:active {
+    color: white; }
+
+.active-portfolio {
+  color: #ffffff;
+  -moz-box-shadow: 0 0 0px 1000px #00a2ff inset;
+  -webkit-box-shadow: 0 0 0px 1000px #00a2ff inset;
+  box-shadow: 0 0 0px 1000px #00a2ff inset; }
+  .active-portfolio:link {
+    color: #ffffff; }
+  .active-portfolio:hover {
+    color: white; }
+  .active-portfolio:visited {
+    color: #ffffff; }
+  .active-portfolio:active {
+    color: white; }
+
+.active-home {
+  background-color: #fae014;
+  color: #ffffff; }
+  .active-home:link {
+    color: #ffffff; }
+  .active-home:hover {
+    color: white; }
+  .active-home:visited {
+    color: #ffffff; }
+  .active-home:active {
+    color: white; }
+
+#navbar-admin-menu {
+  position: absolute;
+  top: 27.5%;
+  height: 45%;
+  right: 0;
   z-index: 10;
-  width: 18rem; }
-  #admin-list #admin-menu-wrapper {
+  width: 21.3%;
+  background-color: #ddd;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px; }
+  #navbar-admin-menu #navbar-admin-menu-wrapper {
     width: 100%;
     height: 100%;
     position: relative; }
-  #admin-list #admin-menu-toggle {
+    #navbar-admin-menu #navbar-admin-menu-wrapper #admin-menu-toggle {
+      position: absolute;
+      top: 30%;
+      height: 120px;
+      color: white;
+      border-radius: 40% 0 0 40%;
+      left: -4%;
+      background-color: black;
+      width: 4%; }
+      #navbar-admin-menu #navbar-admin-menu-wrapper #admin-menu-toggle #menu-toggle-wrapper {
+        position: relative;
+        height: 100%; }
+      #navbar-admin-menu #navbar-admin-menu-wrapper #admin-menu-toggle i {
+        vertical-align: middle;
+        display: inline-block;
+        line-height: 106px;
+        font-size: 10px;
+        padding: 2px; }
+  #navbar-admin-menu .inserted-menu-item a {
+    padding: 0.1rem;
+    padding-left: 4rem;
+    background-color: white;
+    width: 100%;
+    display: inline-block; }
+  #navbar-admin-menu #admin-menu-toggle {
     position: absolute;
     width: 10%;
     height: 10%;
@@ -17,16 +151,14 @@ Navbar
     z-index: 11;
     left: -5%;
     cursonr: pointer; }
-  #admin-list .admin-menu-item-title {
-    text-decoration: none; }
-  #admin-list .menu-child-content {
+  #navbar-admin-menu .menu-child-content {
     margin: 0;
     padding: 0; }
-    #admin-list .menu-child-content li {
+    #navbar-admin-menu .menu-child-content li {
       list-style: none;
       display: block;
       padding: 0.7rem 0.5rem; }
-      #admin-list .menu-child-content li a {
+      #navbar-admin-menu .menu-child-content li a {
         text-decoration: none; }
 
 /* <-------------------------------- MY CODE ENDS HERE ---------------------------------->*/
@@ -54,7 +186,7 @@ Navbar
     padding: 0.5em; }
   .jh-navbar.administrator-menu a.nav-link {
     margin-left: 1.5rem;
-    color: #9b9b9b;
+    color: #f7f7f9;
     font-weight: 400; }
   .jh-navbar.administrator-menu .jh-navbar-toggler {
     color: #ccc;

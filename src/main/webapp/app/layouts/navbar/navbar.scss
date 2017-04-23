@@ -1,16 +1,165 @@
 /* ==========================================================================
 Navbar
 ========================================================================== */
-@import "../../../content/scss/variables";
+@import "../../../content/scss/varibles";
 
-#admin-list {
+$navbar-inactive-menu: #ffffff;
+@mixin navbar-menu-border($color) {
+    border-bottom: 4px solid $color;
+}
+
+@mixin navbar-menu-item($color, $color-hover) {
+    @include navbar-menu-border($color);
+    &:hover {
+        @include navbar-menu-border($color-hover);
+    }
+}
+#navbar-super-wrapper{
+    border:4px solid #ccc;
+}
+#navbar {
+    margin-top: 1rem;
+}
+
+#siteLogo {
+    background: url("../../../content/images/devizion_logo_b.svg") no-repeat center top;
+    background-size: contain;
+    height: 4rem;
+}
+
+#userMenu {
+    height: 40px;
+    ul {
+        list-style: none;
+        li {
+            position: relative;
+            float: left;
+
+            #home-menu-item {
+                @include navbar-menu-item($yellow-accent-border, $yellow-accent-border-hover);
+            }
+            #about-us-menu-item {
+                @include navbar-menu-item($about-us-accent-border, $about-us-accent-border-hover)
+            }
+            #services-menu-item {
+                @include navbar-menu-item($magenta-accent-border, $magenta-accent-border-hover);
+            }
+
+            #portfolio-menu-item {
+                @include navbar-menu-item($cyan-accent-border, $cyan-accent-border-hover);
+            }
+
+            ul {
+                list-style: none;
+                position: absolute;
+                top: 40px;
+                z-index: 15;
+                right: 0;
+
+                li {
+                    &.service-sub-menu {
+                        background-color: $magenta-accent;
+                        border-bottom: 2px solid $magenta-accent-border;
+                        &:hover {
+                            border-bottom: 2px solid $magenta-accent-border-hover;
+                            background-color: $magenta-accent-border;
+                        }
+                    }
+                    &.profile-sub-menu {
+                        background-color: $cyan-accent;
+                        border-bottom: 2px solid $cyan-accent-border;
+                        &:hover {
+                            border-bottom: 2px solid $cyan-accent-border-hover;
+                            background-color: $cyan-accent-border;
+                        }
+                    }
+                    width: 165px;
+                    padding: 10px;
+
+                    a {
+                        text-decoration: none;
+                        @include assign-link-color(#ffddda, white, white, white);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.user-menu-item {
+    @include assign-link-color(black, black, black, black);
+    &:hover {
+        @include assign-link-color(white, white, white, white);
+    }
+}
+
+.active-services {
+    background-color: $magenta-accent;
+    @include assign-link-color($navbar-inactive-menu, white, $navbar-inactive-menu, white);
+}
+
+.active-portfolio {
+    @include assign-link-color($navbar-inactive-menu, white, $navbar-inactive-menu, white);
+    background-color: $cyan-accent;
+}
+
+.active-about-us {
+    @include assign-link-color($navbar-inactive-menu, white, $navbar-inactive-menu, white);
+    background-color: $about-us-accent;
+}
+
+.active-home {
+    background-color: $yellow-accent;
+    @include assign-link-color($navbar-inactive-menu, white, $navbar-inactive-menu, white);
+}
+
+#navbar-admin-menu {
+    position: absolute;
+    top: 27.5%;
+    height: 45%;
+    right: 0;
     z-index: 10;
-    width: 18rem;
-    #admin-menu-wrapper {
+    width: 21.3%;
+
+    background-color: #ddd;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+
+    #navbar-admin-menu-wrapper {
         width: 100%;
         height: 100%;
         position: relative;
+        #admin-menu-toggle {
+            #menu-toggle-wrapper {
+                position: relative;
+                height: 100%;
+            }
+            position: absolute;
+            top: 30%;
+            height: 120px;
+            color: white;
+            border-radius: 40% 0 0 40%;
+            left: -4%;
+            background-color: black;
+            width: 4%;
+            i {
+                vertical-align: middle;
+                display: inline-block;
+                line-height: 106px;
+                font-size: 10px;
+                padding: 2px;
+            }
+        }
     }
+
+    .inserted-menu-item a {
+        padding: 0.1rem;
+        padding-left: 4rem;
+        background-color: $admin-menu-secondary-item-bc;
+        width: 100%;
+        display: inline-block;
+    }
+
     #admin-menu-toggle {
         position: absolute;
         width: 10%;
@@ -22,9 +171,6 @@ Navbar
         cursonr: pointer
     }
 
-    .admin-menu-item-title {
-        text-decoration: none;
-    }
     .menu-child-content {
         margin: 0;
         padding: 0;
@@ -40,74 +186,3 @@ Navbar
 
 }
 
-/* <-------------------------------- MY CODE ENDS HERE ---------------------------------->*/
-#admin-list {
-    position: absolute;
-    right: 0;
-    top: 4rem;
-}
-
-.navbar-version {
-    font-size: 10px;
-    color: #ccc
-}
-
-.jh-navbar.administrator-menu {
-    padding: .2em 1em;
-    .profile-image {
-        margin: -10px 0px;
-        height: 40px;
-        width: 40px;
-        border-radius: 50%;
-    }
-    .dropdown-item.active, .dropdown-item.active:focus, .dropdown-item.active:hover {
-        background-color: #353d47;
-    }
-    .dropdown-toggle::after {
-        margin-left: 0.15em;
-    }
-    ul.navbar-nav {
-        padding: 0.5em;
-    }
-    a.nav-link {
-        margin-left: 1.5rem;
-        color: $nav-menu-link-item;
-        font-weight: 400;
-    }
-    .jh-navbar-toggler {
-        color: #ccc;
-        font-size: 1.5em;
-        padding: 10px;
-        &:hover {
-            color: #fff;
-        }
-    }
-}
-
-@media screen and (max-width: 992px) {
-    .jh-logo-container {
-        width: 100%;
-    }
-}
-
-.navbar-title {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-/* ==========================================================================
-Logo styles
-========================================================================== */
-.navbar-brand {
-    &.logo {
-        padding: 5px 15px;
-        .logo-img {
-            height: 45px;
-            width: 70px;
-            display: inline-block;
-            vertical-align: middle;
-            background: url("../../../content/images/logo-jhipster.png") no-repeat center center;
-            background-size: contain;
-        }
-    }
-}

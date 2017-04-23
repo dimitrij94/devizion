@@ -1,5 +1,7 @@
 package com.mycompany.myapp.service.impl;
 
+import com.mycompany.myapp.domain.ImageToken;
+import com.mycompany.myapp.service.ImageTokenService;
 import com.mycompany.myapp.service.ProductService;
 import com.mycompany.myapp.domain.Product;
 import com.mycompany.myapp.repository.ProductRepository;
@@ -17,12 +19,15 @@ import java.util.List;
 @Transactional
 public class ProductServiceImpl implements ProductService{
 
+    private ImageTokenService imageTokenService;
+
     private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
-    
+
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ImageTokenService imageTokenService) {
         this.productRepository = productRepository;
+        this.imageTokenService = imageTokenService;
     }
 
     /**
@@ -40,7 +45,7 @@ public class ProductServiceImpl implements ProductService{
 
     /**
      *  Get all the products.
-     *  
+     *
      *  @return the list of entities
      */
     @Override
@@ -75,5 +80,12 @@ public class ProductServiceImpl implements ProductService{
     public void delete(Long id) {
         log.debug("Request to delete Product : {}", id);
         productRepository.delete(id);
+    }
+
+    @Override
+    public ImageToken saveImageToken(String fileName) {
+        String filePath = "/products/" + fileName;
+        ImageToken token = new ImageToken(filePath);
+        return this.imageTokenService.save(token);
     }
 }

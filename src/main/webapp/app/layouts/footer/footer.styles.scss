@@ -1,0 +1,49 @@
+@import "../../../content/scss/varibles";
+@media screen and (min-width: 960px) {
+    #footer {
+        height: 10rem;
+        #info {
+            text-align: left;
+            height: 60%;
+        }
+    }
+}
+@media screen and (min-width: 600px) and (max-width: 959px) {
+    #footer {
+        height: 10rem;
+        text-align: left;
+        #info {
+            text-align: center;
+            height: 100%;
+        }
+    }
+}
+@media screen and (max-width: 599px) {
+    #footer {
+        height: 20rem;
+        #info {
+            text-align: center;
+            height: 100%;
+        }
+    }
+}
+#footer {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: $about-us-accent-border;
+    color: whitesmoke;
+    margin: 0;
+    font-size: 0.7rem;
+    line-height: 1.2rem;
+    #footer-logo{
+        background: url("../../../content/images/devizion_logo_w.svg") no-repeat center top;
+        height:4rem;
+    }
+    #info {
+        height: 60%;
+        div {
+            p {
+                vertical-align: baseline;
+            }
+        }
+    }
+}

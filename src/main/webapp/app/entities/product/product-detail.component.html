@@ -16,6 +16,16 @@
         <dd>
             <span>{{product.productDescription}}</span>
         </dd>
+        <dt><span jhiTranslate="devizionApp.product.productImageUri">Product Image Uri</span></dt>
+        <dd>
+            <span>{{product.productImageUri}}</span>
+        </dd>
+        <dt><span jhiTranslate="devizionApp.product.productCategory">Product Category</span></dt>
+        <dd>
+            <div *ngIf="product.productCategory">
+                <a [routerLink]="['/product-category', product.productCategory?.id]">{{product.productCategory?.id}}</a>
+            </div>
+        </dd>
     </dl>
 
     <button type="submit"

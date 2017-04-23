@@ -6,6 +6,18 @@
             "relationshipName": "userOrder",
             "otherEntityName": "userOrder",
             "otherEntityRelationshipName": "orderedProduct"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "portfolioEntry",
+            "otherEntityName": "portfolioEntry",
+            "otherEntityRelationshipName": "portfolio"
+        },
+        {
+            "relationshipName": "productCategory",
+            "otherEntityName": "productCategory",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
         }
     ],
     "fields": [
@@ -29,6 +41,10 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "productImageUri",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20170406065251",

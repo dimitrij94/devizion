@@ -1,0 +1,29 @@
+
+<div *ngIf="productCategory">
+    <h2><span jhiTranslate="devizionApp.productCategory.detail.title">Product Category</span> {{productCategory.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="devizionApp.productCategory.categoryName">Category Name</span></dt>
+        <dd>
+            <span>{{productCategory.categoryName}}</span>
+        </dd>
+        <dt><span jhiTranslate="devizionApp.productCategory.categoryPhotoUri">Category Photo Uri</span></dt>
+        <dd>
+            <span>{{productCategory.categoryPhotoUri}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'product-category/'+ productCategory.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

@@ -1,14 +1,14 @@
-import "./vendor.ts";
+import './vendor.ts';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {Ng2Webstorage} from 'ng2-webstorage';
 
-import {NgModule} from "@angular/core";
-import {BrowserModule} from "@angular/platform-browser";
-import {Ng2Webstorage} from "ng2-webstorage";
-
-import {DevizionSharedModule, UserRouteAccessService} from "./shared";
-import {DevizionHomeModule} from "./home/home.module";
-import {DevizionAdminModule} from "./admin/admin.module";
-import {DevizionAccountModule} from "./account/account.module";
-import {DevizionEntityModule} from "./entities/entity.module";
+import {DevizionSharedModule, UserRouteAccessService} from './shared';
+import {DevizionHomeModule} from './home/home.module';
+import {DevizionAdminModule} from './admin/admin.module';
+import {DevizionAccountModule} from './account/account.module';
+import {DevizionEntityModule} from './entities/entity.module';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 import {
     ActiveMenuDirective,
@@ -20,18 +20,25 @@ import {
     NavbarComponent,
     PageRibbonComponent,
     ProfileService
-} from "./layouts";
-import {customHttpProvider} from "./blocks/interceptor/http.provider";
-import {PaginationConfig} from "./blocks/config/uib-pagination.config";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+} from './layouts';
+import {customHttpProvider} from './blocks/interceptor/http.provider';
+import {PaginationConfig} from './blocks/config/uib-pagination.config';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MdListModule, MdSidenavModule} from "@angular/material";
 
+declare var require: WebpackRequire;
 
 @NgModule({
     imports: [
+        MdSidenavModule,
+        MdListModule,
         BrowserModule,
+        BrowserAnimationsModule,
         LayoutRoutingModule,
-        Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
+        Ng2Webstorage.forRoot({prefix: 'jhi', separator: '-'}),
         NgbModule.forRoot(),
+        FlexLayoutModule,
         DevizionSharedModule,
         DevizionHomeModule,
         DevizionAdminModule,
@@ -42,7 +49,6 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
         JhiMainComponent,
         NavbarComponent,
         ErrorComponent,
-        PageRibbonComponent,
         ActiveMenuDirective,
         FooterComponent,
         NavbarAdminMenuItemComponent
@@ -53,6 +59,7 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
         PaginationConfig,
         UserRouteAccessService
     ],
-    bootstrap: [ JhiMainComponent ]
+    bootstrap: [JhiMainComponent]
 })
-export class DevizionAppModule {}
+export class DevizionAppModule {
+}

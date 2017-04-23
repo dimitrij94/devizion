@@ -1,20 +1,29 @@
-import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import {Injectable} from '@angular/core';
+import {Http, Response, URLSearchParams, BaseRequestOptions} from '@angular/http';
+import {Observable} from 'rxjs/Rx';
+import {Product} from './product.model';
 
-import { Product } from './product.model';
 @Injectable()
 export class ProductService {
 
     private resourceUrl = 'api/products';
+    private imagesDirectory = '../../../content/images/products';
 
-    constructor(private http: Http) { }
+    constructor(private http: Http) {
+    }
 
     create(product: Product): Observable<Product> {
         let copy: Product = Object.assign({}, product);
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
             return res.json();
         });
+    }
+
+
+    productImageUploadCancel(tokenId: number) {
+        let requestParams: URLSearchParams = new URLSearchParams();
+        requestParams.set('token_id', tokenId.toString());
+        return this.http.delete('api/product/image', {search: requestParams});
     }
 
     update(product: Product): Observable<Product> {
@@ -33,13 +42,12 @@ export class ProductService {
     query(req?: any): Observable<Response> {
         let options = this.createRequestOption(req);
         return this.http.get(this.resourceUrl, options)
-        ;
+            ;
     }
 
     delete(id: number): Observable<Response> {
         return this.http.delete(`${this.resourceUrl}/${id}`);
     }
-
 
 
     private createRequestOption(req?: any): BaseRequestOptions {

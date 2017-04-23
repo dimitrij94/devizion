@@ -3,6 +3,19 @@
         "title": "Devizion",
         "browsehappy": "Ваш браузер <strong>устарел</strong>. Пожалуйста <a href=\"http://browsehappy.com/?locale=ru\">обновите ваш браузер</a>.",
         "menu": {
+            "services": {
+                "main": "Послуги",
+                "print":"Широкоформатний друк",
+                "design":"Дизайн"
+            },
+            "portfolio":{
+                "main":"Портфоліо",
+                "print":"Широкоформатний друк",
+                "design":"Дизайн"
+            },
+            "aboutUs":{
+                "main":"Про нас"
+            },
             "home": "Главная",
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
@@ -10,6 +23,7 @@
                 "product": "Product",
                 "userOrder": "User Order",
                 "custumer": "Custumer",
+                "productCategory": "Product Category",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -82,10 +96,10 @@
             }
         },
         "field": {
-            "id" : "ID"
+            "id": "ID"
         },
         "ribbon": {
-            "dev":"Development"
+            "dev": "Development"
         }
     },
     "entity": {
@@ -130,5 +144,18 @@
         "emailexists": "Эл. почта уже используется!!",
         "idexists": "Новый {{entityName}} не может иметь данный ID"
     },
-    "footer": "Это ваш футтер"
+    "footer": {
+        "mainOffice":{
+            "main":"ГОЛОВНИЙ ОФІС",
+            "address":"м.Нововолинськ, 6-р. Шевченка,37",
+            "phoneNumber":"(03344) 3-12-76, (097) 536-50-83",
+            "e-mail":"devizion@ukr.net"
+        },
+        "filial":{
+            "main":"ФІЛАЛ",
+            "address":"м.Володимир-Волинський, вул. Ковельска, 29",
+            "phoneNumber":"(03342) 3-81-71, (097) 296-45-50",
+            "e-mail":"devizion@ukr.net"
+        }
+    }
 }

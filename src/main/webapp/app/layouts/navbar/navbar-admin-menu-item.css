@@ -1,0 +1,21 @@
+/* after changing this file run 'yarn run webpack:build:vendor' or 'yarn install' or 'yarn run webpack:build' */
+/***************************
+put Sass variables here:
+eg $input-color: red;
+****************************/
+/*
+@import '/node_modules/bootstrap/scss/bootstrap';
+@import '/node_modules/font-awesome/scss/font-awesome';
+
+*/
+.admin-menu-item a {
+  padding: 1rem;
+  display: inline-block;
+  width: 100%;
+  background-color: #f7f7f9; }
+.admin-menu-item .admin-menu-child-items div a {
+  padding: 0.1rem;
+  padding-left: 4rem;
+  background-color: white; }
+
+/*# sourceMappingURL=navbar-admin-menu-item.css.map */

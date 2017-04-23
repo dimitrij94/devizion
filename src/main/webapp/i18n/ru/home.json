@@ -1,19 +1,11 @@
 {
+
     "home": {
-        "title": "Добро пожаловать, Java Hipster!",
-        "subtitle": "Это ваша домашняя страница",
-        "logged": {
-            "message": "Вы вошли как пользователь \"{{username}}\"."
-        },
-        "question": "Если у Вас возникли вопросы по JHipster:",
-        "link": {
-            "homepage": "JHipster домашняя страница",
-            "stackoverflow": "JHipster на Stack Overflow",
-            "bugtracker": "JHipster баг трекер",
-            "chat": "JHipster public chat room",
-            "follow": "пользователь @java_hipster в Twitter"
-        },
-        "like": "Если вам нравится JHipster, не забудьте дать нам звёздочку на",
-        "github": "GitHub"
+        "title":"Devizion",
+        "whyUs": {
+            "main":"Чому <br> саме <br> ми?",
+            "answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam diam velit, auctor vel tortor in, finibus vulputate turpis. Proin et ante accumsan, consectetur orci sit amet, sollicitudin lacus. Aenean eleifend consectetur turpis eu vulputate. Curabitur et interdum elit. Praesent at aliquet libero. Aenean interdum vestibulum mi, at lobortis velit pretium vitae. Vestibulum elementum ante ac velit ornare commodo."
+
+        }
     }
 }

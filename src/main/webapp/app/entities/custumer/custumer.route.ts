@@ -17,7 +17,7 @@ export const custumerRoute: Routes = [
     path: 'custumer',
     component: CustumerComponent,
     data: {
-        authorities: ['ROLE_ADMIN'],
+        authorities: ['ROLE_USER'],
         pageTitle: 'devizionApp.custumer.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -25,7 +25,7 @@ export const custumerRoute: Routes = [
     path: 'custumer/:id',
     component: CustumerDetailComponent,
     data: {
-        authorities: ['ROLE_ADMIN'],
+        authorities: ['ROLE_USER'],
         pageTitle: 'devizionApp.custumer.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -37,7 +37,7 @@ export const custumerPopupRoute: Routes = [
     path: 'custumer-new',
     component: CustumerPopupComponent,
     data: {
-        authorities: ['ROLE_ADMIN'],
+        authorities: ['ROLE_USER'],
         pageTitle: 'devizionApp.custumer.home.title'
     },
     canActivate: [UserRouteAccessService],
@@ -47,7 +47,7 @@ export const custumerPopupRoute: Routes = [
     path: 'custumer/:id/edit',
     component: CustumerPopupComponent,
     data: {
-        authorities: ['ROLE_ADMIN'],
+        authorities: ['ROLE_USER'],
         pageTitle: 'devizionApp.custumer.home.title'
     },
     canActivate: [UserRouteAccessService],
@@ -57,7 +57,7 @@ export const custumerPopupRoute: Routes = [
     path: 'custumer/:id/delete',
     component: CustumerDeletePopupComponent,
     data: {
-        authorities: ['ROLE_ADMIN'],
+        authorities: ['ROLE_USER'],
         pageTitle: 'devizionApp.custumer.home.title'
     },
     canActivate: [UserRouteAccessService],

@@ -39,7 +39,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
-    public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,
+    public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder,
+                                 UserDetailsService userDetailsService,
                                  TokenProvider tokenProvider,
                                  CorsFilter corsFilter) {
 
@@ -54,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         try {
             authenticationManagerBuilder
                 .userDetailsService(userDetailsService)
-                    .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder());
         } catch (Exception e) {
             throw new BeanInitializationException("Security configuration failed", e);
         }
@@ -89,36 +90,39 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
             .authenticationEntryPoint(http401UnauthorizedEntryPoint())
-        .and()
+            .and()
             .csrf()
             .disable()
             .headers()
             .frameOptions()
             .disable()
-        .and()
+            .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+            .and()
             .authorizeRequests()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/api/account/reset_password/init").permitAll()
             .antMatchers("/api/account/reset_password/finish").permitAll()
+            .antMatchers("/api/account").authenticated()
             .antMatchers("/api/profile-info").permitAll()
-            .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/v2/api-docs/**").permitAll()
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
             .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.POST, "/api/product/image").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers(HttpMethod.DELETE).hasAnyAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers(HttpMethod.POST).hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers(HttpMethod.PATCH).hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers(HttpMethod.GET,"/api/product").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/product").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/product-categories").permitAll()
             .antMatchers(HttpMethod.GET, "/api/custumers").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers(HttpMethod.GET, "/api/user-orders").hasAuthority(AuthoritiesConstants.ADMIN)
-        .and()
+            .antMatchers(HttpMethod.GET, "/api/image/**").permitAll()
+            .and()
             .apply(securityConfigurerAdapter());
 
     }

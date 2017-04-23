@@ -3,6 +3,10 @@ package com.mycompany.myapp;
 import com.mycompany.myapp.config.ApplicationProperties;
 import com.mycompany.myapp.config.DefaultProfileUtil;
 
+import com.mycompany.myapp.domain.Authority;
+import com.mycompany.myapp.repository.AuthorityRepository;
+import com.mycompany.myapp.security.AuthoritiesConstants;
+import com.mycompany.myapp.service.UserService;
 import io.github.jhipster.config.JHipsterConstants;
 
 import org.slf4j.Logger;
@@ -29,9 +33,12 @@ public class DevizionApp {
     private static final Logger log = LoggerFactory.getLogger(DevizionApp.class);
 
     private final Environment env;
-
-    public DevizionApp(Environment env) {
+    private UserService userService;
+    private AuthorityRepository authorityRepository;
+    public DevizionApp(Environment env, UserService userService, AuthorityRepository authorityRepository) {
         this.env = env;
+        this.userService = userService;
+        this.authorityRepository = authorityRepository;
     }
 
     /**
@@ -52,6 +59,22 @@ public class DevizionApp {
             log.error("You have misconfigured your application! It should not" +
                 "run with both the 'dev' and 'cloud' profiles at the same time.");
         }
+        /*
+        Authority userAuthority = new Authority();
+        userAuthority.setName(AuthoritiesConstants.USER);
+        Authority adminAuthority = new Authority();
+        adminAuthority.setName(AuthoritiesConstants.ADMIN);
+        Authority anonymousAuthority = new Authority();
+        anonymousAuthority.setName(AuthoritiesConstants.ANONYMOUS);
+
+        authorityRepository.save(userAuthority);
+        authorityRepository.save(adminAuthority);
+        authorityRepository.save(anonymousAuthority);
+
+        userService.createUser("admin","admin", "Dmitrij", "Kost", "dim.kost.admin94@gmail.com",null, "ru_RU");
+        userService.createAdmin("user","user", "Dmitrij", "Kost", "dim.kost.94.user@gmail.com",null, "ru_RU");
+        */
+
     }
 
     /**

@@ -1,0 +1,9 @@
+<div id="stage" #stage [ngStyle]="{height:screenH}" (mouseleave)="clearLastMousePosition()">
+    <div id="brick-background"
+         [ngStyle]="{
+            'width':hiddenScreenW+'px',
+            'height':hiddenScreenH+'px',
+            'transform': 'translate('+ backgroundPositionX +'px, '+ backgroundPositionY +'px)'
+         }">
+    </div>
+</div>

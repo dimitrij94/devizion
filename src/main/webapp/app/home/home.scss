@@ -1,26 +1,85 @@
+@import "../../content/scss/varibles";
 
-/* ==========================================================================
-Main page styles
-========================================================================== */
-
-.hipster {
-    display: inline-block;
-    width: 347px;
-    height: 497px;
-    background: url("../../content/images/hipster.png") no-repeat center top;
-    background-size: contain;
-}
-
-/* wait autoprefixer update to allow simple generation of high pixel density media query */
-@media
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (   min--moz-device-pixel-ratio: 2),
-only screen and (     -o-min-device-pixel-ratio: 2/1),
-only screen and (        min-device-pixel-ratio: 2),
-only screen and (                min-resolution: 192dpi),
-only screen and (                min-resolution: 2dppx) {
-    .hipster {
-        background: url("../../content/images/hipster2x.png") no-repeat center top;
-        background-size: contain;
+#why-us {
+    height: 400px;
+    background-color: $nav-menu-link-item;
+    div.question-bar {
+        .bar-horizontal-line {
+            margin-right: 0.5rem;
+            background-color: black;
+        }
+        h3 {
+            margin-right: 0.8rem;
+            text-align: right;
+            color:black;
+        }
+        background-color: $yellow-accent;
+        text-align: right;
+    }
+    div.answer {
+        text-align: left;
+        margin-left: 1rem;
     }
 }
+
+.bar-horizontal-line {
+    display: inline-block;
+    height: 80%;
+    width: 5px;
+}
+
+.theme-block {
+    height: 15rem;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.md-ink-bar{
+    background-color: $magenta-accent;
+}
+.mat-tab-label{
+    width:20%;
+}
+#services {
+    #services-tab-container {
+        width: 90%;
+        margin: 1.5rem 0 0 5%;
+        .mat-tab-label{
+            width:20%;
+        }
+        #cards-wrapper {
+            height: 45rem;
+            .scroller{
+                position: absolute;
+                z-index: 10;
+                cursor:pointer;
+                height:2rem;
+            }
+            #left-scroller{
+                left:0;
+            }
+            #right-scroller{
+                right:0;
+            }
+            #cards-container {
+                position: absolute;
+                width: 100%;
+                padding: 1.5rem;
+            }
+        }
+        md-ink-bar{
+            background-color: $magenta-accent;
+        }
+    }
+    #about-us-block {
+        .bar-horizontal-line {
+            margin-left: 0.5rem;
+            background-color: white;
+        }
+        h3 {
+            color:white;
+            margin-left: 0.8rem;
+        }
+        background-color: $magenta-accent;
+        text-align: left;
+    }
+}
+

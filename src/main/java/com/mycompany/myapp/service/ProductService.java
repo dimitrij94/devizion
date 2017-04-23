@@ -1,5 +1,6 @@
 package com.mycompany.myapp.service;
 
+import com.mycompany.myapp.domain.ImageToken;
 import com.mycompany.myapp.domain.Product;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface ProductService {
 
     /**
      *  Get all the products.
-     *  
+     *
      *  @return the list of entities
      */
     List<Product> findAll();
@@ -37,4 +38,6 @@ public interface ProductService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    ImageToken saveImageToken(String fileName);
 }

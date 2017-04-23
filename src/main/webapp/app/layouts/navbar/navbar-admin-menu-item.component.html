@@ -1,11 +1,17 @@
-<div class="navbar-admin-menu-item">
-    <h4><a [routerLink]="item.childNodes ? item.routerLink:  null"
-           routerLinkActive="active"
-           href="javascript:void(0)"
-           [jhiTranslate]="item.translateVar">{{item.title}}</a></h4>
+<div class="admin-menu-item">
 
-    <jhi-navbar-admin-menu-item
-        *ngFor="let childItem of item.childNodes"
-        [item]="childItem">
-    </jhi-navbar-admin-menu-item>
+    <a [routerLink]="item.childNodes ? item.routerLink:  null"
+       routerLinkActive="active"
+       href="javascript:void(0)"
+       (click)="toggleSubmenuState()">
+        {{item.name}}
+    </a>
+    <div class="admin-menu-child-items" [@subMenuStatus]="isShown">
+        <jhi-navbar-admin-menu-item
+            class="admin-menu-child-item"
+            *ngFor="let childItem of item.childNodes"
+            [item]="childItem">
+        </jhi-navbar-admin-menu-item>
+        <ng-content></ng-content>
+    </div>
 </div>

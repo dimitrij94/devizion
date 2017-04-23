@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {JhiLanguageService} from "ng-jhipster";
@@ -7,8 +7,11 @@ import {JhiLanguageHelper, LoginModalService, LoginService, Principal} from "../
 
 import {DEBUG_INFO_ENABLED, VERSION} from "../../app.constants";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {SidenavService} from "../../shared/sidenav.service";
+import {ProductCategoryService} from "../../entities/product-category/product-category.service";
+import {ProductCategory} from "../../entities/product-category/product-category.model";
 
-export interface UserMenuOption {
+export class UserMenuOption {
     name: string;
     id?: string;
     routerLink?: string;
@@ -24,14 +27,54 @@ export interface UserMenuOption {
     ],
     animations: [
         trigger('arrow-position', [
-            state('menu-opened', style({'transform': 'rotate(180deg)'})),
-            state('menu-closed', style({'transform': 'rotate(0deg)'})),
-            transition('menu-opened <=> menu-closed', [animate('150ms')])
+            state('menu-opened', style({transform: 'rotate(180deg)'})),
+            state('menu-closed', style({transform: 'rotate(0deg)'})),
+            transition('menu-opened <=> menu-closed', [animate('250ms')])
         ]),
         trigger('menu-position', [
             state('menu-opened', style({'right': '0%'})),
-            state('menu-closed', style({'right': '-80%'})),
-            transition('menu-opened<=>menu-closed', [animate(250)])
+            state('menu-closed', style({'right': '-21.3%'})),
+            transition('menu-opened<=>menu-closed', [animate('250ms')])
+        ]),
+        trigger('homeLinkShadowState', [
+            state("active", style({boxShadow: '0 0px  #fae014, 0 0  #fae014, 0px 0px  #fae014, 0px -40px  #fae014 inset'})),
+            state("inactive", style({boxShadow: '0 0px  #fae014, 0 0  #fae014, 0px 0px  #fae014, 0px 0  #fae014 inset'})),
+            transition('active<=>inactive', animate('250ms'))
+        ]),
+        trigger('servicesLinkShadowState', [
+            state("active", style({boxShadow: '0 0px  #e30070, 0 0  #e30070, 0px 0px  #e30070, 0px -40px  #e30070 inset'})),
+            state("inactive", style({boxShadow: '0 0px  #e30070, 0 0  #e30070, 0px 0px  #e30070, 0px 0  #e30070 inset'})),
+            transition('active<=>inactive', animate('250ms'))
+        ]),
+        trigger('portfolioLinkShadowState', [
+            state("active", style({boxShadow: '0 0px   #00a2ff, 0 0   #00a2ff, 0px 0px   #00a2ff, 0px -40px   #00a2ff inset'})),
+            state("inactive", style({boxShadow: '0 0px   #00a2ff, 0 0   #00a2ff, 0px 0px   #00a2ff, 0px 0   #00a2ff inset'})),
+            transition('active<=>inactive', animate('250ms'))
+        ]),
+        trigger('aboutUsLinkShadowState', [
+            state("active", style({boxShadow: '0 0px  #696969, 0 0  #696969, 0px 0px  #696969, 0px -40px  #696969 inset'})),
+            state("inactive", style({boxShadow: '0 0px  #696969, 0 0  #696969, 0px 0px  #696969, 0px 0  #696969 inset'})),
+            transition('active<=>inactive', animate('250ms'))
+        ]),
+        trigger('submenuDropdown', [
+            state('active', style({
+                height: '*',
+                padding: '10px',
+                borderBottom: '2px solid #b90062',
+                display: 'list-item'
+            })),
+            state('inactive', style({height: '0', padding: 0, borderBottom: '0px solid #b90062', display: 'none'})),
+            transition('active<=>inactive', animate('250ms'))
+        ]),
+        trigger('portfolioSubmenuDropdown', [
+            state('active', style({
+                height: '*',
+                padding: '10px',
+                borderBottom: '2px solid #00a2ff',
+                display: 'list-item'
+            })),
+            state('inactive', style({height: '0', padding: 0, borderBottom: '0px solid #00a2ff', display: 'none'})),
+            transition('active<=>inactive', animate('250ms'))
         ])
     ]
 })
@@ -45,127 +88,20 @@ export class NavbarComponent implements OnInit {
     version: string;
     menuState = 'menu-closed';
 
-    adminMenuItem: UserMenuOption = {
-        id: 'administrationMenuItem',
-        name: 'Адміністрування',
-        translateVar: 'global.menu.admin.main',
-        childNodes: [
-            {
-                id: '',
-                name: 'User management',
-                routerLink: 'user-management',
-                translateVar: 'global.menu.admin.userManagement',
-                childNodes: undefined
-            },
-            {
-                id: '',
-                name: 'Configuration',
-                routerLink: 'jhi-configuration',
-                translateVar: 'global.menu.admin.configuration',
-                childNodes: undefined
-            },
-            {
-                id: '',
-                name: 'Health',
-                routerLink: 'jhi-health',
-                translateVar: 'global.menu.admin.health',
-                childNodes: undefined
-            },
-            {
-                id: '',
-                name: 'Audits',
-                routerLink: 'audits',
-                translateVar: 'global.menu.admin.audits',
-                childNodes: undefined
-            },
-            {
-                id: '',
-                name: 'API',
-                routerLink: 'docs',
-                translateVar: 'global.menu.admin.apidocs',
-                childNodes: undefined
-            },
-            {
-                id: '',
-                name: 'Logs',
-                routerLink: 'logs',
-                translateVar: 'global.menu.admin.logs',
-                childNodes: undefined
-            }
-        ]
-    };
-    entitiesMenuItem: UserMenuOption = {
-        id: 'entitiesMenuItem',
-        name: 'Сущности',
-        href: undefined,
-        translateVar: 'global.menu.entities.main',
-        childNodes: [
-            {
-                id: '',
-                name: 'Custumer',
-                routerLink: 'custumer',
-                translateVar: 'global.menu.entities.custumer',
-                childNodes: undefined
-            },
-            {
-                id: '',
-                name: 'User Order',
-                routerLink: 'user-order',
-                translateVar: 'global.menu.entities.userOrder',
-                childNodes: undefined
-            },
-            {
-                id: '',
-                name: 'Product',
-                routerLink: 'product',
-                translateVar: 'global.menu.entities.product',
-                childNodes: undefined
-            }
-        ]
-    };
-    profileMenuItem: UserMenuOption = {
-        id: 'admin-menu-profile-item',
-        name: 'Profile',
-        translateVar: 'global.menu.account.main',
-        childNodes: [
-            {
-                routerLink: 'settings',
-                name: 'Settings',
-                translateVar: 'global.menu.account.settings',
-            },
-            {
-                routerLink: 'password',
-                name: 'Password',
-                translateVar: 'global.menu.account.password',
-            },
-            {
-                routerLink: 'register',
-                name: 'Register',
-                translateVar: 'global.menu.account.register'
-            }
-        ]
-    };
-    userMenuOptions: UserMenuOption[] = [
-        {
-            id: 'services-menu-item',
-            name: 'Послуги',
-            translateVar: '',
-            childNodes: [
-                {id: undefined, name: 'Широкоформатний друк', routerLink: './services/printing', translateVar: ''},
-                {id: undefined, name: 'Дизайн', routerLink: '/services/design', translateVar: ''}
-            ]
-        },
-        {id: 'portfolio-menu-item', name: 'Портфоліо', translateVar: ''},
-        {id: 'about-us-menu-item', name: 'Про нас', translateVar: ''}
-
-    ];
-
-    constructor(private loginService: LoginService,
+    servicesLinkState = 'inactive';
+    homeLinkShadow = 'inactive';
+    profileMenuStatus = 'inactive';
+    aboutUsMenuStatus = 'inactive';
+    categories:ProductCategory[];
+    constructor(private sidenavService:SidenavService,
+                private loginService: LoginService,
                 private languageHelper: JhiLanguageHelper,
                 private languageService: JhiLanguageService,
                 private principal: Principal,
                 private loginModalService: LoginModalService,
                 private profileService: ProfileService,
+                private categoriesService:ProductCategoryService,
+                private changeDetectorRef: ChangeDetectorRef,
                 private router: Router) {
         this.version = DEBUG_INFO_ENABLED ? 'v' + VERSION : '';
         this.isNavbarCollapsed = true;
@@ -177,10 +113,55 @@ export class NavbarComponent implements OnInit {
             this.languages = languages;
         });
 
+        this.loadCategories();
+
         this.profileService.getProfileInfo().subscribe(profileInfo => {
             this.inProduction = profileInfo.inProduction;
             this.swaggerEnabled = profileInfo.swaggerEnabled;
         });
+
+        this.changeDetectorRef.detectChanges();
+    }
+
+    loadCategories(){
+        this.categoriesService.query().subscribe((categories)=>this.categories = categories.json());
+    }
+
+    toggleSidenav() {
+        this.sidenavService.toggle();
+    }
+
+
+    hideAboutUsMenu() {
+        this.aboutUsMenuStatus = 'inactive';
+    }
+
+    showAboutUsMenu() {
+        this.aboutUsMenuStatus = 'active';
+    }
+
+    showPortfolioSubMenu() {
+        this.profileMenuStatus = 'active';
+    }
+
+    hidePortfolioSubMenu() {
+        this.profileMenuStatus = 'inactive';
+    }
+
+    hideServicesSubMenu() {
+        this.servicesLinkState = 'inactive';
+    }
+
+    showServicesSubMenu() {
+        this.servicesLinkState = 'active';
+    }
+
+    hideHomeShadow() {
+        this.homeLinkShadow = 'inactive';
+    }
+
+    showHomeShadow() {
+        this.homeLinkShadow = 'active';
     }
 
     changeLanguage(languageKey: string) {

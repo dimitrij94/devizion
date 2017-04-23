@@ -1,0 +1,23 @@
+{
+    "devizionApp": {
+        "productCategory" : {
+            "home": {
+                "title": "Product Categories",
+                "createLabel": "Создать новый Product Category",
+                "createOrEditLabel": "Создать или отредактировать Product Category"
+            },
+            "created": "Новый Product Category создан с идентификатором {{ param }}",
+            "updated": "Product Category обновлен с идентификатором {{ param }}",
+            "deleted": "Product Category удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Product Category {{ id }}?"
+            },
+            "detail": {
+                "title": "Product Category"
+            },
+            "categoryName": "Category Name",
+            "categoryPhotoUri": "Category Photo Uri",
+            "categoryProducts": "Category Products"
+        }
+    }
+}

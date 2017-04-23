@@ -6,6 +6,7 @@ module.exports = {
             '@angular/common',
             '@angular/compiler',
             '@angular/core',
+            '@angular/material',
             '@angular/forms',
             '@angular/http',
             '@angular/platform-browser',

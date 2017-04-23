@@ -1,0 +1,44 @@
+$fa-font-path: '~font-awesome/fonts';
+$admin-menu-main-item-bc: #f7f7f9;
+$admin-menu-secondary-item-bc: white;
+
+$nav-menu-link-item: #f7f7f9;
+$dropdown-menu-sub-links-background: white;
+
+$about-us-accent: #696969;
+$about-us-accent-border: #4b4b4b;
+$about-us-accent-border-hover: #373737;
+
+$magenta-accent: #e30070;
+$magenta-accent-border: #b90062;
+$magenta-accent-border-hover: #b9053c;
+
+$cyan-accent: #00a2ff;
+$cyan-accent-border: #088fff;
+$cyan-accent-border-hover: #0d72ff;
+
+$yellow-accent: #ffdc00;
+$yellow-accent-border: #fcc30a;
+$yellow-accent-border-hover: #faaf1f;
+
+@mixin box-shadow($shadows...) {
+    -moz-box-shadow: $shadows;
+    -webkit-box-shadow: $shadows;
+    box-shadow: $shadows;
+}
+
+@mixin assign-link-color($main, $at-hover, $at-active, $at-visited) {
+    color: $main;
+    &:link {
+        color: $main;
+    }
+    &:hover {
+        color: $at-hover;
+    }
+    &:visited {
+        color: $at-visited;
+    }
+    &:active {
+        color: $at-active;
+    }
+}

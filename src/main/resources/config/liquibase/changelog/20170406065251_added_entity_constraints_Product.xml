@@ -8,11 +8,11 @@
     -->
     <changeSet id="20170406065251-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="user_order_id"
+        <addForeignKeyConstraint baseColumnNames="product_category_id"
                                  baseTableName="product"
-                                 constraintName="fk_product_user_order_id"
+                                 constraintName="fk_product_product_category_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="user_order"/>
+                                 referencedTableName="product_category"/>
 
     </changeSet>
 </databaseChangeLog>

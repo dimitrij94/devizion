@@ -1,0 +1,12 @@
+md-card {
+    margin: 1rem !important;
+    height: 35rem!important;
+    .service-card-image {
+        -webkit-background-size: cover !important;
+        height: auto;
+        width:100%;
+        background-size: cover !important;
+        margin-bottom: 15px;
+    }
+}
+

@@ -15,15 +15,16 @@ import {
     productRoute,
     productPopupRoute,
 } from './';
+import {ImageUploadModule} from 'angular2-image-upload';
 
 let ENTITY_STATES = [
     ...productRoute,
     ...productPopupRoute,
 ];
-
 @NgModule({
     imports: [
         DevizionSharedModule,
+        ImageUploadModule.forRoot(),
         RouterModule.forRoot(ENTITY_STATES, { useHash: true })
     ],
     declarations: [

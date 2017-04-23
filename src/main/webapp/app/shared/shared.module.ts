@@ -17,6 +17,7 @@ import {
     HasAnyAuthorityDirective,
     JhiLoginModalComponent
 } from './';
+import {SidenavService} from "./sidenav.service";
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import {
         AuthServerProvider,
         AuthService,
         UserService,
-        DatePipe
+        DatePipe,
+        SidenavService
     ],
     entryComponents: [JhiLoginModalComponent],
     exports: [

@@ -1,5 +1,6 @@
 package com.mycompany.myapp.config;
 
+import com.mycompany.myapp.domain.ImageToken;
 import io.github.jhipster.config.JHipsterProperties;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
@@ -46,6 +47,9 @@ public class CacheConfiguration {
             cm.createCache(com.mycompany.myapp.domain.Custumer.class.getName(), jcacheConfiguration);
             cm.createCache(com.mycompany.myapp.domain.Custumer.class.getName() + ".custumerOrders", jcacheConfiguration);
             cm.createCache(com.mycompany.myapp.domain.Product.class.getName() + ".userOrders", jcacheConfiguration);
+            cm.createCache(com.mycompany.myapp.domain.ProductCategory.class.getName(), jcacheConfiguration);
+            cm.createCache(com.mycompany.myapp.domain.ProductCategory.class.getName() + ".categoryProducts", jcacheConfiguration);
+            cm.createCache(com.mycompany.myapp.domain.ImageToken.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -1,0 +1,15 @@
+<md-card [@serviceHover]="serviceActive"
+         (mouseleave)="disableService()"
+         (mouseenter)="activateService()"
+         (mousedown)="serviceClicked()">
+    <md-card-header>
+        <md-card-title><h4>{{service.productName}}</h4></md-card-title>
+        <md-card-subtitle>
+            <small>{{service.productPrice|currency:'UAH':true:'4.2-2'}}</small>
+        </md-card-subtitle>
+    </md-card-header>
+    <img [src]="service.productImageUri" class="service-card-image"/>
+    <md-card-content>
+        <p>{{service.productDescription}}</p>
+    </md-card-content>
+</md-card>

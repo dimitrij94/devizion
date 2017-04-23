@@ -1,0 +1,25 @@
+@import "../../../content/scss/varibles";
+
+md-sidenav {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    width: 16.92rem;
+}
+
+#enteties-menu {
+    background-color: $magenta-accent;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+#administration-menu {
+    background-color: $yellow-accent;
+    color: black;
+}
+
+#profile-menu {
+    color: white;
+    background-color: $cyan-accent;
+}

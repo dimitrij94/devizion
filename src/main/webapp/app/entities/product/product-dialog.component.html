@@ -1,57 +1,89 @@
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
     <div class="modal-header">
-        <h4 class="modal-title" id="myProductLabel" jhiTranslate="devizionApp.product.home.createOrEditLabel">Create or edit a Product</h4>
+        <h4 class="modal-title" id="myProductLabel" jhiTranslate="devizionApp.product.home.createOrEditLabel">Create or
+            edit a Product</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                (click)="clear()">&times;</button>
+                (click)="clear()">&times;
+        </button>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
-        <div class="form-group" [hidden]="!product.id">
-            <label for="id" jhiTranslate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
-                   [(ngModel)]="product.id" readonly />
-        </div>
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.product.productName" for="field_productName">Product Name</label>
+            <label class="form-control-label" jhiTranslate="devizionApp.product.productName" for="field_productName">Назва
+                продукту</label>
             <input type="text" class="form-control" name="productName" id="field_productName"
-                [(ngModel)]="product.productName"
-            required />
+                   [(ngModel)]="product.productName"
+                   required/>
             <div [hidden]="!(editForm.controls.productName?.dirty && editForm.controls.productName?.invalid)">
                 <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.productName?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
+                       [hidden]="!editForm.controls.productName?.errors?.required"
+                       jhiTranslate="entity.validation.required">
+                    This field is required.
                 </small>
             </div>
         </div>
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.product.productPrice" for="field_productPrice">Product Price</label>
+            <label class="form-control-label" jhiTranslate="devizionApp.product.productPrice" for="field_productPrice">Ціна
+                продукту грн.</label>
             <input type="number" class="form-control" name="productPrice" id="field_productPrice"
-                [(ngModel)]="product.productPrice"
-            required />
+                   [(ngModel)]="product.productPrice"
+                   required/>
             <div [hidden]="!(editForm.controls.productPrice?.dirty && editForm.controls.productPrice?.invalid)">
                 <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.productPrice?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
+                       [hidden]="!editForm.controls.productPrice?.errors?.required"
+                       jhiTranslate="entity.validation.required">
+                    This field is required.
                 </small>
                 <small class="form-text text-danger"
-                    [hidden]="!editForm.controls.productPrice?.errors?.number" jhiTranslate="entity.validation.number">
+                       [hidden]="!editForm.controls.productPrice?.errors?.number"
+                       jhiTranslate="entity.validation.number">
                     This field should be a number.
                 </small>
             </div>
         </div>
+
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.product.productDescription" for="field_productDescription">Product Description</label>
+            <label class="form-control-label" jhiTranslate="devizionApp.product.productDescription"
+                   for="field_productDescription">Опис продукту</label>
             <input type="text" class="form-control" name="productDescription" id="field_productDescription"
-                [(ngModel)]="product.productDescription"
-            required />
-            <div [hidden]="!(editForm.controls.productDescription?.dirty && editForm.controls.productDescription?.invalid)">
+                   [(ngModel)]="product.productDescription"
+                   required/>
+            <div
+                [hidden]="!(editForm.controls.productDescription?.dirty && editForm.controls.productDescription?.invalid)">
                 <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.productDescription?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
+                       [hidden]="!editForm.controls.productDescription?.errors?.required"
+                       jhiTranslate="entity.validation.required">
+                    This field is required.
                 </small>
             </div>
         </div>
+
+        <div class="form-group">
+            <label jhiTranslate="devizionApp.product.productCategory" for="field_productCategory">Категорія
+                продукту</label>
+            <select class="form-control" id="field_productCategory" name="productCategory"
+                    [(ngModel)]="product.productCategory">
+                <option [ngValue]="null"></option>
+                <option
+                    [ngValue]="productCategoryOption.id === product.productCategory?.id ? product.productCategory : productCategoryOption"
+                    *ngFor="let productCategoryOption of productcategories; trackBy: trackProductCategoryById">
+                    {{productCategoryOption.categoryName}}
+                </option>
+            </select>
+        </div>
+
+        <div class="foem-group">
+            <label>Фото продукту</label>
+            <image-upload [url]="'/api/product/image'"
+                          [max]="1"
+                          [headers]="[{'header':'Authorization', 'value':'Bearer '+authServiceProvider.getToken()}]"
+                          (onFileUploadFinish)="onLoad($event)"
+                          (onRemove)="onRemove($event)">
+
+            </image-upload>
+        </div>
+
 
     </div>
     <div class="modal-footer">
