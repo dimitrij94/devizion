@@ -71,8 +71,8 @@ public class ProductCategoryResource {
         if (productCategory.getId() == null) {
             return createProductCategory(productCategory);
         }
-
-        this.imageService.deleteImage("/category/", productCategory.getCategoryPhotoUri());
+        if (productCategory.getCategoryPhotoUri() != null)
+            this.imageService.deleteImage("/category/", productCategory.getCategoryPhotoUri());
         ProductCategory result = productCategoryService.save(productCategory);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, productCategory.getId().toString()))

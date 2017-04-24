@@ -17,7 +17,7 @@ export const imageTokenRoute: Routes = [
     path: 'image-token',
     component: ImageTokenComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.imageToken.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -25,7 +25,7 @@ export const imageTokenRoute: Routes = [
     path: 'image-token/:id',
     component: ImageTokenDetailComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.imageToken.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -37,7 +37,7 @@ export const imageTokenPopupRoute: Routes = [
     path: 'image-token-new',
     component: ImageTokenPopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.imageToken.home.title'
     },
     canActivate: [UserRouteAccessService],
@@ -47,7 +47,7 @@ export const imageTokenPopupRoute: Routes = [
     path: 'image-token/:id/edit',
     component: ImageTokenPopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.imageToken.home.title'
     },
     canActivate: [UserRouteAccessService],
@@ -57,7 +57,7 @@ export const imageTokenPopupRoute: Routes = [
     path: 'image-token/:id/delete',
     component: ImageTokenDeletePopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.imageToken.home.title'
     },
     canActivate: [UserRouteAccessService],

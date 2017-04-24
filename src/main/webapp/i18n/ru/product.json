@@ -20,6 +20,7 @@
             "productDescription": "Product Description",
             "productImageUri": "Product Image Uri",
             "userOrder": "User Order",
+            "portfolioEntry": "Portfolio Entry",
             "productCategory": "Product Category"
         }
     }

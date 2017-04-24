@@ -21,7 +21,7 @@
 
         <div class="foem-group">
             <label>Фото категорії</label>
-            <image-upload [url]="'/api/category/image'"
+            <image-upload [url]="'/api/categories/image'"
                           [max]="1"
                           [headers]="[{'header':'Authorization', 'value':'Bearer '+ authServiceProvider.getToken()}]"
                           (onFileUploadFinish)="onLoad($event)"

@@ -17,7 +17,7 @@ export const productCategoryRoute: Routes = [
     path: 'product-category',
     component: ProductCategoryComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.productCategory.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -25,7 +25,7 @@ export const productCategoryRoute: Routes = [
     path: 'product-category/:id',
     component: ProductCategoryDetailComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.productCategory.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -37,7 +37,7 @@ export const productCategoryPopupRoute: Routes = [
     path: 'product-category-new',
     component: ProductCategoryPopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.productCategory.home.title'
     },
     canActivate: [UserRouteAccessService],
@@ -47,7 +47,7 @@ export const productCategoryPopupRoute: Routes = [
     path: 'product-category/:id/edit',
     component: ProductCategoryPopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.productCategory.home.title'
     },
     canActivate: [UserRouteAccessService],
@@ -57,7 +57,7 @@ export const productCategoryPopupRoute: Routes = [
     path: 'product-category/:id/delete',
     component: ProductCategoryDeletePopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.productCategory.home.title'
     },
     canActivate: [UserRouteAccessService],

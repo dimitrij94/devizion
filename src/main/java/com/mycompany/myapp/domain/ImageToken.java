@@ -17,13 +17,6 @@ public class ImageToken implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "path")
-    private String path;
-
     public ImageToken(){
 
     }
@@ -31,6 +24,13 @@ public class ImageToken implements Serializable {
     public ImageToken(String path) {
         this.path = path;
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "path")
+    private String path;
 
     public Long getId() {
         return id;

@@ -8,10 +8,13 @@ import {Product} from '../entities/product/product.model';
 import {ProductCategoryService} from '../entities/product-category/product-category.service';
 import {ProductCategory} from '../entities/product-category/product-category.model';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {ImageService} from '../shared/image.service';
+import {ImageService, productSubdirectory} from '../shared/image/image.service';
 import {Timer} from '../shared/timer';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Subject} from "rxjs";
+import {PortfolioEntryService} from "../entities/portfolio-entry/portfolio-entry.service";
+import {PortfolioEntry} from "../entities/portfolio-entry/portfolio-entry.model";
+import {fortyScalar, sixtyScalar} from "../shared/image/image-size.model";
 const shuffleAnimationTime = 600;
 @Component({
     selector: 'jhi-home',
@@ -43,6 +46,7 @@ const shuffleAnimationTime = 600;
     ])]
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+    numberOfPortfoliosGroupsDisplaed: any;
     scrollingTimer: Timer;
     orientation = 'none';
     account: Account;
@@ -57,6 +61,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     shuffleForwardAnimationSubject: Subject<Array<Product>>;
     shuffleBackwardAnimationSubject: Subject<Array<Product>>;
+
+    portfolioGroups: Array<Array<PortfolioEntry>>;
+    portfolioSize: [number] = [4, 3, 4];
 
     @HostListener('window:resize', ['$event'])
     onResize(event) {
@@ -82,6 +89,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 private productService: ProductService,
                 private eventManager: EventManager,
                 private alertService: AlertService,
+                private portfolioService: PortfolioEntryService,
                 private domSanitizer: DomSanitizer) {
         this.jhiLanguageService.setLocations(['home']);
         this.shuffleForwardAnimationSubject = new Subject();
@@ -174,13 +182,33 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
 
     loadAll() {
-
+        this.portfolioService.query().subscribe(
+            (res: Response) => {
+                let portfolio = <PortfolioEntry[]>res.json();
+                portfolio.map((portfolio) => {
+                    portfolio.photoUri = this.portfolioService.getImageUri(portfolio.photoUri);
+                });
+                let len = portfolio.length;
+                let n = this.numberOfPortfoliosGroupsDisplaed;
+                let i = 0;
+                while (i < len) {
+                    let size = Math.ceil((len - i) / n--);
+                    this.portfolioGroups.push(portfolio.slice(i, i += size));
+                }
+            }
+        );
         this.productService.query().subscribe(
             (res: Response) => {
                 let products = <Product[]> res.json();
                 let categories = {};
                 products.forEach((product: Product) => {
-                    product.productImageUri = ImageService.getProductImageUri(product.productImageUri);
+                    //product.productImageUri = ImageService.getProductImageUri(product.productImageUri);
+                    product.productImageUri = ImageService.getImagePathOfSize(
+                        productSubdirectory,
+                        product.productImageUri,
+                        window.innerWidth,
+                        sixtyScalar
+                    );
                     this.domSanitizer.bypassSecurityTrustUrl(product.productImageUri);
                     let cId = product.productCategory.id;
                     if (!categories[cId]) categories[cId] = product.productCategory;

@@ -10,8 +10,10 @@
     <include file="classpath:config/liquibase/changelog/20170406065253_added_entity_Custumer.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170409185519_added_entity_ProductCategory.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170413080221_added_entity_ImageToken.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170423135312_added_entity_PortfolioEntry.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="classpath:config/liquibase/changelog/20170406065251_added_entity_constraints_Product.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170406065252_added_entity_constraints_UserOrder.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170423135312_added_entity_constraints_PortfolioEntry.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

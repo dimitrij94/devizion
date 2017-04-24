@@ -33,7 +33,7 @@
                 <td>{{product.productPrice}}</td>
                 <td>{{product.productDescription}}</td>
                 <td>
-                    <div class="product-photo" [ngStyle]="{'background':'url('+product.productImageUri+') no-repeat center top'}"></div>
+                    <img class="product-photo" [src]="product.productImageUri"/>
                 </td>
                 <td>
                     <div *ngIf="product.productCategory">

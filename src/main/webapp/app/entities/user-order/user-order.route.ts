@@ -17,7 +17,7 @@ export const userOrderRoute: Routes = [
     path: 'user-order',
     component: UserOrderComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.userOrder.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -25,7 +25,7 @@ export const userOrderRoute: Routes = [
     path: 'user-order/:id',
     component: UserOrderDetailComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.userOrder.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -37,7 +37,7 @@ export const userOrderPopupRoute: Routes = [
     path: 'user-order-new',
     component: UserOrderPopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.userOrder.home.title'
     },
     canActivate: [UserRouteAccessService],
@@ -47,7 +47,7 @@ export const userOrderPopupRoute: Routes = [
     path: 'user-order/:id/edit',
     component: UserOrderPopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.userOrder.home.title'
     },
     canActivate: [UserRouteAccessService],
@@ -57,7 +57,7 @@ export const userOrderPopupRoute: Routes = [
     path: 'user-order/:id/delete',
     component: UserOrderDeletePopupComponent,
     data: {
-        authorities: ['ROLE_USER'],
+        authorities: ['ROLE_USER','ROLE_ADMIN'],
         pageTitle: 'devizionApp.userOrder.home.title'
     },
     canActivate: [UserRouteAccessService],

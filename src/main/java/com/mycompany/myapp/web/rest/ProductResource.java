@@ -51,17 +51,16 @@ public class ProductResource {
     @Timed
     public ResponseEntity<Product> createProduct(@RequestParam(name = "token_id", required = false) Long tokenId, @Valid @RequestBody Product product) throws URISyntaxException {
         log.debug("REST request to save Product : {}", product);
-        if(tokenId!=null)
+        if (tokenId != null)
 
-        if (product.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new product cannot already have an ID")).body(null);
-        }
+            if (product.getId() != null) {
+                return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new product cannot already have an ID")).body(null);
+            }
         Product result = productService.save(product);
         return ResponseEntity.created(new URI("/api/products/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
-
 
 
     /**
@@ -82,7 +81,9 @@ public class ProductResource {
         if (product.getId() == null) {
             return createProduct(tokenId, product);
         }
-        this.imageService.deleteImage("/product/", product.getProductImageUri());
+        if (product.getProductImageUri() != null)
+            this.imageService.deleteImage("/product/", product.getProductImageUri());
+
         Product result = productService.save(product);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, product.getId().toString()))
@@ -125,6 +126,9 @@ public class ProductResource {
     @Timed
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         log.debug("REST request to delete Product : {}", id);
+        Product product = productService.findOne(id);
+        if (product.getProductImageUri() != null)
+            this.imageService.deleteImage("/product/", product.getProductImageUri());
         productService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

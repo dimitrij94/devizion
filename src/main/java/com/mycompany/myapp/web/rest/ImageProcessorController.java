@@ -39,31 +39,35 @@ public class ImageProcessorController {
         this.multipartResolver = multipartResolver;
     }
 
-    @PostMapping(value = "/api/product/image")
-    public ResponseEntity<ImageToken> postProductImage(final MultipartHttpServletRequest request) throws ParseException {
-        MultipartFile file = request.getFile(request.getFileNames().next());
-        return imageService.saveImage("/products/", file);
-    }
 
-    @PostMapping(value = "/api/category/image")
-    public ResponseEntity<ImageToken> postCategoryImage(final MultipartHttpServletRequest request) throws ParseException {
+    @PostMapping(value = "/api/{directoryName}/image")
+    public ResponseEntity<ImageToken> postPortfolioImage(final MultipartHttpServletRequest request,
+                                                         @PathVariable("directoryName") String directoryName) throws ParseException {
         MultipartFile file = request.getFile(request.getFileNames().next());
-        return imageService.saveImage("/categories/", file);
+        return imageService.saveImage("/" + directoryName + "/", file);
     }
-
 
     @GetMapping(value = "/api/image/{directory}", produces = "image/*")
     public ResponseEntity<byte[]> getImageBody(@PathVariable("directory") String directory,
                                                @RequestParam("imageName") String imageName) throws IOException {
-        File image = new File(this.imageStoragePath+ "\\" + directory + "\\" + imageName);
+        File image = new File(this.imageStoragePath + "\\" + directory + "\\" + imageName);
         if (image.exists() && image.canRead()) {
-             return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(image), HttpStatus.OK);
+            return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(image), HttpStatus.OK);
         } else return new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/api/image/icons")
-    public ResponseEntity<byte[]> getImageBody(@RequestParam("iconName") String imageName) throws IOException {
-        File image = new File(this.imageStoragePath+ "\\icons\\" + imageName);
+
+    @GetMapping(value = "/api/image/size/{directory}", produces = "image/*")
+    public ResponseEntity<byte[]> getImageBodyOfSize(@PathVariable("directory") String directory,
+                                                     @RequestParam("imageName") String imageName,
+                                                     @RequestParam("imageScalarSize") String imageScalarSize,
+                                                     @RequestParam("screenSize") String screenSize) throws IOException{
+        File image = new File(
+            this.imageStoragePath + "\\" +
+                directory + "\\" +
+                screenSize + "\\" +
+                imageScalarSize + "\\" +
+                imageName);
         if (image.exists() && image.canRead()) {
             return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(image), HttpStatus.OK);
         } else return new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);

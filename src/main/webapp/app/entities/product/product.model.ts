@@ -1,4 +1,5 @@
 import { UserOrder } from '../user-order';
+import { PortfolioEntry } from '../portfolio-entry';
 import { ProductCategory } from '../product-category';
 export class Product {
     constructor(
@@ -8,6 +9,7 @@ export class Product {
         public productDescription?: string,
         public productImageUri?: string,
         public userOrder?: UserOrder,
+        public portfolioEntry?: PortfolioEntry,
         public productCategory?: ProductCategory,
     ) {
     }

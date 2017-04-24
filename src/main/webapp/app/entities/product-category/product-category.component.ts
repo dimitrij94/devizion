@@ -5,7 +5,7 @@ import {AlertService, EventManager, JhiLanguageService} from 'ng-jhipster';
 import {ProductCategory} from './product-category.model';
 import {ProductCategoryService} from './product-category.service';
 import {Principal} from '../../shared';
-import {ImageService} from '../../shared/image.service';
+import {ImageService} from '../../shared/image/image.service';
 
 @Component({
     selector: 'jhi-product-category',

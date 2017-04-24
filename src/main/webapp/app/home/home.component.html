@@ -61,3 +61,18 @@
         <h3>НАШІ<br>ПОСЛУГИ</h3>
     </div>
 </div>
+<div id="portfolio" *ngFor="let portfolio of portfolioGroups; let i = index">
+    <jhi-portfolio [portfolio]="portfolio"
+                   [portfolioSize]="portfolioSize[i]">
+
+    </jhi-portfolio>
+    <div *ngIf="i===Math.floor(portfolioGroups.lenght/2)"
+         id="portfolio-block"
+         fxFlex="100" fxFlex.gt-sm="20"
+         fxFlexOrder="1" fxFlexOrder.gt-sm="2"
+         fxLayout="row" fxLayoutAlign="start center">
+
+        <div class="bar-horizontal-line"></div>
+        <h3>НАШE<br>ПОРТФОЛІО</h3>
+    </div>
+</div>

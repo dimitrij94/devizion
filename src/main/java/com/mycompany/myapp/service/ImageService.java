@@ -20,6 +20,7 @@ public interface ImageService {
 
     boolean deleteImage(String imageSubPath, String path);
 
-    ResponseEntity<ImageToken> saveImage(String imageSubPath,
+    ResponseEntity<ImageToken>
+    saveImage(String imageSubPath,
                                          MultipartFile file);
 }

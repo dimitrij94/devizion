@@ -3,29 +3,32 @@ entity Product{
 	productName String required
     productPrice Float required
 	productDescription String required
+    productSelfCost Float
     productImageUri String
 }
+
 entity ImageToken{
 	path String
 }
-entity PortfolioEntry{
+
+entity UserOrder{
 	photoUri String
     description String
-    
-}
-entity UserOrder{
 	orderNotes String
 	orderedAt LocalDate
 }
+
 entity Custumer{
     custumerName String
     custumerSurname String
     custumerContactNumber String
 }
+
 entity ProductCategory{
 	categoryName String
     categoryPhotoUri String
 }
+
 relationship OneToMany{
 	ProductCategory{categoryProducts} to Product
 }
@@ -34,9 +37,6 @@ relationship OneToMany{
 }
 relationship OneToMany{
 	Product to UserOrder{orderedProduct}
-}
-relationship OneToMany{
-	Product to PortfolioEntry{portfolio}
 }
 // Set service options to all except few
 service all with serviceImpl

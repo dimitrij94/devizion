@@ -1,0 +1,23 @@
+{
+    "devizionApp": {
+        "portfolioEntry" : {
+            "home": {
+                "title": "Portfolio Entries",
+                "createLabel": "Создать новый Portfolio Entry",
+                "createOrEditLabel": "Создать или отредактировать Portfolio Entry"
+            },
+            "created": "Новый Portfolio Entry создан с идентификатором {{ param }}",
+            "updated": "Portfolio Entry обновлен с идентификатором {{ param }}",
+            "deleted": "Portfolio Entry удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Портфоліо {{ id }}?"
+            },
+            "detail": {
+                "title": "Портфоліо"
+            },
+            "photoUri": "Photo Uri",
+            "description": "Опис",
+            "portfolio": "Портфоліо"
+        }
+    }
+}

@@ -75,7 +75,7 @@
 
         <div class="foem-group">
             <label>Фото продукту</label>
-            <image-upload [url]="'/api/product/image'"
+            <image-upload [url]="'/api/products/image'"
                           [max]="1"
                           [headers]="[{'header':'Authorization', 'value':'Bearer '+authServiceProvider.getToken()}]"
                           (onFileUploadFinish)="onLoad($event)"

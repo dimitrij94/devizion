@@ -1,17 +1,18 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Response} from '@angular/http';
-import {Subscription} from 'rxjs/Rx';
-import {AlertService, EventManager, JhiLanguageService} from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Response} from "@angular/http";
+import {Subscription} from "rxjs/Rx";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import {Product} from './product.model';
-import {ProductService} from './product.service';
-import {Principal} from '../../shared';
-import {ImageService} from '../../shared/image.service';
+import {Product} from "./product.model";
+import {ProductService} from "./product.service";
+import {Principal} from "../../shared";
+import {ImageService, productSubdirectory} from "../../shared/image/image.service";
+import {fortyScalar, twentyScalar} from "../../shared/image/image-size.model";
 
 @Component({
     selector: 'jhi-product',
     templateUrl: './product.component.html',
-    styleUrls:['./product.component.scss']
+    styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit, OnDestroy {
     products: Product[];
@@ -23,6 +24,7 @@ export class ProductComponent implements OnInit, OnDestroy {
                 private alertService: AlertService,
                 private eventManager: EventManager,
                 private principal: Principal) {
+
         this.jhiLanguageService.setLocations(['product']);
     }
 
@@ -31,8 +33,12 @@ export class ProductComponent implements OnInit, OnDestroy {
         this.productService.query().subscribe(
             (res: Response) => {
                 let products = <Product[]> res.json();
-                products.forEach((product)=>{
-                    product.productImageUri = ImageService.getProductImageUri(product.productImageUri);
+                products.forEach((product) => {
+                    product.productImageUri = ImageService.getImagePathOfSize(
+                        productSubdirectory,
+                        product.productImageUri,
+                        window.innerWidth,
+                        twentyScalar);
                 });
                 this.products = products;
             },
