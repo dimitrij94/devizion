@@ -1,15 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import {Injectable} from '@angular/core';
+import {Http, Response, URLSearchParams, BaseRequestOptions} from '@angular/http';
+import {Observable} from 'rxjs/Rx';
 
-import { UserOrder } from './user-order.model';
-import { DateUtils } from 'ng-jhipster';
+import {UserOrder} from './user-order.model';
+import {DateUtils} from 'ng-jhipster';
+import {ImageService, portfolioSubdirectory} from "../../shared/image/image.service";
+import {ImageScalar} from "../../shared/image/image-size.model";
 @Injectable()
 export class UserOrderService {
 
     private resourceUrl = 'api/user-orders';
 
-    constructor(private http: Http, private dateUtils: DateUtils) { }
+    constructor(private http: Http, private dateUtils: DateUtils) {
+    }
+
+    getImageUri(photoName: string, imageScalar: ImageScalar, imageSize: number) {
+        return ImageService.getImagePathOfSize(portfolioSubdirectory, photoName, imageSize, imageScalar)
+    }
+
 
     create(userOrder: UserOrder): Observable<UserOrder> {
         let copy: UserOrder = Object.assign({}, userOrder);
@@ -42,7 +50,7 @@ export class UserOrderService {
         let options = this.createRequestOption(req);
         return this.http.get(this.resourceUrl, options)
             .map((res: any) => this.convertResponse(res))
-        ;
+            ;
     }
 
     delete(id: number): Observable<Response> {

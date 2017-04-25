@@ -8,12 +8,6 @@
             "otherEntityRelationshipName": "orderedProduct"
         },
         {
-            "relationshipType": "one-to-many",
-            "relationshipName": "portfolioEntry",
-            "otherEntityName": "portfolioEntry",
-            "otherEntityRelationshipName": "portfolio"
-        },
-        {
             "relationshipName": "productCategory",
             "otherEntityName": "productCategory",
             "relationshipType": "many-to-one",
@@ -41,6 +35,10 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "productSelfCost",
+            "fieldType": "Float"
         },
         {
             "fieldName": "productImageUri",

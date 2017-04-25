@@ -3,27 +3,24 @@ entity Product{
 	productName String required
     productPrice Float required
 	productDescription String required
-    productSelfCost Float
+    
     productImageUri String
 }
-
 entity ImageToken{
 	path String
 }
-
 entity UserOrder{
 	photoUri String
     description String
 	orderNotes String
 	orderedAt LocalDate
 }
-
 entity Custumer{
     custumerName String
     custumerSurname String
     custumerContactNumber String
+	custumerImageUri String
 }
-
 entity ProductCategory{
 	categoryName String
     categoryPhotoUri String

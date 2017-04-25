@@ -1,15 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Response} from '@angular/http';
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EventManager, AlertService, JhiLanguageService } from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {EventManager, AlertService, JhiLanguageService} from 'ng-jhipster';
 
-import { UserOrder } from './user-order.model';
-import { UserOrderPopupService } from './user-order-popup.service';
-import { UserOrderService } from './user-order.service';
-import { Product, ProductService } from '../product';
-import { Custumer, CustumerService } from '../custumer';
+import {UserOrder} from './user-order.model';
+import {UserOrderPopupService} from './user-order-popup.service';
+import {UserOrderService} from './user-order.service';
+import {Product, ProductService} from '../product';
+import {Custumer, CustumerService} from '../custumer';
+import {ImageToken} from "../image-token";
 
 @Component({
     selector: 'jhi-user-order-dialog',
@@ -20,19 +21,18 @@ export class UserOrderDialogComponent implements OnInit {
     userOrder: UserOrder;
     authorities: any[];
     isSaving: boolean;
-
+    imageToken: ImageToken;
     products: Product[];
 
     custumers: Custumer[];
-    constructor(
-        public activeModal: NgbActiveModal,
-        private jhiLanguageService: JhiLanguageService,
-        private alertService: AlertService,
-        private userOrderService: UserOrderService,
-        private productService: ProductService,
-        private custumerService: CustumerService,
-        private eventManager: EventManager
-    ) {
+
+    constructor(public activeModal: NgbActiveModal,
+                private jhiLanguageService: JhiLanguageService,
+                private alertService: AlertService,
+                private userOrderService: UserOrderService,
+                private productService: ProductService,
+                private custumerService: CustumerService,
+                private eventManager: EventManager) {
         this.jhiLanguageService.setLocations(['userOrder']);
     }
 
@@ -40,15 +40,39 @@ export class UserOrderDialogComponent implements OnInit {
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
         this.productService.query().subscribe(
-            (res: Response) => { this.products = res.json(); }, (res: Response) => this.onError(res.json()));
+            (res: Response) => {
+                this.products = res.json();
+            }, (res: Response) => this.onError(res.json()));
         this.custumerService.query().subscribe(
-            (res: Response) => { this.custumers = res.json(); }, (res: Response) => this.onError(res.json()));
+            (res: Response) => {
+                this.custumers = res.json();
+            }, (res: Response) => this.onError(res.json()));
     }
-    clear () {
+
+    clear() {
         this.activeModal.dismiss('cancel');
     }
 
-    save () {
+    onRemove($event) {
+        this.productService
+            .productImageUploadCancel(this.imageToken[$event.file.name].id)
+            .subscribe(() => {
+                delete this.imageToken[$event.file.name];
+            });
+    }
+
+
+    onLoad($event: any) {
+        if ($event.serverResponse.status == 200) {
+            let imageToken = JSON.parse($event.serverResponse.response);
+            this.userOrder.photoUri = imageToken.path;
+            this.imageToken[$event.file.name] = imageToken;
+        }
+        else
+            this.onError($event.serverResponse.json());
+    }
+
+    save() {
         this.isSaving = true;
         if (this.userOrder.id !== undefined) {
             this.userOrderService.update(this.userOrder)
@@ -61,13 +85,13 @@ export class UserOrderDialogComponent implements OnInit {
         }
     }
 
-    private onSaveSuccess (result: UserOrder) {
-        this.eventManager.broadcast({ name: 'userOrderListModification', content: 'OK'});
+    private onSaveSuccess(result: UserOrder) {
+        this.eventManager.broadcast({name: 'userOrderListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
 
-    private onSaveError (error) {
+    private onSaveError(error) {
         try {
             error.json();
         } catch (exception) {
@@ -77,7 +101,7 @@ export class UserOrderDialogComponent implements OnInit {
         this.onError(error);
     }
 
-    private onError (error) {
+    private onError(error) {
         this.alertService.error(error.message, null, null);
     }
 
@@ -99,14 +123,13 @@ export class UserOrderPopupComponent implements OnInit, OnDestroy {
     modalRef: NgbModalRef;
     routeSub: any;
 
-    constructor (
-        private route: ActivatedRoute,
-        private userOrderPopupService: UserOrderPopupService
-    ) {}
+    constructor(private route: ActivatedRoute,
+                private userOrderPopupService: UserOrderPopupService) {
+    }
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe(params => {
-            if ( params['id'] ) {
+            if (params['id']) {
                 this.modalRef = this.userOrderPopupService
                     .open(UserOrderDialogComponent, params['id']);
             } else {

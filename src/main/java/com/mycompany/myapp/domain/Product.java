@@ -37,6 +37,9 @@ public class Product implements Serializable {
     @Column(name = "product_description", nullable = false)
     private String productDescription;
 
+    @Column(name = "product_self_cost")
+    private Float productSelfCost;
+
     @Column(name = "product_image_uri")
     private String productImageUri;
 
@@ -44,11 +47,6 @@ public class Product implements Serializable {
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<UserOrder> userOrders = new HashSet<>();
-
-    @OneToMany(mappedBy = "portfolio")
-    @JsonIgnore
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<PortfolioEntry> portfolioEntries = new HashSet<>();
 
     @ManyToOne
     private ProductCategory productCategory;
@@ -100,6 +98,19 @@ public class Product implements Serializable {
         this.productDescription = productDescription;
     }
 
+    public Float getProductSelfCost() {
+        return productSelfCost;
+    }
+
+    public Product productSelfCost(Float productSelfCost) {
+        this.productSelfCost = productSelfCost;
+        return this;
+    }
+
+    public void setProductSelfCost(Float productSelfCost) {
+        this.productSelfCost = productSelfCost;
+    }
+
     public String getProductImageUri() {
         return productImageUri;
     }
@@ -136,31 +147,6 @@ public class Product implements Serializable {
 
     public void setUserOrders(Set<UserOrder> userOrders) {
         this.userOrders = userOrders;
-    }
-
-    public Set<PortfolioEntry> getPortfolioEntries() {
-        return portfolioEntries;
-    }
-
-    public Product portfolioEntries(Set<PortfolioEntry> portfolioEntries) {
-        this.portfolioEntries = portfolioEntries;
-        return this;
-    }
-
-    public Product addPortfolioEntry(PortfolioEntry portfolioEntry) {
-        this.portfolioEntries.add(portfolioEntry);
-        portfolioEntry.setPortfolio(this);
-        return this;
-    }
-
-    public Product removePortfolioEntry(PortfolioEntry portfolioEntry) {
-        this.portfolioEntries.remove(portfolioEntry);
-        portfolioEntry.setPortfolio(null);
-        return this;
-    }
-
-    public void setPortfolioEntries(Set<PortfolioEntry> portfolioEntries) {
-        this.portfolioEntries = portfolioEntries;
     }
 
     public ProductCategory getProductCategory() {
@@ -203,6 +189,7 @@ public class Product implements Serializable {
             ", productName='" + productName + "'" +
             ", productPrice='" + productPrice + "'" +
             ", productDescription='" + productDescription + "'" +
+            ", productSelfCost='" + productSelfCost + "'" +
             ", productImageUri='" + productImageUri + "'" +
             '}';
     }

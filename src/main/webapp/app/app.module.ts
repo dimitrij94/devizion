@@ -18,7 +18,6 @@ import {
     LayoutRoutingModule,
     NavbarAdminMenuItemComponent,
     NavbarComponent,
-    PageRibbonComponent,
     ProfileService
 } from './layouts';
 import {customHttpProvider} from './blocks/interceptor/http.provider';

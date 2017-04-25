@@ -90,17 +90,18 @@ export class NavbarComponent implements OnInit {
 
     servicesLinkState = 'inactive';
     homeLinkShadow = 'inactive';
-    profileMenuStatus = 'inactive';
+    portfolioMenuStatus = 'inactive';
     aboutUsMenuStatus = 'inactive';
-    categories:ProductCategory[];
-    constructor(private sidenavService:SidenavService,
+    categories: ProductCategory[];
+
+    constructor(private sidenavService: SidenavService,
                 private loginService: LoginService,
                 private languageHelper: JhiLanguageHelper,
                 private languageService: JhiLanguageService,
                 private principal: Principal,
                 private loginModalService: LoginModalService,
                 private profileService: ProfileService,
-                private categoriesService:ProductCategoryService,
+                private categoriesService: ProductCategoryService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private router: Router) {
         this.version = DEBUG_INFO_ENABLED ? 'v' + VERSION : '';
@@ -123,8 +124,9 @@ export class NavbarComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
     }
 
-    loadCategories(){
-        this.categoriesService.query().subscribe((categories)=>this.categories = categories.json());
+
+    loadCategories() {
+        this.categoriesService.query().subscribe((categories) => this.categories = categories.json());
     }
 
     toggleSidenav() {
@@ -141,15 +143,23 @@ export class NavbarComponent implements OnInit {
     }
 
     showPortfolioSubMenu() {
-        this.profileMenuStatus = 'active';
+        this.portfolioMenuStatus = 'active';
+    }
+
+    togglePortfolioSubMenu() {
+        this.portfolioMenuStatus = this.portfolioMenuStatus === 'active' ? 'inactive' : 'active';
     }
 
     hidePortfolioSubMenu() {
-        this.profileMenuStatus = 'inactive';
+        this.portfolioMenuStatus = 'inactive';
     }
 
     hideServicesSubMenu() {
         this.servicesLinkState = 'inactive';
+    }
+
+    toggleServicesSubMenu() {
+        this.servicesLinkState = this.servicesLinkState === 'active' ? 'inactive' : 'active';
     }
 
     showServicesSubMenu() {

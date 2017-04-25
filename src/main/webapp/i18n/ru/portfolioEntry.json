@@ -10,14 +10,14 @@
             "updated": "Portfolio Entry обновлен с идентификатором {{ param }}",
             "deleted": "Portfolio Entry удален с идентификатором {{ param }}",
             "delete": {
-                "question": "Вы уверены что хотите удалить Портфоліо {{ id }}?"
+                "question": "Вы уверены что хотите удалить Portfolio Entry {{ id }}?"
             },
             "detail": {
-                "title": "Портфоліо"
+                "title": "Portfolio Entry"
             },
             "photoUri": "Photo Uri",
-            "description": "Опис",
-            "portfolio": "Портфоліо"
+            "description": "Description",
+            "portfolio": "Portfolio"
         }
     }
 }

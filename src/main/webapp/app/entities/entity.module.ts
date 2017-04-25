@@ -5,7 +5,6 @@ import { DevizionUserOrderModule } from './user-order/user-order.module';
 import { DevizionCustumerModule } from './custumer/custumer.module';
 import { DevizionProductCategoryModule } from './product-category/product-category.module';
 import { DevizionImageTokenModule } from './image-token/image-token.module';
-import { DevizionPortfolioEntryModule } from './portfolio-entry/portfolio-entry.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -14,8 +13,7 @@ import { DevizionPortfolioEntryModule } from './portfolio-entry/portfolio-entry.
         DevizionUserOrderModule,
         DevizionCustumerModule,
         DevizionProductCategoryModule,
-        DevizionImageTokenModule,
-        DevizionPortfolioEntryModule,
+        DevizionImageTokenModule
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

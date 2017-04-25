@@ -40,6 +40,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = DevizionApp.class)
 public class UserOrderResourceIntTest {
 
+    private static final String DEFAULT_PHOTO_URI = "AAAAAAAAAA";
+    private static final String UPDATED_PHOTO_URI = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
     private static final String DEFAULT_ORDER_NOTES = "AAAAAAAAAA";
     private static final String UPDATED_ORDER_NOTES = "BBBBBBBBBB";
 
@@ -86,6 +92,8 @@ public class UserOrderResourceIntTest {
      */
     public static UserOrder createEntity(EntityManager em) {
         UserOrder userOrder = new UserOrder()
+            .photoUri(DEFAULT_PHOTO_URI)
+            .description(DEFAULT_DESCRIPTION)
             .orderNotes(DEFAULT_ORDER_NOTES)
             .orderedAt(DEFAULT_ORDERED_AT);
         return userOrder;
@@ -111,6 +119,8 @@ public class UserOrderResourceIntTest {
         List<UserOrder> userOrderList = userOrderRepository.findAll();
         assertThat(userOrderList).hasSize(databaseSizeBeforeCreate + 1);
         UserOrder testUserOrder = userOrderList.get(userOrderList.size() - 1);
+        assertThat(testUserOrder.getPhotoUri()).isEqualTo(DEFAULT_PHOTO_URI);
+        assertThat(testUserOrder.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testUserOrder.getOrderNotes()).isEqualTo(DEFAULT_ORDER_NOTES);
         assertThat(testUserOrder.getOrderedAt()).isEqualTo(DEFAULT_ORDERED_AT);
     }
@@ -145,6 +155,8 @@ public class UserOrderResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(userOrder.getId().intValue())))
+            .andExpect(jsonPath("$.[*].photoUri").value(hasItem(DEFAULT_PHOTO_URI.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].orderNotes").value(hasItem(DEFAULT_ORDER_NOTES.toString())))
             .andExpect(jsonPath("$.[*].orderedAt").value(hasItem(DEFAULT_ORDERED_AT.toString())));
     }
@@ -160,6 +172,8 @@ public class UserOrderResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(userOrder.getId().intValue()))
+            .andExpect(jsonPath("$.photoUri").value(DEFAULT_PHOTO_URI.toString()))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.orderNotes").value(DEFAULT_ORDER_NOTES.toString()))
             .andExpect(jsonPath("$.orderedAt").value(DEFAULT_ORDERED_AT.toString()));
     }
@@ -183,6 +197,8 @@ public class UserOrderResourceIntTest {
         // Update the userOrder
         UserOrder updatedUserOrder = userOrderRepository.findOne(userOrder.getId());
         updatedUserOrder
+            .photoUri(UPDATED_PHOTO_URI)
+            .description(UPDATED_DESCRIPTION)
             .orderNotes(UPDATED_ORDER_NOTES)
             .orderedAt(UPDATED_ORDERED_AT);
 
@@ -195,6 +211,8 @@ public class UserOrderResourceIntTest {
         List<UserOrder> userOrderList = userOrderRepository.findAll();
         assertThat(userOrderList).hasSize(databaseSizeBeforeUpdate);
         UserOrder testUserOrder = userOrderList.get(userOrderList.size() - 1);
+        assertThat(testUserOrder.getPhotoUri()).isEqualTo(UPDATED_PHOTO_URI);
+        assertThat(testUserOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testUserOrder.getOrderNotes()).isEqualTo(UPDATED_ORDER_NOTES);
         assertThat(testUserOrder.getOrderedAt()).isEqualTo(UPDATED_ORDERED_AT);
     }

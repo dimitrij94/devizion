@@ -19,6 +19,7 @@
                     </a>
                 </li>
                 <li (mouseenter)="showServicesSubMenu()"
+                    (click)="toggleServicesSubMenu()"
                     (mouseleave)="hideServicesSubMenu()">
                     <a class="nav-link user-menu-item"
                        [@servicesLinkShadowState]="servicesLinkState"
@@ -40,9 +41,10 @@
                     </ul>
                 </li>
                 <li (mouseenter)="showPortfolioSubMenu()"
+                    (click)="togglePortfolioSubMenu()"
                     (mouseleave)="hidePortfolioSubMenu()">
                     <a class="nav-link user-menu-item"
-                       [@portfolioLinkShadowState]="profileMenuStatus"
+                       [@portfolioLinkShadowState]="portfolioMenuStatus"
                        href="javascript:void(0)"
                        id="portfolio-menu-item"
                        routerLinkActive="active-menu active-portfolio"
@@ -53,7 +55,7 @@
                     <ul>
                         <li class="profile-sub-menu"
                             *ngFor="let category of categories"
-                            [@portfolioSubmenuDropdown]="profileMenuStatus">
+                            [@portfolioSubmenuDropdown]="portfolioMenuStatus">
                             <a [routerLink]="'./portfolio/'+category.id">
                                 {{category.categoryName}}
                             </a>

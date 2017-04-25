@@ -1,20 +1,19 @@
-import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {AlertService, EventManager, JhiLanguageService} from 'ng-jhipster';
-import {Response} from '@angular/http';
-import {Account, LoginModalService, Principal} from '../shared';
-import {ProductService} from '../entities/product/product.service';
-import {Product} from '../entities/product/product.model';
-import {ProductCategoryService} from '../entities/product-category/product-category.service';
-import {ProductCategory} from '../entities/product-category/product-category.model';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {ImageService, productSubdirectory} from '../shared/image/image.service';
-import {Timer} from '../shared/timer';
-import {DomSanitizer} from '@angular/platform-browser';
+import {AfterViewInit, Component, HostListener, OnInit} from "@angular/core";
+import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
+import {Response} from "@angular/http";
+import {Account, LoginModalService, Principal} from "../shared";
+import {ProductService} from "../entities/product/product.service";
+import {Product} from "../entities/product/product.model";
+import {ProductCategory} from "../entities/product-category/product-category.model";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {ImageService, productSubdirectory} from "../shared/image/image.service";
+import {Timer} from "../shared/timer";
+import {DomSanitizer} from "@angular/platform-browser";
 import {Subject} from "rxjs";
-import {PortfolioEntryService} from "../entities/portfolio-entry/portfolio-entry.service";
-import {PortfolioEntry} from "../entities/portfolio-entry/portfolio-entry.model";
-import {fortyScalar, sixtyScalar} from "../shared/image/image-size.model";
+import {sixtyScalar} from "../shared/image/image-size.model";
+import {UserOrder} from "../entities/user-order/user-order.model";
+import {UserOrderService} from "../entities/user-order/user-order.service";
 const shuffleAnimationTime = 600;
 @Component({
     selector: 'jhi-home',
@@ -62,7 +61,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     shuffleForwardAnimationSubject: Subject<Array<Product>>;
     shuffleBackwardAnimationSubject: Subject<Array<Product>>;
 
-    portfolioGroups: Array<Array<PortfolioEntry>>;
+    portfolioGroups: Array<Array<UserOrder>>;
     portfolioSize: [number] = [4, 3, 4];
 
     @HostListener('window:resize', ['$event'])
@@ -89,7 +88,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 private productService: ProductService,
                 private eventManager: EventManager,
                 private alertService: AlertService,
-                private portfolioService: PortfolioEntryService,
+                private portfolioService: UserOrderService,
                 private domSanitizer: DomSanitizer) {
         this.jhiLanguageService.setLocations(['home']);
         this.shuffleForwardAnimationSubject = new Subject();
@@ -184,10 +183,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     loadAll() {
         this.portfolioService.query().subscribe(
             (res: Response) => {
-                let portfolio = <PortfolioEntry[]>res.json();
-                portfolio.map((portfolio) => {
-                    portfolio.photoUri = this.portfolioService.getImageUri(portfolio.photoUri);
-                });
+                let portfolio = <UserOrder[]>res.json();
+
                 let len = portfolio.length;
                 let n = this.numberOfPortfoliosGroupsDisplaed;
                 let i = 0;

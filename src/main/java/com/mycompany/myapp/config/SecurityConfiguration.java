@@ -116,6 +116,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/product-categories").permitAll()
             .antMatchers(HttpMethod.GET, "/api/product").permitAll()
             .antMatchers(HttpMethod.GET, "/api/custumers").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.GET, "/api/portfolio").permitAll()
             .antMatchers(HttpMethod.GET, "/api/user-orders").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers(HttpMethod.POST, "/api/product/image").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers(HttpMethod.GET, "/api/image/**").permitAll()

@@ -5,7 +5,7 @@ export enum ScreenSize{
     xs, sm, md, lg
 }
 
-
+export const imageScalars = [0.2, 0.4, 0.6, 0.8, 1.0];
 
 export class ImageScalar {
     size: number;
@@ -14,7 +14,20 @@ export class ImageScalar {
         this.size = size;
     }
 
-    toString(){
+    static getFillScreenScalar(numOfElements: number) {
+        let portfolioImageScalar = numOfElements / 100;
+        let scalarDifferences = imageScalars.map((scalar) => scalar - portfolioImageScalar);
+        let closesScalar = scalarDifferences.indexOf(Math.min.apply(null, imageScalars.map(Math.abs)));
+        switch (closesScalar){
+            case(0): return twentyScalar;
+            case(1): return fortyScalar;
+            case(2): return sixtyScalar;
+            case(3): return eightyScalar;
+            case(4): return hundredScalar;
+        }
+    }
+
+    toString() {
         return this.size.toString();
     }
 }

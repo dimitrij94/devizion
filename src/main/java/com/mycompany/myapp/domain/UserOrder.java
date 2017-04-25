@@ -1,7 +1,9 @@
 package com.mycompany.myapp.domain;
 
+import com.mycompany.myapp.service.dto.user_order.UserOrderDtoViews;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.cloud.cloudfoundry.com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +22,16 @@ public class UserOrder implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(UserOrderDtoViews.SharedView.class)
     private Long id;
+
+    @Column(name = "photo_uri")
+    @JsonView(UserOrderDtoViews.SharedView.class)
+    private String photoUri;
+
+    @Column(name = "description")
+    @JsonView(UserOrderDtoViews.SharedView.class)
+    private String description;
 
     @Column(name = "order_notes")
     private String orderNotes;
@@ -29,6 +40,7 @@ public class UserOrder implements Serializable {
     private LocalDate orderedAt;
 
     @ManyToOne
+    @JsonView(UserOrderDtoViews.PortfolioViewDto.class)
     private Product orderedProduct;
 
     @ManyToOne
@@ -40,6 +52,32 @@ public class UserOrder implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPhotoUri() {
+        return photoUri;
+    }
+
+    public UserOrder photoUri(String photoUri) {
+        this.photoUri = photoUri;
+        return this;
+    }
+
+    public void setPhotoUri(String photoUri) {
+        this.photoUri = photoUri;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public UserOrder description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getOrderNotes() {
@@ -118,6 +156,8 @@ public class UserOrder implements Serializable {
     public String toString() {
         return "UserOrder{" +
             "id=" + id +
+            ", photoUri='" + photoUri + "'" +
+            ", description='" + description + "'" +
             ", orderNotes='" + orderNotes + "'" +
             ", orderedAt='" + orderedAt + "'" +
             '}';

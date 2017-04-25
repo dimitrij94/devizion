@@ -16,6 +16,14 @@
     ],
     "fields": [
         {
+            "fieldName": "photoUri",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "orderNotes",
             "fieldType": "String"
         },

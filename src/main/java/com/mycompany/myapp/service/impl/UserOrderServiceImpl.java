@@ -3,26 +3,65 @@ package com.mycompany.myapp.service.impl;
 import com.mycompany.myapp.service.UserOrderService;
 import com.mycompany.myapp.domain.UserOrder;
 import com.mycompany.myapp.repository.UserOrderRepository;
+import com.mycompany.myapp.service.dto.user_order.UserOrderPortfolioDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing UserOrder.
  */
 @Service
 @Transactional
-public class UserOrderServiceImpl implements UserOrderService{
+public class UserOrderServiceImpl implements UserOrderService {
 
     private final Logger log = LoggerFactory.getLogger(UserOrderServiceImpl.class);
-    
+
     private final UserOrderRepository userOrderRepository;
 
     public UserOrderServiceImpl(UserOrderRepository userOrderRepository) {
         this.userOrderRepository = userOrderRepository;
+    }
+
+
+    @Override
+    public Page<UserOrder> findAll(Pageable pageable) {
+        return this.userOrderRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<UserOrderPortfolioDto> findAllPortfolios(Pageable pageable) {
+        Page<UserOrder> userOrderPage = this.findAll(pageable);
+        return UserOrderPortfolioDto.convertPage(pageable, userOrderPage);
+    }
+
+    @Override
+    public Page<UserOrder> findAllByProductId(Pageable pageable, Long productId) {
+        log.debug("Request to get Portfolio of the product with id: {}", productId);
+        return this.userOrderRepository.findAllByOrderedProductId(pageable, productId);
+    }
+
+    @Override
+    public UserOrderPortfolioDto findOnePortfolio(Long portfolioId) {
+        UserOrder userOrder = this.findOne(portfolioId);
+        return UserOrderPortfolioDto.getPortfolioFromUserOrder(userOrder);
+    }
+
+    public Page<UserOrder> findAllByProductId(PageRequest pageRequest, long productId) {
+        return this.userOrderRepository.findAllByOrderedProductId(pageRequest, productId);
+    }
+
+    @Override
+    public Page<UserOrderPortfolioDto> findAllPortfoliosByProductId(PageRequest pageRequest, long productId) {
+        return UserOrderPortfolioDto.convertPage(pageRequest, this.findAllByProductId(pageRequest, productId));
     }
 
     /**
@@ -39,9 +78,9 @@ public class UserOrderServiceImpl implements UserOrderService{
     }
 
     /**
-     *  Get all the userOrders.
-     *  
-     *  @return the list of entities
+     * Get all the userOrders.
+     *
+     * @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
@@ -53,10 +92,10 @@ public class UserOrderServiceImpl implements UserOrderService{
     }
 
     /**
-     *  Get one userOrder by id.
+     * Get one userOrder by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Override
     @Transactional(readOnly = true)
@@ -67,9 +106,9 @@ public class UserOrderServiceImpl implements UserOrderService{
     }
 
     /**
-     *  Delete the  userOrder by id.
+     * Delete the  userOrder by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     @Override
     public void delete(Long id) {

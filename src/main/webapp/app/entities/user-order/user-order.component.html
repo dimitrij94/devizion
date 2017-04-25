@@ -17,6 +17,8 @@
             <thead>
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="devizionApp.userOrder.photoUri">Photo Uri</span></th>
+            <th><span jhiTranslate="devizionApp.userOrder.description">Description</span></th>
             <th><span jhiTranslate="devizionApp.userOrder.orderNotes">Order Notes</span></th>
             <th><span jhiTranslate="devizionApp.userOrder.orderedAt">Ordered At</span></th>
             <th><span jhiTranslate="devizionApp.userOrder.orderedProduct">Ordered Product</span></th>
@@ -27,6 +29,8 @@
             <tbody>
             <tr *ngFor="let userOrder of userOrders ;trackBy: trackId">
                 <td><a [routerLink]="['../user-order', userOrder.id ]">{{userOrder.id}}</a></td>
+                <td>{{userOrder.photoUri}}</td>
+                <td>{{userOrder.description}}</td>
                 <td>{{userOrder.orderNotes}}</td>
                 <td>{{userOrder.orderedAt | date:'mediumDate'}}</td>
                 <td>

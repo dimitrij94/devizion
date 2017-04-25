@@ -15,6 +15,8 @@
             "detail": {
                 "title": "User Order"
             },
+            "photoUri": "Photo Uri",
+            "description": "Description",
             "orderNotes": "Order Notes",
             "orderedAt": "Ordered At",
             "orderedProduct": "Ordered Product",
