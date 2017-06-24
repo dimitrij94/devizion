@@ -3,8 +3,10 @@ package com.mycompany.myapp.service.impl;
 import com.mycompany.myapp.domain.ImageToken;
 import com.mycompany.myapp.service.ImageService;
 import com.mycompany.myapp.service.ImageTokenService;
+import com.mycompany.myapp.service.dto.ImageBounds;
 import com.mycompany.myapp.service.dto.MyImageSizeHolder;
 import com.mycompany.myapp.service.dto.ScreenSize;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.awt.RenderingHints;
 import java.util.Map;
 import java.util.HashMap;
-import java.awt.RenderingHints.Key;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.*;
 
 /**
@@ -93,28 +93,68 @@ public class ImageServiceImpl implements ImageService {
         return true;
     }
 
+    private String getFileFormat(String contentType) {
+        return contentType.split("/")[1];
+    }
+
     @Override
     public ResponseEntity<ImageToken> saveImage(String imageSubPath,
                                                 MultipartFile file) {
-        ByteArrayInputStream inStream = null;
-        FileOutputStream outStream = null;
+
         String fileName = file.getOriginalFilename();
         String filePath = this.imageRepositoryPath + imageSubPath + fileName;
         ImageToken imageToken = null;
-
+        String fileFormat = getFileFormat(file.getContentType());
         try {
-            byte[] bytes = file.getBytes();
-            BufferedOutputStream buffStream =
-                new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-            buffStream.write(bytes);
-            buffStream.close();
-            saveResizeCopies(fileName, filePath, file.getContentType(), imageSubPath);
+            saveFile(filePath, file.getBytes());
+            saveResizeCopies(fileName, filePath, fileFormat, imageSubPath);
             imageToken = imageTokenService.save(new ImageToken(fileName));
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<ImageToken>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<ImageToken>(imageToken, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ImageToken> saveCroppedImage(String imageSubPath, ImageBounds cropBounds) {
+
+        String fileName = "cropped_" + cropBounds.fileName;
+        String fileDir = this.imageRepositoryPath + imageSubPath;
+        String filePath = fileDir + fileName;
+        File imageFile = new File(fileDir + cropBounds.fileName);
+
+        String fileFormat = FilenameUtils.getExtension(cropBounds.fileName);
+
+        ImageToken imageToken = null;
+
+        try {
+            BufferedImage resizedCopy = this.cropImage(ImageIO.read(imageFile), cropBounds);
+            saveFile(filePath, this.getByteArrayFromBufferedImage(resizedCopy));
+            saveResizeCopies(fileName, filePath, fileFormat, imageSubPath);
+            imageToken = imageTokenService.save(new ImageToken(fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<ImageToken>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<ImageToken>(imageToken, HttpStatus.OK);
+    }
+
+    private byte[] getByteArrayFromBufferedImage(BufferedImage originalImage) throws IOException {
+        byte[] imageInByte;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(originalImage, "jpg", baos);
+            baos.flush();
+            imageInByte = baos.toByteArray();
+        }
+        return imageInByte;
+    }
+
+    private void saveFile(String filePath, byte[] bytes) throws IOException {
+        BufferedOutputStream buffStream =
+            new BufferedOutputStream(new FileOutputStream(new File(filePath)));
+        buffStream.write(bytes);
+        buffStream.close();
     }
 
     private void saveResizeCopies(String fileName, String path, String formatName, String subPath) throws IOException {
@@ -126,6 +166,7 @@ public class ImageServiceImpl implements ImageService {
         for (int i = 0; i < ScreenSize.values().length; i++) {
             MyImageSizeHolder imageSize = imageSizeHolders[i];
             for (int j = 0; j < MyImageSizeHolder.NUM_SCALARS; j++) {
+                if (image == null) image = ImageIO.read(new File(path));
                 scaledImage = createResizeCopy(image, imageSize.getWidths()[j], imageSize.getHeights()[j], true);
                 saveResizeCopy(
                     scaledImage,
@@ -152,7 +193,7 @@ public class ImageServiceImpl implements ImageService {
                 scalarName + "/" +
                 fileOriginalName);
             if (!newImageFile.exists()) newImageFile.createNewFile();
-            ImageIO.write(image, formatName.split("/")[1], newImageFile);
+            ImageIO.write(image, formatName, newImageFile);
         } catch (IOException ex) {
             log.error("Failed to save the resize version of image" + fileOriginalName + ex.getMessage());
         }
@@ -160,12 +201,12 @@ public class ImageServiceImpl implements ImageService {
 
     private MyImageSizeHolder[] getScaledParameters(int width, int height) {
         float widthToHeightRation = (float) height / (float) width;
+
         MyImageSizeHolder[] imageSizeHolders = new MyImageSizeHolder[ScreenSize.values().length];
         ScreenSize[] screenSizes = ScreenSize.values();
         for (int i = 0; i < screenSizes.length; i++) {
             int screenMaxSize = screenSizes[i].getMaxWidth();
-            if (screenMaxSize * MyImageSizeHolder.getScalars()[0] <= width)
-                imageSizeHolders[i] = new MyImageSizeHolder(screenMaxSize, new Float(screenMaxSize * widthToHeightRation).intValue());
+            imageSizeHolders[i] = new MyImageSizeHolder(screenMaxSize, new Float(screenMaxSize * widthToHeightRation).intValue());
         }
         return imageSizeHolders;
     }
@@ -178,6 +219,7 @@ public class ImageServiceImpl implements ImageService {
         //RenderingHints.KEY_ANTIALIASING  => RenderingHints.VALUE_ANTIALIAS_ON
         //	KEY_RENDERING 	VALUE_RENDER_QUALITY
         Map<RenderingHints.Key, Object> renderingHintsMap = new HashMap<RenderingHints.Key, Object>(3);
+        renderingHintsMap.put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         renderingHintsMap.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         renderingHintsMap.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         renderingHintsMap.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -190,6 +232,10 @@ public class ImageServiceImpl implements ImageService {
         g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
         g.dispose();
         return scaledBI;
+    }
+
+    private BufferedImage cropImage(BufferedImage originalImage, ImageBounds bounds) {
+        return originalImage.getSubimage(bounds.left, bounds.top, bounds.width, bounds.height);
     }
 }
 

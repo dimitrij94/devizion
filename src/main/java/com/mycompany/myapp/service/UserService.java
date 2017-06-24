@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -98,7 +97,7 @@ public class UserService {
         newUser.setImageUrl(imageUrl);
         newUser.setLangKey(langKey);
         // new user is not active
-        newUser.setActivated(false);
+        newUser.setActivated(true);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         authorities.add(authority);
@@ -107,7 +106,7 @@ public class UserService {
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
-/*
+
     public User createAdmin(String login, String password, String firstName, String lastName, String email,
                            String imageUrl, String langKey) {
 
@@ -133,7 +132,7 @@ public class UserService {
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
-*/
+
     public User createUser(UserDTO userDTO) {
         User user = new User();
         user.setLogin(userDTO.getLogin());

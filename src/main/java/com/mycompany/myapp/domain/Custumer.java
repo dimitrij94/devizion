@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,14 +25,19 @@ public class Custumer implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "custumer_name")
+    @NotNull
+    @Column(name = "custumer_name", nullable = false)
     private String custumerName;
 
-    @Column(name = "custumer_surname")
+    @NotNull
+    @Column(name = "custumer_surname", nullable = false)
     private String custumerSurname;
 
     @Column(name = "custumer_contact_number")
     private String custumerContactNumber;
+
+    @Column(name = "custumer_image_uri")
+    private String custumerImageUri;
 
     @OneToMany(mappedBy = "custumer")
     @JsonIgnore
@@ -83,6 +89,19 @@ public class Custumer implements Serializable {
 
     public void setCustumerContactNumber(String custumerContactNumber) {
         this.custumerContactNumber = custumerContactNumber;
+    }
+
+    public String getCustumerImageUri() {
+        return custumerImageUri;
+    }
+
+    public Custumer custumerImageUri(String custumerImageUri) {
+        this.custumerImageUri = custumerImageUri;
+        return this;
+    }
+
+    public void setCustumerImageUri(String custumerImageUri) {
+        this.custumerImageUri = custumerImageUri;
     }
 
     public Set<UserOrder> getCustumerOrders() {
@@ -137,6 +156,7 @@ public class Custumer implements Serializable {
             ", custumerName='" + custumerName + "'" +
             ", custumerSurname='" + custumerSurname + "'" +
             ", custumerContactNumber='" + custumerContactNumber + "'" +
+            ", custumerImageUri='" + custumerImageUri + "'" +
             '}';
     }
 }

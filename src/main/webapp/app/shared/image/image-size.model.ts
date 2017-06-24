@@ -8,16 +8,16 @@ export enum ScreenSize{
 export const imageScalars = [0.2, 0.4, 0.6, 0.8, 1.0];
 
 export class ImageScalar {
-    size: number;
+    size: number|string;
 
-    constructor(size: number) {
+    constructor(size: number|string) {
         this.size = size;
     }
 
     static getFillScreenScalar(numOfElements: number) {
-        let portfolioImageScalar = numOfElements / 100;
-        let scalarDifferences = imageScalars.map((scalar) => scalar - portfolioImageScalar);
-        let closesScalar = scalarDifferences.indexOf(Math.min.apply(null, imageScalars.map(Math.abs)));
+        let portfolioImageScalar = (100/numOfElements)/100;
+        let scalarDifferences = imageScalars.map((scalar) => Math.abs(scalar - portfolioImageScalar));
+        let closesScalar = scalarDifferences.indexOf(Math.min.apply(null, scalarDifferences));
         switch (closesScalar){
             case(0): return twentyScalar;
             case(1): return fortyScalar;
@@ -35,7 +35,7 @@ export const twentyScalar: ImageScalar = new ImageScalar(0.2);
 export const fortyScalar: ImageScalar = new ImageScalar(0.4);
 export const sixtyScalar: ImageScalar = new ImageScalar(0.6);
 export const eightyScalar: ImageScalar = new ImageScalar(0.8);
-export const hundredScalar: ImageScalar = new ImageScalar(1.0);
+export const hundredScalar: ImageScalar = new ImageScalar('1.0');
 
 export interface ImageSize {
     scalar?: ImageScalar;

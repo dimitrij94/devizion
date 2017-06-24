@@ -11,5 +11,5 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory,Long> {
-
+    ProductCategory findTop1By();
 }

@@ -6,6 +6,7 @@ import com.mycompany.myapp.domain.ProductCategory;
 import com.mycompany.myapp.repository.ProductCategoryRepository;
 import com.mycompany.myapp.service.ImageService;
 import com.mycompany.myapp.service.ProductCategoryService;
+import com.mycompany.myapp.service.ProductService;
 import com.mycompany.myapp.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -64,6 +65,9 @@ public class ProductCategoryResourceIntTest {
     private ImageService imageService;
 
     @Autowired
+    private ProductService productService;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restProductCategoryMockMvc;
@@ -73,7 +77,7 @@ public class ProductCategoryResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ProductCategoryResource productCategoryResource = new ProductCategoryResource(productCategoryService, imageService);
+        ProductCategoryResource productCategoryResource = new ProductCategoryResource(productCategoryService, productService, imageService);
         this.restProductCategoryMockMvc = MockMvcBuilders.standaloneSetup(productCategoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -82,7 +86,7 @@ public class ProductCategoryResourceIntTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */

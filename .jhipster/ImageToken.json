@@ -4,7 +4,10 @@
     "fields": [
         {
             "fieldName": "path",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20170413080221",

@@ -50,8 +50,7 @@ public class CacheConfiguration {
             cm.createCache(com.mycompany.myapp.domain.ProductCategory.class.getName(), jcacheConfiguration);
             cm.createCache(com.mycompany.myapp.domain.ProductCategory.class.getName() + ".categoryProducts", jcacheConfiguration);
             cm.createCache(com.mycompany.myapp.domain.ImageToken.class.getName(), jcacheConfiguration);
-            cm.createCache(com.mycompany.myapp.domain.Product.class.getName() + ".portfolioEntries", jcacheConfiguration);
-            cm.createCache(com.mycompany.myapp.domain.PortfolioEntry.class.getName(), jcacheConfiguration);
+            cm.createCache(com.mycompany.myapp.domain.Product.class.getName() + ".orderedProducts", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -11,6 +11,7 @@ import {ProductService} from './product.service';
 import {ProductCategory, ProductCategoryService} from '../product-category';
 import {ImageToken} from '../image-token';
 import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
+import {MyImageService} from "../../shared/image/image.service";
 
 @Component({
     selector: 'jhi-product-dialog',
@@ -31,13 +32,14 @@ export class ProductDialogComponent implements OnInit {
                 private productService: ProductService,
                 private authServiceProvider: AuthServerProvider,
                 private productCategoryService: ProductCategoryService,
+                private imageService:MyImageService,
                 private eventManager: EventManager) {
         this.jhiLanguageService.setLocations(['product']);
     }
 
     onRemove($event) {
-        this.productService
-            .productImageUploadCancel(this.imageToken[$event.file.name].id)
+        this.imageService
+            .imageUploadCancel(this.imageToken[$event.file.name].id, 'products')
             .subscribe(() => {
                 delete this.imageToken[$event.file.name];
             });

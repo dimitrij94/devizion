@@ -1,243 +1,302 @@
-import {AfterViewInit, Component, HostListener, OnInit} from "@angular/core";
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from "@angular/core";
 import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
-import {Response} from "@angular/http";
 import {Account, LoginModalService, Principal} from "../shared";
 import {ProductService} from "../entities/product/product.service";
-import {Product} from "../entities/product/product.model";
-import {ProductCategory} from "../entities/product-category/product-category.model";
+import {ProductCategory, ProductCategoryWithProducts} from "../entities/product-category/product-category.model";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {ImageService, productSubdirectory} from "../shared/image/image.service";
-import {Timer} from "../shared/timer";
-import {DomSanitizer} from "@angular/platform-browser";
-import {Subject} from "rxjs";
-import {sixtyScalar} from "../shared/image/image-size.model";
+import {DOCUMENT, DomSanitizer} from "@angular/platform-browser";
+import {Observable, Subject, Subscription} from "rxjs";
 import {UserOrder} from "../entities/user-order/user-order.model";
 import {UserOrderService} from "../entities/user-order/user-order.service";
-const shuffleAnimationTime = 600;
+import {ActivatedRoute} from "@angular/router";
+
+import "fullpage.js/dist/jquery.fullpage.js";
+import {PortfolioComponent} from "../portfolio/portfolio-cards-grid-component/portfolio.component";
+import {NavbarComponent} from "../layouts/navbar/navbar.component";
+import {LampsComponent, scrollElasticX} from "./lapm-component/lamps.component";
+import {Product} from "../entities/product/product.model";
+import {Page} from "../shared/page.model";
+
+const numberOfPages = 5;
+const scrollMaxDuration = 7000;
+export const widthOfServiceCard = 300; //px
+enum PagesNames{
+    firsPage, secondPage, thirdPage
+}
 @Component({
     selector: 'jhi-home',
     templateUrl: './home.component.html',
     styleUrls: [
         'home.scss'
     ],
-    animations: [trigger('animateCardsGroupShift', [
-        state('forward', style({left: '0', opacity: 1})),
-
-        state('backward', style({left: '0', opacity: 1})),
-
-        transition('void => forward', [
-            style({left: '-100%', opacity: '0'}),
-            animate('600ms')
-        ]),
-
-        transition('void => backward', [
-            style({left: '100%', opacity: '0'}),
-            animate('600ms')
-        ]),
-
-        transition('backward=>void', [
-            animate('600ms', style({'left': '-100%', 'opacity': '0'}))
-        ]),
-        transition('forward=>void', [
-            animate('600ms', style({'left': '100%', 'opacity': '0'}))
-        ])
-    ])]
+    encapsulation: ViewEncapsulation.None
 })
-export class HomeComponent implements OnInit, AfterViewInit {
-    numberOfPortfoliosGroupsDisplaed: any;
-    scrollingTimer: Timer;
-    orientation = 'none';
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+    showMobileNavbar = false;
+    parallaxScrollSubscription: Subscription;
+    navbarPositionY: any;
+    navbarPosition = 'relative';
+    windowScrollSubscription: Subscription;
+
     account: Account;
     modalRef: NgbModalRef;
     categories: ProductCategory[] = [];
-    activeTabIndex = 0;
-    numberOfServicesDisplayed = 2;
-    cardsGroups = [];
-    leftChevronUrl = require('../../content/images/icons/ic_chevron_left_24px.svg');
-    rightChevronUrl = require('../../content/images/icons/ic_chevron_right_24px.svg');
-    oneServiceCardSize = 400; //px
+    categoryTabIndex = 0;
+    numberOfServicesDisplayed = 3;
 
-    shuffleForwardAnimationSubject: Subject<Array<Product>>;
-    shuffleBackwardAnimationSubject: Subject<Array<Product>>;
 
-    portfolioGroups: Array<Array<UserOrder>>;
-    portfolioSize: [number] = [4, 3, 4];
+    widthOfPortfolioCard = 200;
+    numberOfPortfolioCols = 3;
+    portfolio: Array<UserOrder>;
 
-    @HostListener('window:resize', ['$event'])
-    onResize(event) {
-        let windowWidth = event.target.innerWidth;
-        let oldNum = this.numberOfServicesDisplayed;
-        if (windowWidth <= 599) {
-            this.numberOfServicesDisplayed = 1;
-        }
-        if (windowWidth >= 600 && windowWidth <= 959) {
-            this.numberOfServicesDisplayed = Math.floor(windowWidth / this.oneServiceCardSize);
-        }
-        if (windowWidth >= 960) {
-            this.numberOfServicesDisplayed = Math.floor((windowWidth * 0.8) / this.oneServiceCardSize);
-        }
-        if (oldNum != this.numberOfServicesDisplayed) {
-            this.getStartingActiveServices();
-        }
-    }
+    @ViewChild('portfolioElRef')
+    portfolioElRef: PortfolioComponent;
+
+    @ViewChild('lampsComponentElementRef')
+    lampsComponentElementRef: LampsComponent;
+
+    @ViewChild('navbarElementRef')
+    navbarElementRef: ElementRef;
+
+    @ViewChild('whyUsElement')
+    whyUsElement: ElementRef;
+
+    @ViewChild('servicesElementRef')
+    servicesElementRef: ElementRef;
+
+    @ViewChild('servicesElementRef')
+    productsEl: ElementRef;
+
+    @ViewChild('navbarComponentElRef')
+    navbarComponentElRef: NavbarComponent;
+
+    /*@ViewChild('productWindowEl')
+     productWindowEl: ElementRef;*/
+
+    @ViewChild('portfolioWindowEl')
+    portfolioWindowEl: ElementRef;
+
+    @ViewChild('parallaxStripsElRef')
+    parallaxStripsElRef: ElementRef;
+
+    perPxlScrollStripsParalllax: number;
+
+    private windowResizeSubscription: Subscription;
+    private portfolioOffsetsY: number;
+
+    lampsRun = true;
+
+    @ViewChild('portfolioWrapperEl')
+    portfolioWrapperEl: ElementRef;
+
+    @ViewChild('aboutUsWrapperEL')
+    aboutUsWrapperEL: ElementRef;
+
+    prodWindowPerPxlChange: number;
+
+    navbarIdentifierPosition = 0;
+    navbarPositionSubject = new Subject<number>();
+
+    navbarPositionBreakpoints: Array<number>;
+
+    navbarHeight = window.innerHeight * 0.11;
+    perPxlScrollTime: number;
+    categoryTabLoading: boolean = false;
+    showCategoryRow: Array<boolean>;
+
 
     constructor(private jhiLanguageService: JhiLanguageService,
                 private principal: Principal,
+                @Inject(DOCUMENT) private document: Document,
+                private route: ActivatedRoute,
                 private loginModalService: LoginModalService,
                 private productService: ProductService,
                 private eventManager: EventManager,
                 private alertService: AlertService,
-                private portfolioService: UserOrderService,
+                private userOrderService: UserOrderService,
                 private domSanitizer: DomSanitizer) {
         this.jhiLanguageService.setLocations(['home']);
-        this.shuffleForwardAnimationSubject = new Subject();
-        this.shuffleBackwardAnimationSubject = new Subject();
+
+        let resolvedData = this.route.snapshot.data;
+        let categories = <Array<ProductCategory>> resolvedData['categories'].json();
+        let firstCategory = <ProductCategoryWithProducts> resolvedData['firstCategory'];
+        categories[0].categoryProducts = this.productService.mapProductImageUrls(firstCategory.categoryProductsPage.content, domSanitizer);
+        //let indexOfFirst = categories.indexOf(categories.find((category) => category.id === firstCategory.id));
+        //delete categories[indexOfFirst];
+
+
+        this.showCategoryRow = categories.map(this.isCategoryNotEmpty);
+        this.categories = [categories[0]];
+        this.portfolio = this.userOrderService.parsePortfolio(this.route.snapshot.data['portfolio'].json(), this.domSanitizer);
     }
 
 
-    ngAfterViewInit(): void {
-        this.shuffleForwardAnimationSubject
-            .throttleTime(shuffleAnimationTime)
-            .subscribe(
-                () => {
-                    let products = this.getNextProducts();
-                    this.orientation = 'forward';
-                    this.cardsGroups.shift();
-                    this.cardsGroups.push(products);
-                },
-                (error) => {
-                    console.log(error);
-                });
-
-        this.shuffleBackwardAnimationSubject
-            .throttleTime(shuffleAnimationTime)
-            .subscribe(
-                () => {
-                    let products = this.getPreciousProducts();
-                    this.orientation = 'backward';
-                    this.cardsGroups.pop();
-                    this.cardsGroups.unshift(products);
-                }
-            );
-    }
-
-
-    pauseTimer() {
-        this.scrollingTimer.pause();
-    }
-
-    resumeTimer() {
-        this.scrollingTimer.resume();
-    }
-
-    getNextProducts(): Product[] {
-        let activeCategoryProducts = this.categories[this.activeTabIndex].categoryProducts;
-        let n = this.numberOfServicesDisplayed;
-        if (activeCategoryProducts.length > n) {
-            let newProductsGroup = [];
-            let firstActiveIndex = activeCategoryProducts.indexOf(this.cardsGroups[0][0]);
-            let index;
-            for (let i = 0; i < n; i++) {
-                index = firstActiveIndex + n + i;
-                index = index > activeCategoryProducts.length - 1 ?
-                    index - activeCategoryProducts.length :
-                    index;
-                newProductsGroup.push(activeCategoryProducts[index]);
-            }
-            return newProductsGroup;
-        }
-    }
-
-    getPreciousProducts(): Product[] {
-        let activeCategoryProducts = this.categories[this.activeTabIndex].categoryProducts;
-        let n = this.numberOfServicesDisplayed;
-
-        if (activeCategoryProducts.length > n) {
-            let newProductsGroup = [];
-            let lastActiveIndex = activeCategoryProducts.indexOf(this.cardsGroups[0][n - 1]);
-            let index;
-            for (let i = n - 1; i >= 0; i--) {
-                index = lastActiveIndex - i - n;
-                index = index < 0 ?
-                    activeCategoryProducts.length + index :
-                    index;
-                newProductsGroup.push(activeCategoryProducts[index]);
-            }
-            return newProductsGroup;
-        }
-    }
-
-
-    scrollFroward() {
-        this.shuffleForwardAnimationSubject.next();
-    }
-
-    selectActiveTabIndex($event) {
-        this.orientation = 'none';
-        this.activeTabIndex = $event.index;
-        this.getStartingActiveServices();
-    }
-
-
-    loadAll() {
-        this.portfolioService.query().subscribe(
-            (res: Response) => {
-                let portfolio = <UserOrder[]>res.json();
-
-                let len = portfolio.length;
-                let n = this.numberOfPortfoliosGroupsDisplaed;
-                let i = 0;
-                while (i < len) {
-                    let size = Math.ceil((len - i) / n--);
-                    this.portfolioGroups.push(portfolio.slice(i, i += size));
-                }
-            }
-        );
-        this.productService.query().subscribe(
-            (res: Response) => {
-                let products = <Product[]> res.json();
-                let categories = {};
-                products.forEach((product: Product) => {
-                    //product.productImageUri = ImageService.getProductImageUri(product.productImageUri);
-                    product.productImageUri = ImageService.getImagePathOfSize(
-                        productSubdirectory,
-                        product.productImageUri,
-                        window.innerWidth,
-                        sixtyScalar
-                    );
-                    this.domSanitizer.bypassSecurityTrustUrl(product.productImageUri);
-                    let cId = product.productCategory.id;
-                    if (!categories[cId]) categories[cId] = product.productCategory;
-                    delete product.productCategory;
-                    if (!categories[cId].categoryProducts) categories[cId].categoryProducts = [];
-                    categories[cId].categoryProducts.push(product);
-                });
-                for (let category in categories) {
-                    this.categories.push(categories[category]);
-                }
-                this.getStartingActiveServices();
-                this.scrollingTimer = new Timer(6000, this.scrollFroward.bind(this));
-            },
-            (res: Response) => this.onError(res.json())
-        );
-    }
-
-    getStartingActiveServices() {
-        let activeCategory = this.categories[this.activeTabIndex];
-        let products = activeCategory.categoryProducts;
-        this.cardsGroups = [products.slice(0,
-            this.numberOfServicesDisplayed <= products.length ? this.numberOfServicesDisplayed : products.length)];
+    ngOnDestroy(): void {
+        this.windowResizeSubscription.unsubscribe();
+        this.windowScrollSubscription.unsubscribe();
     }
 
     ngOnInit() {
-        this.loadAll();
         this.principal.identity().then((account) => {
             this.account = account;
         });
         this.registerAuthenticationSuccess();
+        this.onResize();
     }
 
+    ngAfterViewInit(): void {
+        this.navbarPositionY = this.navbarElementRef.nativeElement.getBoundingClientRect().top;
+        this.portfolioOffsetsY = this.productsEl.nativeElement.getBoundingClientRect().top;
+
+        let body = this.document.body,
+            html = this.document.documentElement;
+
+        let documentHeight = Math.max(body.scrollHeight, body.offsetHeight,
+            html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+        let productsOffsetTop = this.servicesElementRef.nativeElement.getBoundingClientRect().top;
+
+        /*let productsHeight = window.innerHeight;
+         let productsWindowHeight = window.innerHeight*0.8;
+         let prodWindowFinalMargin = -(productsHeight - (productsHeight - productsWindowHeight) / 2);
+         let headerHeight = window.innerHeight * 0.1;
+         this.prodWindowPerPxlChange = prodWindowFinalMargin / (productsOffsetTop + headerHeight); */
+
+        this.navbarPositionBreakpoints = [
+            0,//lamps header
+            this.whyUsElement.nativeElement.getBoundingClientRect().top + 20,
+            productsOffsetTop,
+            this.portfolioWrapperEl.nativeElement.getBoundingClientRect().top,
+            this.aboutUsWrapperEL.nativeElement.getBoundingClientRect().top,
+            documentHeight
+        ];
+
+        this.perPxlScrollTime = scrollMaxDuration / this.navbarPositionBreakpoints[this.navbarPositionBreakpoints.length - 1];
+
+
+        this.perPxlScrollStripsParalllax = (window.innerHeight * 8) / documentHeight;
+
+
+        this.windowResizeSubscription = Observable.fromEvent(window, 'resize')
+            .subscribe(this.onResize.bind(this));
+
+        let scrollObservable = Observable.fromEvent(window, 'scroll');
+        this.windowScrollSubscription = scrollObservable
+            .skip(10)
+            .subscribe(this.onScroll.bind(this));
+
+        this.parallaxScrollSubscription = scrollObservable
+            .subscribe(this.parallaxElements.bind(this));
+    }
+
+
+    onResize() {
+        let windowWidth = window.innerWidth;
+        let oldNumOfPortfolios = this.numberOfPortfolioCols;
+        let newNumOfPortfolios;
+
+        if (windowWidth <= 599) {
+            newNumOfPortfolios = 2;
+            this.showMobileNavbar = true;
+        }
+
+        if (windowWidth > 599) {
+            this.showMobileNavbar = false;
+            newNumOfPortfolios = Math.floor((windowWidth * 0.9) / this.widthOfPortfolioCard)
+        }
+
+        if (oldNumOfPortfolios != newNumOfPortfolios) {
+            this.numberOfPortfolioCols = newNumOfPortfolios;
+        }
+    }
+
+    onScroll(event) {
+        if (!this.showMobileNavbar) {
+            let viewPointMargin = 70;
+            let scrollTop = this.document.body.scrollTop;
+            let viewPointPosition = scrollTop + this.navbarHeight + viewPointMargin;
+
+            for (let i = 0; i < this.navbarPositionBreakpoints.length - 1; i++) {
+                if (this.navbarPositionBreakpoints[i + 1] > viewPointPosition &&
+                    this.navbarPositionBreakpoints[i] <= viewPointPosition) {
+                    if (i != this.navbarIdentifierPosition) {
+                        this.navbarPositionSubject.next(i);
+                        this.navbarIdentifierPosition = i;
+                        break;
+                    }
+                }
+            }
+
+            if (scrollTop >= this.navbarPositionY) {
+                if (this.lampsRun) {
+                    this.lampsComponentElementRef.disableEnableComponent.next(false);
+                    this.lampsRun = false;
+                }
+                this.navbarComponentElRef.toggleFixedState();
+            }
+
+            else {
+                if (!this.lampsRun) {
+                    this.lampsComponentElementRef.disableEnableComponent.next(true);
+                    this.lampsRun = true;
+                }
+                this.navbarComponentElRef.toggleRelativeState();
+            }
+        }
+    }
+
+    isCategoryNotEmpty(category: ProductCategory) {
+        return category.categoryProducts && category.categoryProducts !== []
+    }
+
+    parallaxElements($event) {
+        let scrollTop = this.document.body.scrollTop;
+        // this.productWindowEl.nativeElement.style.marginTop = scrollTop * this.prodWindowPerPxlChange + 'px ';
+        this.parallaxStripsElRef.nativeElement.style.marginTop = -scrollTop / 1.5 + 'px';
+    }
+
+    switchShowCategoryRowTo(index: number) {
+        this.showCategoryRow.forEach((val: boolean, i: number) => {
+            val = i === index;
+        })
+    }
+
+    selectActiveTabIndex($event) {
+        let newIndex = $event.index;
+        let newCategory = this.categories[newIndex];
+
+        if (this.isCategoryNotEmpty(newCategory)) {
+            this.categoryTabLoading = true;
+            this.loadCategoryProducts(newIndex)
+                .subscribe((products: Page<Array<Product>>) => {
+                    this.categories[newIndex].categoryProducts = products.content;
+                    this.categoryTabLoading = false;
+                    this.switchShowCategoryRowTo(newIndex);
+                    this.categoryTabIndex = newIndex;
+                });
+            return false;
+        }
+        else {
+            this.switchShowCategoryRowTo(newIndex);
+            this.categoryTabIndex = newIndex;
+        }
+    }
+
+
+    loadCategoryProducts(index: number): Observable<Page<Array<Product>>> {
+        return this.productService.findByCategoryId(this.categories[index].id, {page: 0});
+    }
 
     private onError(error) {
         this.alertService.error(error.message, null, null);
@@ -257,6 +316,47 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     login() {
         this.modalRef = this.loginModalService.open();
+    }
+
+    scrollToPosition(position: number) {
+        let finishPageScroll = this.navbarPositionBreakpoints[position] - this.navbarHeight;
+        let scrollStart = this.document.body.scrollTop;
+        let animationStart = performance.now();
+        //true => moving up | false => moving down
+        //let direction = scrollStart < finishPageScroll;
+
+        let breakpointsLength = this.navbarPositionBreakpoints.length;
+
+        let easingFunction =
+            (position < breakpointsLength - 2) ?
+                this.bowEaseIn : this.circ;
+
+        let easingFunctionWithDirection = this.makeEaseOut(easingFunction, scrollElasticX);
+        let delta = finishPageScroll - scrollStart;
+        let scrollDuration = Math.abs(finishPageScroll - scrollStart) * this.perPxlScrollTime;
+
+        window.requestAnimationFrame(function animateScrollStep(time) {
+            let animationPrcnt = (time - animationStart) / scrollDuration;
+            if (animationPrcnt <= 1) {
+                let increment = easingFunctionWithDirection(animationPrcnt);
+                window.scrollTo(0, scrollStart + (increment * delta));
+                window.requestAnimationFrame(animateScrollStep);
+            }
+        })
+    }
+
+    bowEaseIn(timeFraction, x) {
+        return Math.pow(timeFraction, 2) * ((x + 1) * timeFraction - x)
+    }
+
+    circ(timeFraction) {
+        return timeFraction ** 3;
+    }
+
+    makeEaseOut(timing, x?) {
+        return function (timeFraction) {
+            return 1 - timing(1 - timeFraction, x);
+        }
     }
 }
 

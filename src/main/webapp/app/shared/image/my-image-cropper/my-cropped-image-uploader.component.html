@@ -1,0 +1,15 @@
+<img-cropper #cropper [image]="data" [settings]="cropperSettings" (onCrop)="cropped($event)"></img-cropper>
+
+<div class="file-upload">
+    <input #imageInput id="custom-input" type="file" (change)="fileChangeListener($event)"/>
+</div>
+<div class="result" *ngIf="data.image">
+    <div class="crop-menu">
+        <div class="cancel-button" *ngIf="isImageSaved" (click)="imageUploadCanceled()"></div>
+        <div class="crop-button" [ngClass]="{'disabled':isUploadRunning}" (click)="postImage()"></div>
+    </div>
+    <img [src]="data.image"
+         [width]="cropperSettings.croppedWidth"
+         [height]="cropperSettings.croppedHeight">
+    <md-progress-spinner id="progress-spinner" *ngIf="isUploadRunning" mode="indeterminate"></md-progress-spinner>
+</div>

@@ -1,0 +1,80 @@
+@import './../../../content/scss/varibles';
+
+#main-grid {
+    position: relative;
+    //margin-bottom: 24px;
+    #main-grid-wrapper {
+        height: 96%;
+        width: 90%;
+        margin: 2% 0 2% 5%;
+        portfolio-flipping-card.my-grid-tile {
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+        }
+        #cards-controlls {
+            width: 100%;
+            height: 100%;
+            background-color: $cyan-accent;
+            display: table;
+            .caption {
+                font-size: 1.5em;
+                font-family: Roboto, "Helvetica Neue", sans-serif;
+                width: 40%;
+                vertical-align: middle;
+                display: table-cell;
+            }
+            .scroller {
+                width: 30%;
+                height: 2em;
+                display: table-cell;
+                cursor: pointer;
+                &.forward {
+                    background: url('../../../content/images/icons/ic_chevron_right_24px.svg') no-repeat center center;
+                }
+                &.backward {
+                    background: url('../../../content/images/icons/ic_chevron_left_24px.svg') no-repeat center center;
+                }
+            }
+        }
+    }
+    #modal-window {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.3);
+        overflow: hidden;
+        transition: left 1s, top 1s, width 1s, height 1s;
+        #preloader {
+            font-size: 2em;
+        }
+        #portfolio-image {
+            transition: left 1s, top 1s, width 1s, height 1s;
+            position: absolute;
+        }
+        #modal-controls {
+            @include transition(opacity 0.3s linear);
+            opacity: 1;
+            position: absolute;
+            right: -14em;
+            top: 0;
+            width: 14em;
+            height: 100%;
+            padding: 12px;
+            background-color: white;
+            &:hover {
+                opacity: 0.3;
+            }
+            #close-switch {
+                background: url('../../../content/images/icons/ic_clear_black_24px.svg');
+                width: 1.5em;
+                height: 1.5em;
+                background-size: contain;
+                right: 0;
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                z-index: 12;
+            }
+        }
+    }
+
+}

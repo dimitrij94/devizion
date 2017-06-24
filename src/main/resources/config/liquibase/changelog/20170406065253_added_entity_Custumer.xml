@@ -23,14 +23,18 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="custumer_name" type="varchar(255)">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
 
             <column name="custumer_surname" type="varchar(255)">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
 
             <column name="custumer_contact_number" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="custumer_image_uri" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 

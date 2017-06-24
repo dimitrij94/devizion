@@ -1,444 +1,56 @@
-<nav class="navbar navbar-toggleable-md jh-navbar">
-    <div class="jh-logo-container float-left">
-        <a class="jh-navbar-toggler hidden-lg-up float-right" href="javascript:void(0);" data-toggle="collapse"
-           data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-           aria-label="Toggle navigation" (click)="toggleNavbar()">
-            <i class="fa fa-bars"></i>
-        </a>
-        <a class="navbar-brand logo float-left" routerLink="/" (click)="cfollapseNavbar()">
-            <span class="logo-img"></span>
-            <span jhiTranslate="global.title" class="navbar-title">Devizion</span> <span class="navbar-version">{{version}}</span>
-        </a>
-    </div>
-
-    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed">
-        <!-- administrators and moderators navigation menu -->
-        <ul class="navbar-nav">
-            <!-- Home menu item option -->
-            <li class="nav-item">
-                <a
-                    [@homeLinkShadowState]="homeLinkShadow"
-                    class="nav-link user-menu-item"
-                    (mouseenter)="showHomeShadow()"
-                    (mouseleave)="hideHomeShadow()"
-                    routerLink="/"
-                    routerLinkActive="active-home"
-                    id="home-menu-item"
-                    (click)="collapseNavbar()">
-                    <span jhiTranslate="global.menu.home">Home</span>
-                </a>
-            </li>
-
-            <!-- Services menu item option -->
-            <li class="nav-item">
-                <a class="nav-link user-menu-item"
-                   [@servicesLinkShadowState]="servicesLinkState"
-                   (mouseenter)="showServicesSubMenu()"
-                   (mouseleave)="hideServicesSubMenu()"
-                   href="javascript:void(0)"
-                   id="services-menu-item"
-                   routerLinkActive="active-menu active-services"
-                   routerLink="services"
-                   jhiTranslate="global.menu.services.main">
-                    Послуги
-                </a>
-                <ul>
-                    <li *ngFor="let childNode of servicesOptions">
-                        <a class="dropdown-item"
-                           [routerLink]="childNode.href"
-                           [jhiTranslate]="childNode.translateVar"
-                           (click)="collapseNavbar()">
-                            {{childNode.name}}
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-
-        </ul>
-    </div>
-</nav>
-
-
-
-
-
-
-
-<div [ngSwitch]="isAuthenticated()">
-    <nav class="navbar navbar-toggleable-md jh-navbar">
-        <div class="jh-logo-container float-left">
-            <a class="jh-navbar-toggler hidden-lg-up float-right" href="javascript:void(0);" data-toggle="collapse"
-               data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-               aria-label="Toggle navigation" (click)="toggleNavbar()">
-                <i class="fa fa-bars"></i>
+<md-sidenav-container>
+    <md-sidenav mode="over" [opened]="sidenavOpened" #sidenav *ngIf="isAuthenticated()">
+        <a (click)="toggleSidenav()">Close sidenav</a>
+        <md-nav-list>
+            <!-- Products menu -->
+            <md-list-item id="enteties-menu">
+                <span jhiTranslate="global.menu.entities.main">Сущности</span>
+            </md-list-item>
+            <a md-list-item *ngFor="let menu of entitiesMenuItem" routerLinkActive="active"
+               [routerLink]="menu.routerLink">
+                <span [jhiTranslate]="menu.translateVar">{{name}}</span>
             </a>
-            <a class="navbar-brand logo float-left" routerLink="/" (click)="cfollapseNavbar()">
-                <span class="logo-img"></span>
-                <span jhiTranslate="global.title" class="navbar-title">Devizion</span> <span class="navbar-version">{{version}}</span>
+            <div mdListDivider></div>
+            <!-- Administration menu -->
+            <md-list-item id="administration-menu">
+                <span jhiTranslate="global.menu.admin.main">Адміністрування</span>
+            </md-list-item>
+
+            <a md-list-item *ngFor="let menu of adminMenuItem" routerLinkActive="active"
+               [routerLink]="menu.routerLink">
+                <span [jhiTranslate]="menu.translateVar">{{name}}</span>
             </a>
-        </div>
-        <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed"
-        >
-            <!-- administrators and moderators navigation menu -->
-            <ul class="navbar-nav">
-                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                    <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
-                        <span jhiTranslate="global.menu.home">Home</span>
-                    </a>
-                </li>
 
-
-                <li *ngFor="let userMenuOption of userMenuOptions" ngbDropdown class="nav-item dropdown pointer"
-                    [id]="userMenuOption.id">
-                    <a class="nav-link dropdown-toggle"
-                       [href]="href"
-                       ngbDropdownToggle
-                       routerLinkActive="active"
-                       [routerLink]="userMenuOption.routerLink"
-                       id="services-menu">
-                        {{userMenuOption.name}}
-                    </a>
-                    <ul *ngIf="userMenuOption.childNodes" class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-                        <li *ngFor="let childNode of userMenuOption.childNodes">
-                            <a class="dropdown-item" routerLinkActive="active" [routerLink]="childNode.href"
-                               (click)="collapseNavbar()">
-                                {{childNode.name}}
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <div id="navbar-admin-menu">
-        <!-- Database link holds href instead of routerLink -->
-        <jhi-navbar-admin-menu-item [item]="adminMenuItem">
-            <div class="jhi-navbar-admin-menu-item">
-                <h3>
-                    <a href="/h2-console" jhiTranslate="global.menu.admin.database">
-                        Database
-                    </a>
-                </h3>
-            </div>
-        </jhi-navbar-admin-menu-item>
-        <jhi-navbar-admin-menu-item [item]="entitiesMenuItem"></jhi-navbar-admin-menu-item>
-        <jhi-navbar-admin-menu-item [item]='profileMenuItem'>
-            <div class="jhi-navbar-admin-menu-item" *ngSwitchCase="false">
-                <h4>
-                    <a (click)="logout()" id="logout"
-                       href="javascript:void(0)"
-                       jhiTranslate="global.menu.account.logout">
-                        Sign out
-                    </a>
-                </h4>
-            </div>
-
-            <div class="jhi-navbar-admin-menu-item" ngSwitchCase="true">
-                <h4>
-                    <a (click)="login()" id="login"
-                       jhiTranslate="global.menu.account.login"
-                       href="javascript:void(0)">
-                        Sign in
-                    </a>
-                </h4>
-            </div>
-        </jhi-navbar-admin-menu-item>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- ----------------------------------------------------------------------------------------------------------->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div  id="admin-list" [@menu-position]="menuState" *jhiHasAnyAuthority="'ROLE_ADMIN'">
-    <div id="admin-menu-toggle" [@arrow-position]='menuState' (click)="toggleMenuState()">
-        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-    </div>
-    <ngb-accordion closeOthers="true">
-
-        <!-- Administration and entities menu options -->
-        <ngb-panel *ngFor="let adminMenuOption of adminMenuOptions; let i = index" [id]="adminMenuOption.id">
-
-            <template ngbPanelTitle>
-                <a class="admin-menu-item-title" href="javascript:void(0)"
-                   [jhiTranslate]="adminMenuOption.translateVar">
-                    {{adminMenuOption.name}}
-                </a>
-            </template>
-            <!--  navbar menu option -->
-            <template ngbPanelContent>
-                <ul class="menu-child-content">
-                    <li *ngFor="let childOption of adminMenuOption.childNodes; let j = index">
-                        <a *ngIf="i!=0||j!=0" routerLinkActive="active" [routerLink]="childOption.href"
-                           [jhiTranslate]="childOption.translateVar">
-                            {{childOption.name}}
-                        </a>
-                        <!-- h2database link has to have the href instead of routerLink-->
-                        <a *ngIf="i==0&&j==0" [href]="childOption.href"
-                           [jhiTranslate]="childOption.translateVar">
-                            {{childOption.name}}
-                        </a>
-                    </li>
-                </ul>
-            </template>
-        </ngb-panel>
-
-        <ngb-panel id="accountMenuItem">
-            <template ngbPanelTitle>
-                <a class="admin-menu-item-title" href="javascript:void(0)"
-                   jhiTranslate="global.menu.account.main">
-                    Account
-                </a>
-            </template>
-            <template ngbPanelContent>
-                <ul class="menu-child-content">
-                    <li>
-                        <a routerLinkActive="active" routerLink="settings"
-                           jhiTranslate="global.menu.account.settings">
-                            Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a routerLinkActive="active" routerLink="password"
-                           jhiTranslate="global.menu.account.password">
-                            Password
-                        </a>
-                    </li>
-
-                    <li *ngSwitchCase="true">
-                        <a routerLinkActive="active" (click)="logout()" id="logout" routerLink="settings"
-                           jhiTranslate="global.menu.account.logout">
-                            Sign out
-                        </a>
-                    </li>
-
-                    <li *ngSwitchCase="false">
-                        <a routerLinkActive="active" (click)="login()" routerLink="settings" id="login"
-                           jhiTranslate="global.menu.account.login">
-                            Sign in
-                        </a>
-                    </li>
-
-                    <li *ngSwitchCase="false">
-                        <a routerLinkActive="active" routerLink="register"
-                           jhiTranslate="global.menu.account.register">
-                            Register
-                        </a>
-                    </li>
-                </ul>
-            </template>
-        </ngb-panel>
-
-
-        <!-- languadge panel -->
-        <ngb-panel id="languageMenuItem" *ngIf="languages && languages.length > 1">
-            <template ngbPanelTitle>
-                <a class="admin-menu-item-title" href="javascript:void(0)" jhiTranslate="global.menu.language">
-                    Language
-                </a>
-            </template>
-            <template ngbPanelContent title="Language">
-                <ul class="menu-child-content">
-                    <li *ngFor="let language of languages">
-                        <a [jhiActiveMenu]="language" href="javascript:void(0);"
-                           (click)="changeLanguage(language);">{{language | findLanguageFromKey}}</a>
-                    </li>
-                </ul>
-            </template>
-        </ngb-panel>
-        <!-- languadge panel -->
-    </ngb-accordion>
-</div>
-<!-- entities navbar menu option
-<ul class="dropdown-menu" ngbDropdownMenu>
-    <li uiSrefActive="active">
-        <a class="dropdown-item" routerLink="product" (click)="collapseNavbar()">
-            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-            <span jhiTranslate="global.menu.entities.product">Product</span>
-        </a>
-    </li>
-    <li uiSrefActive="active">
-        <a class="dropdown-item" routerLink="user-order" (click)="collapseNavbar()">
-            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-            <span jhiTranslate="global.menu.entities.userOrder">User Order</span>
-        </a>
-    </li>
-    <li uiSrefActive="active">
-        <a class="dropdown-item" routerLink="custumer" (click)="collapseNavbar()">
-            <i class="fa fa-fw fa-asterisk" aria-hidden="true"></i>
-            <span jhiTranslate="global.menu.entities.custumer">Custumer</span>
-        </a>
-    </li>
-    <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here
-</ul>
-<!-- administration navbar menu option
-<li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer">
-    <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
-                <span>
-                     <span jhiTranslate="global.menu.admin.main">Administration</span>
-                    <b class="caret"></b>
-                </span>
-    </a>
-    <ul class="dropdown-menu" ngbDropdownMenu>
-        <li>
-            <a class="dropdown-item" routerLink="user-management" routerLinkActive="active"
-               (click)="collapseNavbar()">
-                <i class="fa fa-fw fa-user" aria-hidden="true"></i>
-                <span jhiTranslate="global.menu.admin.userManagement">User management</span>
+            <a md-list-item href="/h2-console">
+                <span jhiTranslate="global.menu.admin.database">Database</span>
             </a>
-        </li>
-        <li>
-            <a class="dropdown-item" routerLink="jhi-metrics" routerLinkActive="active"
-               (click)="collapseNavbar()">
-                <i class="fa fa-fw fa-tachometer" aria-hidden="true"></i>
-                <span jhiTranslate="global.menu.admin.metrics">Metrics</span>
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item" routerLink="jhi-health" routerLinkActive="active"
-               (click)="collapseNavbar()">
-                <i class="fa fa-fw fa-heart" aria-hidden="true"></i>
-                <span jhiTranslate="global.menu.admin.health">Health</span>
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item" routerLink="jhi-configuration" routerLinkActive="active"
-               (click)="collapseNavbar()">
-                <i class="fa fa-fw fa-list" aria-hidden="true"></i>
-                <span jhiTranslate="global.menu.admin.configuration">Configuration</span>
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item" routerLink="audits" routerLinkActive="active"
-               (click)="collapseNavbar()">
-                <i class="fa fa-fw fa-bell" aria-hidden="true"></i>
-                <span jhiTranslate="global.menu.admin.audits">Audits</span>
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item" routerLink="logs" routerLinkActive="active" (click)="collapseNavbar()">
-                <i class="fa fa-fw fa-tasks" aria-hidden="true"></i>
-                <span jhiTranslate="global.menu.admin.logs">Logs</span>
-            </a>
-        </li>
-        <li *ngIf="swaggerEnabled">
-            <a class="dropdown-item" routerLink="docs" routerLinkActive="active" (click)="collapseNavbar()">
-                <i class="fa fa-fw fa-book" aria-hidden="true"></i>
-                <span jhiTranslate="global.menu.admin.apidocs">API</span>
-            </a>
-        </li>
-        <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
-<!-- <li *ngIf="!inProduction">
-     <a class="dropdown-item" href='/h2-console' target="_tab" (click)="collapseNavbar()">
-         <i class="fa fa-fw fa-hdd-o" aria-hidden="true"></i>
-         <span jhiTranslate="global.menu.admin.database">Database</span>
-     </a>
- </li>
- </ul>
- </li>
- <!-- administration navbar menu option
+            <div MdListDivider></div>
+            <!-- Profile menu -->
+            <md-list-item id="profile-menu">
+                <span jhiTranslate="global.menu.account.main">Profile</span>
+            </md-list-item>
 
- <!-- profile navbar menu option
- <li ngbDropdown class="nav-item dropdown pointer" *ngIf="languages">
-     <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);"
-        id="languagesnavBarDropdown" *ngIf="languages.length > 1">
-                 <span>
-                     <i class="fa fa-flag" aria-hidden="true"></i>
-                     <span jhiTranslate="global.menu.language">Language</span>
-                     <b class="caret"></b>
-                 </span>
-     </a>
-     <ul class="dropdown-menu" ngbDropdownMenu *ngIf="languages.length > 1">
-         <li *ngFor="let language of languages">
-             <a class="dropdown-item" [jhiActiveMenu]="language" href="javascript:void(0);"
-                (click)="changeLanguage(language);collapseNavbar();">{{language | findLanguageFromKey}}</a>
-         </li>
-     </ul>
- </li>
- <!-- profile navbar menu option
+            <a md-list-item *ngFor="let menu of profileMenuItem" routerLinkActive="active"
+               [routerLink]="menu.routerLink">
+                <span [jhiTranslate]="menu.translateVar">{{name}}</span>
+            </a>
 
- <!-- account navbar menu option
- <li ngbDropdown class="nav-item dropdown pointer">
-     <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
-               <span *ngIf="!getImageUrl()">
-                 <span jhiTranslate="global.menu.account.main">
-                   Account
-                 </span>
-                 <b class="caret"></b>
-               </span>
-         <span *ngIf="getImageUrl()">
-                   <img [src]="getImageUrl()" class="profile-image img-circle" alt="Avatar">
-               </span>
-     </a>
-     <ul class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-         <li *ngSwitchCase="true">
-             <a class="dropdown-item" routerLink="settings" routerLinkActive="active"
-                (click)="collapseNavbar()">
-                 <i class="fa fa-fw fa-wrench" aria-hidden="true"></i>
-                 <span jhiTranslate="global.menu.account.settings">Settings</span>
-             </a>
-         </li>
-         <li *ngSwitchCase="true">
-             <a class="dropdown-item" routerLink="password" routerLinkActive="active"
-                (click)="collapseNavbar()">
-                 <i class="fa fa-fw fa-clock-o" aria-hidden="true"></i>
-                 <span jhiTranslate="global.menu.account.password">Password</span>
-             </a>
-         </li>
-         <li *ngSwitchCase="true">
-             <a class="dropdown-item" (click)="logout()" id="logout">
-                 <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i>
-                 <span jhiTranslate="global.menu.account.logout">Sign out</span>
-             </a>
-         </li>
-         <li *ngSwitchCase="false">
-             <a class="dropdown-item" (click)="login()" id="login">
-                 <i class="fa fa-fw fa-sign-in" aria-hidden="true"></i>
-                 <span jhiTranslate="global.menu.account.login">Sign in</span>
-             </a>
-         </li>
-         <li *ngSwitchCase="false">
-             <a class="dropdown-item" routerLink="register" routerLinkActive="active"
-                (click)="collapseNavbar()">
-                 <i class="fa fa-fw fa-registered" aria-hidden="true"></i>
-                 <span jhiTranslate="global.menu.account.register">Register</span>
-             </a>
-         </li>
-     </ul>
- </li>
- <!-- account navbar menu option -->
+            <a md-list-item
+               id="logout"
+               (click)="logout()"
+               href="javascript:void(0)">
+                <span jhiTranslate="global.menu.account.logout">Sign out</span>
+            </a>
+
+            <a md-list-item
+               routerLinkActive="active"
+               routerLink="register"
+               href="javascript:void(0)">
+                <span jhiTranslate="global.menu.account.register">Register</span>
+            </a>
+
+        </md-nav-list>
+    </md-sidenav>
+
+
+</md-sidenav-container>

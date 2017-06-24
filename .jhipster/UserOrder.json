@@ -3,14 +3,14 @@
     "relationships": [
         {
             "relationshipType": "many-to-one",
-            "relationshipName": "orderedProduct",
-            "otherEntityName": "product",
+            "relationshipName": "custumer",
+            "otherEntityName": "custumer",
             "otherEntityField": "id"
         },
         {
-            "relationshipName": "custumer",
-            "otherEntityName": "custumer",
             "relationshipType": "many-to-one",
+            "relationshipName": "product",
+            "otherEntityName": "product",
             "otherEntityField": "id"
         }
     ],
@@ -20,11 +20,11 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "description",
+            "fieldName": "cropedUri",
             "fieldType": "String"
         },
         {
-            "fieldName": "orderNotes",
+            "fieldName": "description",
             "fieldType": "String"
         },
         {
@@ -35,6 +35,6 @@
     "changelogDate": "20170406065252",
     "entityTableName": "user_order",
     "dto": "no",
-    "pagination": "no",
+    "pagination": "infinite-scroll",
     "service": "serviceImpl"
 }

@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Http, Response, URLSearchParams, BaseRequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
-import {ProductCategory} from './product-category.model';
+import {ProductCategory, ProductCategoryWithProducts} from './product-category.model';
+import {HttpCommonService} from "../../shared/http-commons/http-common.service";
 
 @Injectable()
 export class ProductCategoryService {
@@ -26,10 +27,29 @@ export class ProductCategoryService {
         });
     }
 
-    find(id: number): Observable<ProductCategory> {
-        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
+    find(id: number, includeProducts = false, productsPageSize = 10): Observable<ProductCategoryWithProducts> {
+        let requestParams = HttpCommonService.wrapAsRequestOptions({
+            includeProducts: includeProducts,
+            productsPageSize: productsPageSize
+        });
+        return this.http.get(`${this.resourceUrl}/${id}`, requestParams).map((res: Response) => {
             return res.json();
         });
+    }
+
+    findFirst(): Observable<ProductCategoryWithProducts> {
+        return this.http.get(`${this.resourceUrl}/first?includeProducts=true`)
+            .map((res: Response) => {
+                return res.json();
+            });
+    }
+
+    queryWithProducts(productsPageSize = 10): Observable<Response> {
+        let options = HttpCommonService.wrapAsRequestOptions({
+            includeProducts: true,
+            productsPageSize: productsPageSize
+        });
+        return this.http.get(this.resourceUrl, options);
     }
 
     query(req?: any): Observable<Response> {

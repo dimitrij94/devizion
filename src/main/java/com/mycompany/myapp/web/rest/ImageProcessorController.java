@@ -3,23 +3,19 @@ package com.mycompany.myapp.web.rest;
 import com.mycompany.myapp.domain.ImageToken;
 import com.mycompany.myapp.service.ImageService;
 import com.mycompany.myapp.service.ImageTokenService;
+import com.mycompany.myapp.service.dto.ImageBounds;
 import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
 
 /**
  * Created by Dmitrij on 12.04.2017.
@@ -47,6 +43,12 @@ public class ImageProcessorController {
         return imageService.saveImage("/" + directoryName + "/", file);
     }
 
+    @PostMapping(value = "/api/{directory}/image/cropped")
+    public ResponseEntity<ImageToken> postCroppedImage(@RequestBody ImageBounds cropBounds,
+                                                       @PathVariable("directory") String directory) {
+        return imageService.saveCroppedImage("/" + directory + "/", cropBounds);
+    }
+
     @GetMapping(value = "/api/image/{directory}", produces = "image/*")
     public ResponseEntity<byte[]> getImageBody(@PathVariable("directory") String directory,
                                                @RequestParam("imageName") String imageName) throws IOException {
@@ -61,7 +63,7 @@ public class ImageProcessorController {
     public ResponseEntity<byte[]> getImageBodyOfSize(@PathVariable("directory") String directory,
                                                      @RequestParam("imageName") String imageName,
                                                      @RequestParam("imageScalarSize") String imageScalarSize,
-                                                     @RequestParam("screenSize") String screenSize) throws IOException{
+                                                     @RequestParam("screenSize") String screenSize) throws IOException {
         File image = new File(
             this.imageStoragePath + "\\" +
                 directory + "\\" +
@@ -69,8 +71,12 @@ public class ImageProcessorController {
                 imageScalarSize + "\\" +
                 imageName);
         if (image.exists() && image.canRead()) {
-            return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(image), HttpStatus.OK);
-        } else return new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
+            byte[] responceBody = FileUtils.readFileToByteArray(image);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentLength(responceBody.length);
+            headers.setCacheControl("max-age=1000");
+            return new ResponseEntity<>(responceBody, headers, HttpStatus.OK);
+        } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/api/product/image")
@@ -79,13 +85,10 @@ public class ImageProcessorController {
         return this.imageService.updateImage("/products/", oldFilePath, request);
     }
 
-    @DeleteMapping("/api/product/image")
-    public HttpStatus imageUploadCanceled(@RequestParam("token_id") long tokenId) {
-        return this.imageService.imageUploadCanceled(tokenId, "/product/");
+    @DeleteMapping("/api/{subdirectory}/image")
+    public HttpStatus imageUploadCanceled(@RequestParam("token_id") long tokenId,
+                                          @PathVariable("subdirectory") String subdirectory) {
+        return this.imageService.imageUploadCanceled(tokenId, "/" + subdirectory + "/");
     }
 
-    @DeleteMapping(value = "/api/category/image")
-    public HttpStatus categoryImageCanceled(@RequestParam("token_id") long tokenId) {
-        return this.imageService.imageUploadCanceled(tokenId, "/categories/");
-    }
 }

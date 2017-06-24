@@ -11,6 +11,10 @@ import {UserOrderService} from './user-order.service';
 import {Product, ProductService} from '../product';
 import {Custumer, CustumerService} from '../custumer';
 import {ImageToken} from "../image-token";
+import {MyImageService, portfolioSubdirectory} from "../../shared/image/image.service";
+import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
+import {Bounds} from "ng2-img-cropper";
+import {CropCoordinates} from "../../shared/image/my-image-cropper/my-cropped-image-uploader.component";
 
 @Component({
     selector: 'jhi-user-order-dialog',
@@ -21,7 +25,8 @@ export class UserOrderDialogComponent implements OnInit {
     userOrder: UserOrder;
     authorities: any[];
     isSaving: boolean;
-    imageToken: ImageToken;
+    originalImageToken: ImageToken;
+    croppedImageToken: ImageToken;
     products: Product[];
 
     custumers: Custumer[];
@@ -32,7 +37,9 @@ export class UserOrderDialogComponent implements OnInit {
                 private userOrderService: UserOrderService,
                 private productService: ProductService,
                 private custumerService: CustumerService,
-                private eventManager: EventManager) {
+                private eventManager: EventManager,
+                private authServiceProvider: AuthServerProvider,
+                private imageService: MyImageService) {
         this.jhiLanguageService.setLocations(['userOrder']);
     }
 
@@ -53,23 +60,31 @@ export class UserOrderDialogComponent implements OnInit {
         this.activeModal.dismiss('cancel');
     }
 
-    onRemove($event) {
-        this.productService
-            .productImageUploadCancel(this.imageToken[$event.file.name].id)
-            .subscribe(() => {
-                delete this.imageToken[$event.file.name];
-            });
+
+    onCroppedImageRemove(i) {
+        this.imageService
+            .imageUploadCancel(this.croppedImageToken.id, portfolioSubdirectory);
     }
 
+    onOriginalImageRemove() {
+        this.imageService.imageUploadCancel(this.originalImageToken.id, portfolioSubdirectory)
+    }
 
-    onLoad($event: any) {
-        if ($event.serverResponse.status == 200) {
-            let imageToken = JSON.parse($event.serverResponse.response);
-            this.userOrder.photoUri = imageToken.path;
-            this.imageToken[$event.file.name] = imageToken;
-        }
-        else
-            this.onError($event.serverResponse.json());
+    onOriginalImageLoad(imageToken: ImageToken) {
+        this.userOrder.photoUri = imageToken.path;
+        this.originalImageToken = imageToken;
+    }
+
+    onCroppedImageLoad(imageToken: ImageToken) {
+        this.userOrder.cropedUri = imageToken.path;
+        this.croppedImageToken = imageToken;
+    }
+
+    assignCropBounds($event: CropCoordinates) {
+        this.userOrder.croppCoordinateX1 = $event.cropX1;
+        this.userOrder.croppCoordinateX2 = $event.cropX2;
+        this.userOrder.croppCoordinateY1 = $event.cropY1;
+        this.userOrder.croppCoordinateY2 = $event.cropY2;
     }
 
     save() {

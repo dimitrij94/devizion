@@ -1,0 +1,44 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myPortfolioEntryLabel" jhiTranslate="devizionApp.portfolioEntry.home.createOrEditLabel">Create or edit a Portfolio Entry</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!portfolioEntry.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="portfolioEntry.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="devizionApp.portfolioEntry.photoUri" for="field_photoUri">Photo Uri</label>
+            <input type="text" class="form-control" name="photoUri" id="field_photoUri"
+                [(ngModel)]="portfolioEntry.photoUri"
+             />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="devizionApp.portfolioEntry.description" for="field_description">Description</label>
+            <input type="text" class="form-control" name="description" id="field_description"
+                [(ngModel)]="portfolioEntry.description"
+             />
+        </div>
+
+        <div class="form-group">
+            <label jhiTranslate="devizionApp.portfolioEntry.portfolio" for="field_portfolio">Portfolio</label>
+            <select class="form-control" id="field_portfolio" name="portfolio" [(ngModel)]="portfolioEntry.portfolio" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="productOption.id === portfolioEntry.portfolio?.id ? portfolioEntry.portfolio : productOption" *ngFor="let productOption of products; trackBy: trackProductById">{{productOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

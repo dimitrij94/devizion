@@ -23,3 +23,68 @@ a {
     color: white;
     background-color: $cyan-accent;
 }
+
+@import '../../../content/scss/varibles';
+
+$dot-size: 0.7em;
+
+@keyframes bouncy {
+    0%, 100% {
+        transform: translateY(0em) scale(1);
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .27));
+    }
+    50% {
+
+        filter: drop-shadow(0 21px 16px rgba(0, 0, 0, .18));
+        transform: translateY(-0.8em) scale(1.2);
+    }
+}
+
+
+.loader-wrapper {
+    padding: calc(50vh - 0.35em);
+    position: relative;
+    text-align: center;
+    font-size: 4rem;
+
+    .spinner-wrapper {
+        position: relative;
+        display: block;
+        margin: -$dot-size auto auto;
+        width: 4em;
+        height: $dot-size;
+
+        .dot {
+            margin-left: -0.5em;
+            width: $dot-size;
+            position: absolute;
+            top: 0px;
+            height: 100%;
+            border-radius: 0.45em;
+
+
+            &:nth-child(1) {
+                background-color: $magenta-accent;
+                left: 0.75em;
+                &.animated {
+                    animation: bouncy 1s ease-in-out infinite;
+                }
+            }
+
+            &:nth-child(2) {
+                background-color: $yellow-accent;
+                margin-top: 0;
+                &.animated {
+                    animation: bouncy 1s ease-in-out 0.33s infinite;
+                }
+            }
+            &:nth-child(3) {
+                background-color: $cyan-accent;
+                left: 3.25em;
+                &.animated {
+                    animation: bouncy 1s ease-in-out infinite;
+                }
+            }
+        }
+    }
+}

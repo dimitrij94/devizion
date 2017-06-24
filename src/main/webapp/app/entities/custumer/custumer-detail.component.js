@@ -8,13 +8,36 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var CustumerDetailComponent = (function () {
-    function CustumerDetailComponent(eventManager, jhiLanguageService, custumerService, route) {
+    function CustumerDetailComponent(eventManager, jhiLanguageService, custumerService, authServiceProvider, alertService, imageService, route) {
         this.eventManager = eventManager;
         this.jhiLanguageService = jhiLanguageService;
         this.custumerService = custumerService;
+        this.authServiceProvider = authServiceProvider;
+        this.alertService = alertService;
+        this.imageService = imageService;
         this.route = route;
         this.jhiLanguageService.setLocations(['custumer']);
     }
+    CustumerDetailComponent.prototype.onRemove = function ($event) {
+        var _this = this;
+        this.imageService
+            .imageUploadCancel(this.imageToken[$event.file.name].id, "custumer")
+            .subscribe(function () {
+            delete _this.imageToken[$event.file.name];
+        });
+    };
+    CustumerDetailComponent.prototype.onLoad = function ($event) {
+        if ($event.serverResponse.status == 200) {
+            var imageToken = JSON.parse($event.serverResponse.response);
+            this.custumer.custumerImageUri = imageToken.path;
+            this.imageToken[$event.file.name] = imageToken;
+        }
+        else
+            this.onError($event.serverResponse.json());
+    };
+    CustumerDetailComponent.prototype.onError = function (error) {
+        this.alertService.error(error.message, null, null);
+    };
     CustumerDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.subscription = this.route.params.subscribe(function (params) {

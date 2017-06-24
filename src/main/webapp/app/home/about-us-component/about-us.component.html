@@ -1,0 +1,41 @@
+<div id="about-us-wrapper" fxLayout="row" fxLayoutAlign="center center">
+    <div class="map-wrapper" fxFlex="70">
+        <sebm-google-map [latitude]="lat" [longitude]="lng"
+                         [zoom]="17"
+                         [draggable]="false"
+                         [disableDoubleClickZoom]="true"
+                         class="map">
+            <sebm-google-map-marker *ngFor="let m of departments; let i=index"
+                                    [label]="m.label"
+                                    [latitude]="m.lat" [longitude]="m.lng">
+                <sebm-google-map-info-window class="map-baloon">
+                    <div class="map-baloon-image-holder"></div>
+                    <div class="map-baloon-image"></div>
+                    <p>{{m.address}}</p>
+                    <p>{{m.phoneNumber}}</p>
+                </sebm-google-map-info-window>
+            </sebm-google-map-marker>
+        </sebm-google-map>
+    </div>
+    <div id="departments-info">
+        <div id="logo-wrapper">
+            <div id="logo"></div>
+            <p id="header" class="logo-text">МІСЬКА ДРУКАРНЯ</p>
+            <p id="subheader" class="logo-text">рекламно-поліграфічна компанія</p>
+        </div>
+        <div class="department-list-wrapper">
+            <md-list class="departments-list">
+                <a md-list-item *ngFor="let department of departments; let i = index">
+                    <div class="department-list-item"
+                         (click)="goToDepartment(departments[i])"
+                         [ngClass]="{active:department.isActive}">
+                        <h5 md-line>{{department.name}}</h5>
+                        <p md-line>{{department.address}}</p>
+                        <p md-line>{{department.phoneNumber}}</p>
+                        <p md-line>{{department.email}}</p>
+                    </div>
+                </a>
+            </md-list>
+        </div>
+    </div>
+</div>

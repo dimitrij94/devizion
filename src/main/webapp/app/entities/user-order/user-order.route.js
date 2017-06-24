@@ -10,7 +10,7 @@ exports.userOrderRoute = [
         path: 'user-order',
         component: user_order_component_1.UserOrderComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.userOrder.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService]
@@ -18,7 +18,7 @@ exports.userOrderRoute = [
         path: 'user-order/:id',
         component: user_order_detail_component_1.UserOrderDetailComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.userOrder.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService]
@@ -29,7 +29,7 @@ exports.userOrderPopupRoute = [
         path: 'user-order-new',
         component: user_order_dialog_component_1.UserOrderPopupComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.userOrder.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService],
@@ -39,7 +39,7 @@ exports.userOrderPopupRoute = [
         path: 'user-order/:id/edit',
         component: user_order_dialog_component_1.UserOrderPopupComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.userOrder.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService],
@@ -49,7 +49,7 @@ exports.userOrderPopupRoute = [
         path: 'user-order/:id/delete',
         component: user_order_delete_dialog_component_1.UserOrderDeletePopupComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.userOrder.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService],

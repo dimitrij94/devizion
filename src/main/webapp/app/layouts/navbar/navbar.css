@@ -15,10 +15,10 @@ eg $input-color: red;
 #navbar-super-wraper {
     overflow: hidden;
     &>nav{
-        height: 50px;
+        imageHeight: 50px;
         padding:0;
         div:nth-child(1){
-            height: 50px;
+            imageHeight: 50px;
             display: block!important;
 
             ul{
@@ -43,25 +43,25 @@ eg $input-color: red;
   #portfolio-menu-item:hover {
     border-bottom: 4px solid #088fff; }
 
-.user-menu-item {
+.user-menu-link {
   color: black; }
-  .user-menu-item:link {
+  .user-menu-link:link {
     color: black; }
-  .user-menu-item:hover {
+  .user-menu-link:hover {
     color: black; }
-  .user-menu-item:visited {
+  .user-menu-link:visited {
     color: black; }
-  .user-menu-item:active {
+  .user-menu-link:active {
     color: black; }
-  .user-menu-item:hover {
+  .user-menu-link:hover {
     color: white; }
-    .user-menu-item:hover:link {
+    .user-menu-link:hover:link {
       color: white; }
-    .user-menu-item:hover:hover {
+    .user-menu-link:hover:hover {
       color: white; }
-    .user-menu-item:hover:visited {
+    .user-menu-link:hover:visited {
       color: white; }
-    .user-menu-item:hover:active {
+    .user-menu-link:hover:active {
       color: white; }
 
 .active-services {

@@ -10,6 +10,9 @@ import com.mycompany.myapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -19,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing Product.
@@ -26,6 +30,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/products")
 public class ProductResource {
+    private final int productsPageSize = 20;
 
     private final Logger log = LoggerFactory.getLogger(ProductResource.class);
 
@@ -81,8 +86,12 @@ public class ProductResource {
         if (product.getId() == null) {
             return createProduct(tokenId, product);
         }
-        if (product.getProductImageUri() != null)
-            this.imageService.deleteImage("/product/", product.getProductImageUri());
+
+        Product oldProduct = this.productService.findOne(product.getId());
+
+        String productImageUri = product.getProductImageUri();
+        if (productImageUri != null && !productImageUri.equals(oldProduct.getProductImageUri()))
+            this.imageService.deleteImage("/product/", productImageUri);
 
         Product result = productService.save(product);
         return ResponseEntity.ok()
@@ -105,6 +114,25 @@ public class ProductResource {
     /**
      * GET  /products/:id : get the "id" product.
      *
+     * @param categoryId the id of the product category to find by;
+     * @param page       the page of the
+     * @return the ResponseEntity with status 200 (OK) and with body the products Page, or with status 404 (Not Found)
+     */
+    @GetMapping(params = {"page", "categoryId"})
+    @Timed
+    public ResponseEntity<Page<Product>> getProduct(
+        @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+        @RequestParam(value = "categoryId") Long categoryId) {
+        log.debug("REST request to get Product : {}", categoryId);
+        Page<Product> productsPage = productService.findByCategoryId(categoryId, new PageRequest(page, productsPageSize));
+        if (productsPage.hasContent())
+            return new ResponseEntity<>(productsPage, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * GET  /products/:id : get the "id" product.
+     *
      * @param id the id of the product to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the product, or with status 404 (Not Found)
      */
@@ -115,6 +143,7 @@ public class ProductResource {
         Product product = productService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(product));
     }
+
 
     /**
      * DELETE  /products/:id : delete the "id" product.

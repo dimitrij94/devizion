@@ -11,7 +11,10 @@
     "fields": [
         {
             "fieldName": "categoryName",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         },
         {
             "fieldName": "categoryPhotoUri",
@@ -21,6 +24,6 @@
     "changelogDate": "20170409185519",
     "entityTableName": "product_category",
     "dto": "no",
-    "pagination": "no",
+    "pagination": "infinite-scroll",
     "service": "serviceImpl"
 }

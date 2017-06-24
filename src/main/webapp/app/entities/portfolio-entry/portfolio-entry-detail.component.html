@@ -1,0 +1,35 @@
+
+<div *ngIf="portfolioEntry">
+    <h2><span jhiTranslate="devizionApp.portfolioEntry.detail.title">Portfolio Entry</span> {{portfolioEntry.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="devizionApp.portfolioEntry.photoUri">Photo Uri</span></dt>
+        <dd>
+            <span>{{portfolioEntry.photoUri}}</span>
+        </dd>
+        <dt><span jhiTranslate="devizionApp.portfolioEntry.description">Description</span></dt>
+        <dd>
+            <span>{{portfolioEntry.description}}</span>
+        </dd>
+        <dt><span jhiTranslate="devizionApp.portfolioEntry.portfolio">Portfolio</span></dt>
+        <dd>
+            <div *ngIf="portfolioEntry.portfolio">
+                <a [routerLink]="['/product', portfolioEntry.portfolio?.id]">{{portfolioEntry.portfolio?.id}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'portfolio-entry/'+ portfolioEntry.id + '/edit'} }]"
+            replaceUrl="true"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

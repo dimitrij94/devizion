@@ -1,85 +1,74 @@
-<div id="navbar-super-wraper">
+<div id="navbar-position-wrapper" #navbarPositionWrapper class="relative">
 
-    <div id="navbar" fxLayout="row" fxLayoutAlign="space-around end">
-        <div fxFlex="20" id="siteLogo"></div>
-        <div fxFlex></div>
-        <div id="userMenu">
-            <ul>
-                <li>
-                    <a
-                        [@homeLinkShadowState]="homeLinkShadow"
-                        class="nav-link user-menu-item"
-                        (mouseenter)="showHomeShadow()"
-                        (mouseleave)="hideHomeShadow()"
-                        routerLink="/"
-                        routerLinkActive="active-home"
-                        id="home-menu-item"
-                        (click)="collapseNavbar()">
-                        <span jhiTranslate="global.menu.home">Home</span>
-                    </a>
-                </li>
-                <li (mouseenter)="showServicesSubMenu()"
-                    (click)="toggleServicesSubMenu()"
-                    (mouseleave)="hideServicesSubMenu()">
-                    <a class="nav-link user-menu-item"
-                       [@servicesLinkShadowState]="servicesLinkState"
-                       href="javascript:void(0)"
-                       id="services-menu-item"
-                       routerLinkActive="active-menu active-services"
-                       routerLink="services"
-                       jhiTranslate="global.menu.services.main">
-                        Послуги
-                    </a>
-                    <ul>
-                        <li class="service-sub-menu"
-                            *ngFor="let category of categories"
-                            [@submenuDropdown]="servicesLinkState">
-                            <a [routerLink]="'./category/'+category.id + '/products'">
-                                {{category.categoryName}}
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li (mouseenter)="showPortfolioSubMenu()"
-                    (click)="togglePortfolioSubMenu()"
-                    (mouseleave)="hidePortfolioSubMenu()">
-                    <a class="nav-link user-menu-item"
-                       [@portfolioLinkShadowState]="portfolioMenuStatus"
-                       href="javascript:void(0)"
-                       id="portfolio-menu-item"
-                       routerLinkActive="active-menu active-portfolio"
-                       routerLink="portfolio"
-                       jhiTranslate="global.menu.portfolio.main">
-                        Портфоліо
-                    </a>
-                    <ul>
-                        <li class="profile-sub-menu"
-                            *ngFor="let category of categories"
-                            [@portfolioSubmenuDropdown]="portfolioMenuStatus">
-                            <a [routerLink]="'./portfolio/'+category.id">
-                                {{category.categoryName}}
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li (mouseenter)="showAboutUsMenu()"
-                    (mouseleave)="hideAboutUsMenu()">
-                    <a [@aboutUsLinkShadowState]="aboutUsMenuStatus"
-                       class="nav-link user-menu-item"
-                       id="about-us-menu-item"
-                       href="javascript:void(0)"
-                       routerLinkActive="about-us-active"
-                       jhiTranslate="global.menu.aboutUs.main">
-                        Про нас
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <jhi-mobile-navbar *ngIf="showMobileNavbar"
+                       [categories]="categories">
 
-        <div fxFlex="10">
-            <a *ngIf="isAuthenticated()" (click)="toggleSidenav()">Toggle navbar</a>
+    </jhi-mobile-navbar>
+
+    <div id="navbar-super-wrapper" *ngIf="!showMobileNavbar">
+
+        <div id="navbar">
+            <div id="site-logo-wrapper">
+                <div id="site-logo"></div>
+                <div id="logo-text">
+                    <p id="header" class="logo-text">МІСЬКА ДРУКАРНЯ</p>
+                    <p id="subheader" class="logo-text">рекламно-поліграфічна компанія</p>
+                </div>
+            </div>
+            <div id="userMenu">
+                <ul>
+                    <li class="navbar-menu-item">
+                        <a class="nav-link user-menu-link"
+                           id="home-menu-item"
+                           [@homeLinkShadowState]="linkShadows[1]"
+                           (click)="positionItemClicked(1)">
+                            Чому ми?
+                        </a>
+                    </li>
+                    <li (mouseenter)="showServicesSubMenu()"
+                        (mouseleave)="hideServicesSubMenu()"
+                        id="services-menu-item"
+                        class="navbar-menu-item">
+                        <a class="nav-link user-menu-link"
+                           href="javascript:void(0)"
+                           id="services-link"
+                           [@servicesLinkShadowState]="linkShadows[2]"
+                           (click)="positionItemClicked(2)">
+                            Послуги
+                        </a>
+                        <div class="service-sub-menu">
+                            <div class="menu-item"
+                                 *ngFor="let category of categories">
+                                <a [routerLink]="'./category/'+category.id + '/products'">
+                                    {{category.categoryName}}
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="navbar-menu-item">
+                        <a class="nav-link user-menu-link"
+                           href="javascript:void(0)"
+                           id="portfolio-menu-item"
+                           (click)="positionItemClicked(3)"
+                           [@portfolioLinkShadowState]="linkShadows[3]">
+                            Портфоліо
+                        </a>
+                    </li>
+                    <li class="navbar-menu-item">
+                        <a class="nav-link user-menu-link"
+                           [@aboutUsLinkShadowState]="linkShadows[4]"
+                           id="about-us-menu-item"
+                           (click)="positionItemClicked(4)"
+                           href="javascript:void(0)">
+                            Про нас
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
     </div>
+    <a *ngIf="isAuthenticated()" (click)="toggleSidenav()">
+        <div id="navbar-toggler"></div>
+    </a>
 </div>
-
-

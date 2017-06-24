@@ -1,9 +1,7 @@
 package com.mycompany.myapp.domain;
 
-import com.mycompany.myapp.service.dto.user_order.UserOrderDtoViews;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.cloud.cloudfoundry.com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,29 +20,38 @@ public class UserOrder implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(UserOrderDtoViews.SharedView.class)
     private Long id;
 
     @Column(name = "photo_uri")
-    @JsonView(UserOrderDtoViews.SharedView.class)
     private String photoUri;
 
-    @Column(name = "description")
-    @JsonView(UserOrderDtoViews.SharedView.class)
-    private String description;
+    @Column(name = "croped_uri")
+    private String cropedUri;
 
-    @Column(name = "order_notes")
-    private String orderNotes;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "ordered_at")
     private LocalDate orderedAt;
 
     @ManyToOne
-    @JsonView(UserOrderDtoViews.PortfolioViewDto.class)
-    private Product orderedProduct;
+    private Custumer custumer;
 
     @ManyToOne
-    private Custumer custumer;
+    private Product product;
+
+    @Column(name = "croppCoordinateX1")
+    private float croppCoordinateX1;
+
+    @Column(name = "croppCoordinateX2")
+    private float croppCoordinateX2;
+
+    @Column(name = "croppCoordinateY1")
+    private float croppCoordinateY1;
+
+    @Column(name = "croppCoordinateY2")
+    private float croppCoordinateY2;
+
 
     public Long getId() {
         return id;
@@ -67,6 +74,19 @@ public class UserOrder implements Serializable {
         this.photoUri = photoUri;
     }
 
+    public String getCropedUri() {
+        return cropedUri;
+    }
+
+    public UserOrder cropedUri(String cropedUri) {
+        this.cropedUri = cropedUri;
+        return this;
+    }
+
+    public void setCropedUri(String cropedUri) {
+        this.cropedUri = cropedUri;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -78,19 +98,6 @@ public class UserOrder implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getOrderNotes() {
-        return orderNotes;
-    }
-
-    public UserOrder orderNotes(String orderNotes) {
-        this.orderNotes = orderNotes;
-        return this;
-    }
-
-    public void setOrderNotes(String orderNotes) {
-        this.orderNotes = orderNotes;
     }
 
     public LocalDate getOrderedAt() {
@@ -106,19 +113,6 @@ public class UserOrder implements Serializable {
         this.orderedAt = orderedAt;
     }
 
-    public Product getOrderedProduct() {
-        return orderedProduct;
-    }
-
-    public UserOrder orderedProduct(Product product) {
-        this.orderedProduct = product;
-        return this;
-    }
-
-    public void setOrderedProduct(Product product) {
-        this.orderedProduct = product;
-    }
-
     public Custumer getCustumer() {
         return custumer;
     }
@@ -130,6 +124,56 @@ public class UserOrder implements Serializable {
 
     public void setCustumer(Custumer custumer) {
         this.custumer = custumer;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public UserOrder product(Product product) {
+        this.product = product;
+        return this;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public float getCroppCoordinateX1() {
+        return croppCoordinateX1;
+    }
+
+    public void setCroppCoordinateX1(float croppCoordinateX1) {
+        this.croppCoordinateX1 = croppCoordinateX1;
+    }
+
+    public float getCroppCoordinateX2() {
+        return croppCoordinateX2;
+    }
+
+    public void setCroppCoordinateX2(float croppCoordinateX2) {
+        this.croppCoordinateX2 = croppCoordinateX2;
+    }
+
+    public float getCroppCoordinateY1() {
+        return croppCoordinateY1;
+    }
+
+    public void setCroppCoordinateY1(float croppCoordinateY1) {
+        this.croppCoordinateY1 = croppCoordinateY1;
+    }
+
+    public float getCroppCoordinateY2() {
+        return croppCoordinateY2;
+    }
+
+    public void setCroppCoordinateY2(float croppCoordinateY2) {
+        this.croppCoordinateY2 = croppCoordinateY2;
+    }
+
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override
@@ -157,8 +201,8 @@ public class UserOrder implements Serializable {
         return "UserOrder{" +
             "id=" + id +
             ", photoUri='" + photoUri + "'" +
+            ", cropedUri='" + cropedUri + "'" +
             ", description='" + description + "'" +
-            ", orderNotes='" + orderNotes + "'" +
             ", orderedAt='" + orderedAt + "'" +
             '}';
     }

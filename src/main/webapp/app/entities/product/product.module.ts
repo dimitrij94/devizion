@@ -16,6 +16,8 @@ import {
     productPopupRoute,
 } from './';
 import {ImageUploadModule} from 'angular2-image-upload';
+import {ProductResolver} from "./product.resolver";
+import {FirstProductCategoryResolver} from "../product-category/product-category.resolver";
 
 let ENTITY_STATES = [
     ...productRoute,
@@ -43,6 +45,7 @@ let ENTITY_STATES = [
         ProductDeletePopupComponent,
     ],
     providers: [
+        ProductResolver,
         ProductService,
         ProductPopupService,
     ],

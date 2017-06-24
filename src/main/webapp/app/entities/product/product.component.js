@@ -7,6 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var image_service_1 = require("../../shared/image/image.service");
+var image_size_model_1 = require("../../shared/image/image-size.model");
 var ProductComponent = (function () {
     function ProductComponent(jhiLanguageService, productService, alertService, eventManager, principal) {
         this.jhiLanguageService = jhiLanguageService;
@@ -18,10 +20,12 @@ var ProductComponent = (function () {
     }
     ProductComponent.prototype.loadAll = function () {
         var _this = this;
-        var directory = "/content/images/products";
+        var directory = '/content/images/products';
         this.productService.query().subscribe(function (res) {
             var products = res.json();
-            products.map(_this.productService.transformImageUri);
+            products.forEach(function (product) {
+                product.productImageUri = image_service_1.MyImageService.getImagePathOfSize(image_service_1.productSubdirectory, product.productImageUri, window.innerWidth, image_size_model_1.twentyScalar);
+            });
             _this.products = products;
         }, function (res) { return _this.onError(res.json()); });
     };
@@ -51,7 +55,8 @@ var ProductComponent = (function () {
 ProductComponent = __decorate([
     core_1.Component({
         selector: 'jhi-product',
-        templateUrl: './product.component.html'
+        templateUrl: './product.component.html',
+        styleUrls: ['./product.component.scss']
     })
 ], ProductComponent);
 exports.ProductComponent = ProductComponent;

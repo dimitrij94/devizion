@@ -7,8 +7,9 @@ export class Timer {
     timerId: any;
     delay: number;
     callback: any;
+    index = 0;
 
-    constructor(delay: number, callback) {
+    constructor(delay: number, callback: (index?: number) => any) {
         this.timerId = delay;
         this.delay = delay;
         this.start = delay;
@@ -25,6 +26,10 @@ export class Timer {
     resume() {
         this.start = new Date().getDate();
         window.clearInterval(this.timerId);
-        this.timerId = window.setInterval(this.callback, this.remaining);
+        this.timerId = window.setInterval(() => {
+                this.index += 1;
+                this.callback(this.index);
+            }, this.remaining
+        );
     }
 }

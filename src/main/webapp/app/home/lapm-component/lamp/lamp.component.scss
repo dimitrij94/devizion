@@ -1,0 +1,49 @@
+@import "../../../../content/scss/varibles";
+
+$lamp-bolb-size: 1em;
+
+.wrapper {
+    height: 2.235em;
+    width: 2.235em;
+
+    .lamp-wrapper {
+        width: 100%;
+        height: 100%;
+        margin-top: -50%;
+        position: relative;
+        border-radius: 50%;
+        @include transition(transform 0s linear);
+        .cable {
+            position: absolute;
+            background: #262626;
+            background: -moz-linear-gradient(left, #262626 1%, #757575 50%, #262626 100%);
+            background: -webkit-linear-gradient(left, #262626 1%, #757575 50%, #262626 100%);
+            background: linear-gradient(to right, #262626 1%, #757575 50%, #262626 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#262626', endColorstr='#262626', GradientType=1);
+            left: 50%;
+            top: 50%;
+            width: 0.015em;
+            margin-left: -0.0075em;
+            height: 50%;
+        }
+
+        .lamp {
+            @include transformOrigin(50% 0);
+            background: url('../../../../content/images/Lamp.png') no-repeat top center;
+            background-size: cover;
+            @include transition(transform 0s linear);
+            //box-shadow: 0em 0em 1em 0.6em rgba(255,255,255,0.2);
+            //border-radius: 50%;
+            //background-color: rgba(255,255,255,0.2);
+
+            width: $lamp-bolb-size;
+            height: $lamp-bolb-size;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            margin-bottom: -$lamp-bolb-size + 0.1;
+            margin-left: -$lamp-bolb-size/2 - 0.0016;
+        }
+    }
+}
+

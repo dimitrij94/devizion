@@ -7,15 +7,36 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var image_service_1 = require("../../shared/image/image.service");
 var CustumerDialogComponent = (function () {
-    function CustumerDialogComponent(activeModal, jhiLanguageService, alertService, custumerService, eventManager) {
+    function CustumerDialogComponent(activeModal, jhiLanguageService, alertService, custumerService, eventManager, imageService, authServiceProvider) {
         this.activeModal = activeModal;
         this.jhiLanguageService = jhiLanguageService;
         this.alertService = alertService;
         this.custumerService = custumerService;
         this.eventManager = eventManager;
+        this.imageService = imageService;
+        this.authServiceProvider = authServiceProvider;
+        this.imageToken = {};
         this.jhiLanguageService.setLocations(['custumer']);
     }
+    CustumerDialogComponent.prototype.onRemove = function ($event) {
+        var _this = this;
+        this.imageService
+            .imageUploadCancel(this.imageToken[$event.file.name].id, image_service_1.custumerSubdirectory)
+            .subscribe(function () {
+            delete _this.imageToken[$event.file.name];
+        });
+    };
+    CustumerDialogComponent.prototype.onLoad = function ($event) {
+        if ($event.serverResponse.status == 200) {
+            var imageToken = JSON.parse($event.serverResponse.response);
+            this.custumer.custumerImageUri = imageToken.path;
+            this.imageToken[$event.file.name] = imageToken;
+        }
+        else
+            this.onError($event.serverResponse.json());
+    };
     CustumerDialogComponent.prototype.ngOnInit = function () {
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];

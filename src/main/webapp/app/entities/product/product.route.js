@@ -10,7 +10,7 @@ exports.productRoute = [
         path: 'product',
         component: product_component_1.ProductComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.product.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService]
@@ -18,7 +18,7 @@ exports.productRoute = [
         path: 'product/:id',
         component: product_detail_component_1.ProductDetailComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.product.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService]
@@ -29,7 +29,7 @@ exports.productPopupRoute = [
         path: 'product-new',
         component: product_dialog_component_1.ProductPopupComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.product.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService],
@@ -39,7 +39,7 @@ exports.productPopupRoute = [
         path: 'product/:id/edit',
         component: product_dialog_component_1.ProductPopupComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.product.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService],
@@ -49,7 +49,7 @@ exports.productPopupRoute = [
         path: 'product/:id/delete',
         component: product_delete_dialog_component_1.ProductDeletePopupComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_USER', 'ROLE_ADMIN'],
             pageTitle: 'devizionApp.product.home.title'
         },
         canActivate: [shared_1.UserRouteAccessService],

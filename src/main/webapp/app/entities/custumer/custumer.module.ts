@@ -15,6 +15,7 @@ import {
     custumerRoute,
     custumerPopupRoute,
 } from './';
+import {ImageUploadModule} from "angular2-image-upload";
 
 let ENTITY_STATES = [
     ...custumerRoute,
@@ -24,6 +25,7 @@ let ENTITY_STATES = [
 @NgModule({
     imports: [
         DevizionSharedModule,
+        ImageUploadModule.forRoot(),
         RouterModule.forRoot(ENTITY_STATES, { useHash: true })
     ],
     declarations: [

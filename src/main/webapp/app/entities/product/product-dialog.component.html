@@ -63,7 +63,7 @@
             <label jhiTranslate="devizionApp.product.productCategory" for="field_productCategory">Категорія
                 продукту</label>
             <select class="form-control" id="field_productCategory" name="productCategory"
-                    [(ngModel)]="product.productCategory">
+                    [(ngModel)]="product.productCategory" required>
                 <option [ngValue]="null"></option>
                 <option
                     [ngValue]="productCategoryOption.id === product.productCategory?.id ? product.productCategory : productCategoryOption"

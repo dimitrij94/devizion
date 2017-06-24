@@ -14,5 +14,5 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface UserOrderRepository extends JpaRepository<UserOrder,Long> {
 
-    Page<UserOrder> findAllByOrderedProductId(Pageable pageable, Long productId);
+    Page<UserOrder> findAllByProductId(Pageable pageable, Long productId);
 }

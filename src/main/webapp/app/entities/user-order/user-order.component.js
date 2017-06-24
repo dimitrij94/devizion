@@ -7,6 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var image_service_1 = require("../../shared/image/image.service");
+var image_size_model_1 = require("../../shared/image/image-size.model");
 var UserOrderComponent = (function () {
     function UserOrderComponent(jhiLanguageService, userOrderService, alertService, eventManager, principal) {
         this.jhiLanguageService = jhiLanguageService;
@@ -19,7 +21,11 @@ var UserOrderComponent = (function () {
     UserOrderComponent.prototype.loadAll = function () {
         var _this = this;
         this.userOrderService.query().subscribe(function (res) {
-            _this.userOrders = res.json();
+            var userOrders = res.json();
+            userOrders.forEach(function (order) {
+                order.photoUri = image_service_1.MyImageService.getImagePathOfSize(image_service_1.portfolioSubdirectory, order.photoUri, window.innerWidth, image_size_model_1.twentyScalar);
+            });
+            _this.userOrders = userOrders;
         }, function (res) { return _this.onError(res.json()); });
     };
     UserOrderComponent.prototype.ngOnInit = function () {
@@ -48,7 +54,8 @@ var UserOrderComponent = (function () {
 UserOrderComponent = __decorate([
     core_1.Component({
         selector: 'jhi-user-order',
-        templateUrl: './user-order.component.html'
+        templateUrl: './user-order.component.html',
+        styleUrls: ['/user-order.style.scss']
     })
 ], UserOrderComponent);
 exports.UserOrderComponent = UserOrderComponent;

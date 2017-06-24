@@ -1,7 +1,14 @@
-import {Injectable} from '@angular/core';
-import {Http, Response, URLSearchParams, BaseRequestOptions} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
-import {Product} from './product.model';
+import {Injectable} from "@angular/core";
+import {BaseRequestOptions, Http, Response, URLSearchParams} from "@angular/http";
+import {Observable} from "rxjs/Rx";
+import {Product} from "./product.model";
+import {MyImageService, productSubdirectory} from "../../shared/image/image.service";
+import {fortyScalar, hundredScalar, sixtyScalar, twentyScalar} from "../../shared/image/image-size.model";
+import {DomSanitizer} from "@angular/platform-browser";
+import {ProductCategory} from "../product-category/product-category.model";
+import {widthOfServiceCard} from "../../home/home.component";
+import {Page, PageRequest} from "../../shared/page.model";
+import {HttpCommonService} from "../../shared/http-commons/http-common.service";
 
 @Injectable()
 export class ProductService {
@@ -10,6 +17,60 @@ export class ProductService {
     private imagesDirectory = '../../../content/images/products';
 
     constructor(private http: Http) {
+    }
+
+    getProductScalar() {
+        let windowWidth = window.innerWidth;
+        let numberOfServicesDisplayed;
+        if (windowWidth <= 599) {
+            numberOfServicesDisplayed = 1;
+        }
+        if (windowWidth > 599) {
+            numberOfServicesDisplayed = Math.floor((windowWidth * 0.95) / widthOfServiceCard);
+        }
+        if (numberOfServicesDisplayed >= 4) return fortyScalar;
+        if (numberOfServicesDisplayed >= 2) return sixtyScalar;
+        if (numberOfServicesDisplayed >= 1) return hundredScalar;
+    }
+
+    mapProductImageUrls(products: Product[], domSanitizer: DomSanitizer): Product[] {
+        let scalar = this.getProductScalar();
+        products.forEach((product) => {
+            product.productImageUri = MyImageService.getImagePathOfSize(
+                productSubdirectory,
+                product.productImageUri,
+                window.innerWidth,
+                scalar
+            );
+            domSanitizer.bypassSecurityTrustUrl(product.productImageUri);
+        });
+        return products;
+    }
+
+    parseProducts(products: Product[], domSanitizer: DomSanitizer): ProductCategory[] {
+        let categories = {};
+        let parsedCategories: ProductCategory[] = [];
+        let scalar = this.getProductScalar();
+
+        products.forEach((product: Product) => {
+            //product.productImageUri = ImageService.getProductImageUri(product.productImageUri);
+            product.productImageUri = MyImageService.getImagePathOfSize(
+                productSubdirectory,
+                product.productImageUri,
+                window.innerWidth,
+                scalar
+            );
+            domSanitizer.bypassSecurityTrustUrl(product.productImageUri);
+            let cId = product.productCategory.id;
+            if (!categories[cId]) categories[cId] = product.productCategory;
+            delete product.productCategory;
+            if (!categories[cId].categoryProducts) categories[cId].categoryProducts = [];
+            categories[cId].categoryProducts.push(product);
+        });
+        for (let category in categories) {
+            parsedCategories.push(categories[category]);
+        }
+        return parsedCategories;
     }
 
     create(product: Product): Observable<Product> {
@@ -39,10 +100,9 @@ export class ProductService {
         });
     }
 
-    query(req?: any): Observable<Response> {
+    query(req?: PageRequest): Observable<Response> {
         let options = this.createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-            ;
+        return this.http.get(this.resourceUrl, options);
     }
 
     delete(id: number): Observable<Response> {
@@ -64,5 +124,12 @@ export class ProductService {
             options.search = params;
         }
         return options;
+    }
+
+    findByCategoryId(id: number, page: PageRequest): Observable<Page<Array<Product>>> {
+        let options = HttpCommonService.wrapAsRequestOptions({page: page.page, categoryId: id});
+
+        return this.http.get(this.resourceUrl, options).map((res: Response) =>
+            (<Page<Array<Product>>>res.json()));
     }
 }

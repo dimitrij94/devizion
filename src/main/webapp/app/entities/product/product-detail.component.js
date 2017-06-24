@@ -8,11 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var ProductDetailComponent = (function () {
-    function ProductDetailComponent(eventManager, jhiLanguageService, productService, route) {
+    function ProductDetailComponent(eventManager, jhiLanguageService, productService, route, authServiceProvider) {
         this.eventManager = eventManager;
         this.jhiLanguageService = jhiLanguageService;
         this.productService = productService;
         this.route = route;
+        this.authServiceProvider = authServiceProvider;
         this.jhiLanguageService.setLocations(['product']);
     }
     ProductDetailComponent.prototype.ngOnInit = function () {

@@ -94,7 +94,6 @@ public class UserOrderResourceIntTest {
         UserOrder userOrder = new UserOrder()
             .photoUri(DEFAULT_PHOTO_URI)
             .description(DEFAULT_DESCRIPTION)
-            .orderNotes(DEFAULT_ORDER_NOTES)
             .orderedAt(DEFAULT_ORDERED_AT);
         return userOrder;
     }
@@ -121,7 +120,6 @@ public class UserOrderResourceIntTest {
         UserOrder testUserOrder = userOrderList.get(userOrderList.size() - 1);
         assertThat(testUserOrder.getPhotoUri()).isEqualTo(DEFAULT_PHOTO_URI);
         assertThat(testUserOrder.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testUserOrder.getOrderNotes()).isEqualTo(DEFAULT_ORDER_NOTES);
         assertThat(testUserOrder.getOrderedAt()).isEqualTo(DEFAULT_ORDERED_AT);
     }
 
@@ -199,7 +197,6 @@ public class UserOrderResourceIntTest {
         updatedUserOrder
             .photoUri(UPDATED_PHOTO_URI)
             .description(UPDATED_DESCRIPTION)
-            .orderNotes(UPDATED_ORDER_NOTES)
             .orderedAt(UPDATED_ORDERED_AT);
 
         restUserOrderMockMvc.perform(put("/api/user-orders")
@@ -213,8 +210,6 @@ public class UserOrderResourceIntTest {
         UserOrder testUserOrder = userOrderList.get(userOrderList.size() - 1);
         assertThat(testUserOrder.getPhotoUri()).isEqualTo(UPDATED_PHOTO_URI);
         assertThat(testUserOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testUserOrder.getOrderNotes()).isEqualTo(UPDATED_ORDER_NOTES);
-        assertThat(testUserOrder.getOrderedAt()).isEqualTo(UPDATED_ORDERED_AT);
     }
 
     @Test

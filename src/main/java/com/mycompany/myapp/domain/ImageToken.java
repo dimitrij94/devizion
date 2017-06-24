@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -17,19 +18,12 @@ public class ImageToken implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public ImageToken(){
-
-    }
-
-    public ImageToken(String path) {
-        this.path = path;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "path")
+    @NotNull
+    @Column(name = "path", nullable = false)
     private String path;
 
     public Long getId() {
@@ -42,6 +36,13 @@ public class ImageToken implements Serializable {
 
     public String getPath() {
         return path;
+    }
+
+    public ImageToken(String path) {
+        this.path = path;
+    }
+
+    public ImageToken() {
     }
 
     public ImageToken path(String path) {

@@ -3,18 +3,15 @@ package com.mycompany.myapp.service.impl;
 import com.mycompany.myapp.service.UserOrderService;
 import com.mycompany.myapp.domain.UserOrder;
 import com.mycompany.myapp.repository.UserOrderRepository;
-import com.mycompany.myapp.service.dto.user_order.UserOrderPortfolioDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing UserOrder.
@@ -37,32 +34,21 @@ public class UserOrderServiceImpl implements UserOrderService {
         return this.userOrderRepository.findAll(pageable);
     }
 
-    @Override
-    public Page<UserOrderPortfolioDto> findAllPortfolios(Pageable pageable) {
-        Page<UserOrder> userOrderPage = this.findAll(pageable);
-        return UserOrderPortfolioDto.convertPage(pageable, userOrderPage);
-    }
+
 
     @Override
     public Page<UserOrder> findAllByProductId(Pageable pageable, Long productId) {
         log.debug("Request to get Portfolio of the product with id: {}", productId);
-        return this.userOrderRepository.findAllByOrderedProductId(pageable, productId);
+        return this.userOrderRepository.findAllByProductId(pageable, productId);
     }
 
-    @Override
-    public UserOrderPortfolioDto findOnePortfolio(Long portfolioId) {
-        UserOrder userOrder = this.findOne(portfolioId);
-        return UserOrderPortfolioDto.getPortfolioFromUserOrder(userOrder);
-    }
+
 
     public Page<UserOrder> findAllByProductId(PageRequest pageRequest, long productId) {
-        return this.userOrderRepository.findAllByOrderedProductId(pageRequest, productId);
+        return this.userOrderRepository.findAllByProductId(pageRequest, productId);
     }
 
-    @Override
-    public Page<UserOrderPortfolioDto> findAllPortfoliosByProductId(PageRequest pageRequest, long productId) {
-        return UserOrderPortfolioDto.convertPage(pageRequest, this.findAllByProductId(pageRequest, productId));
-    }
+
 
     /**
      * Save a userOrder.

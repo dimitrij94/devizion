@@ -8,17 +8,17 @@
     -->
     <changeSet id="20170406065252-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="ordered_product_id"
-                                 baseTableName="user_order"
-                                 constraintName="fk_user_order_ordered_product_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="product"/>
-
         <addForeignKeyConstraint baseColumnNames="custumer_id"
                                  baseTableName="user_order"
                                  constraintName="fk_user_order_custumer_id"
                                  referencedColumnNames="id"
                                  referencedTableName="custumer"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="user_order"
+                                 constraintName="fk_user_order_product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product"/>
 
     </changeSet>
 </databaseChangeLog>

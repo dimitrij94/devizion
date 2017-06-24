@@ -1,0 +1,27 @@
+<div class="flip-container" (mouseenter)="scaleImage()" (mouseleave)="reverseScaleImage()"
+     [@showHideGridTile]="tileShown">
+    <div class="flipper" [@flipCard]="flipStatus"
+         (click)="openModal()">
+
+        <div class="front">
+            <portfolio-card (portfolioImageLoaded)="toggleFlip()"
+                            [descStatus]="frontImageScaleStatus"
+                            [portfolioEntry]="frontSidePortfolio"></portfolio-card>
+        </div>
+
+        <div class="back">
+            <portfolio-card (portfolioImageLoaded)="toggleFlip()"
+                            [descStatus]="backImageScaleStatus"
+                            [portfolioEntry]="backSidePortfolio"></portfolio-card>
+        </div>
+
+    </div>
+
+    <div class="description"
+         (click)="openModal()"
+         fxLayout="column" fxLayoutAlign="center center">
+        <h4 class=" custumer-name">{{activeCard.custumer.custumerName}}</h4>
+        <p class="order-description">{{activeCard.description}}</p>
+        <small class="order-date">{{activeCard.orderedAt|date}}</small>
+    </div>
+</div>

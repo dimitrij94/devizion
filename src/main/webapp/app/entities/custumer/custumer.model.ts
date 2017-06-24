@@ -5,6 +5,7 @@ export class Custumer {
         public custumerName?: string,
         public custumerSurname?: string,
         public custumerContactNumber?: string,
+        public custumerImageUri?: string,
         public custumerOrders?: UserOrder,
     ) {
     }

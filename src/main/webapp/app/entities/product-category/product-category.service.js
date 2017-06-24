@@ -12,21 +12,8 @@ var ProductCategoryService = (function () {
     function ProductCategoryService(http) {
         this.http = http;
         this.resourceUrl = 'api/product-categories';
-        this.imageDirectory = "/content/images/categories";
+        this.imageDirectory = '/content/images/categories';
     }
-    ProductCategoryService.prototype.transformCategoryImageUri = function (productCategory) {
-        var context = require.context(this.imageDirectory, false, /\.(gif|jpe?g|tiff|png)$/i);
-        productCategory.categoryPhotoUri = context(productCategory.categoryPhotoUri);
-        return productCategory;
-    };
-    ProductCategoryService.prototype.transformAllCategoryImageUri = function (productCategories) {
-        var context = require.context(this.imageDirectory, false, /\.(gif|jpe?g|tiff|png)$/i);
-        productCategories.map(function (category) {
-            category.categoryPhotoUri = context(category.categoryPhotoUri);
-            return category;
-        });
-        return productCategories;
-    };
     ProductCategoryService.prototype.create = function (productCategory) {
         var copy = Object.assign({}, productCategory);
         return this.http.post(this.resourceUrl, copy).map(function (res) {

@@ -1,0 +1,50 @@
+@import '../../../../content/scss/_varibles.scss';
+
+.side,
+.container {
+    width: 10em;
+    height: 10em;
+}
+
+.container {
+    transform-style: preserve-3d;
+    position: absolute;
+}
+
+.side {
+    position: absolute;
+    width: 10em;
+    height: 10em;
+    border: 2px solid white;
+    opacity: .1;
+}
+
+.back {
+    transform: translateZ(-5em);
+    background: $magenta-accent;
+}
+
+.left {
+    transform: translateX(-5em) rotateY(90deg);
+    background: lightgreen;
+}
+
+.right {
+    transform: translateX(5em) rotateY(90deg);
+    background: yellowgreen;
+}
+
+.top {
+    transform: translateY(-5em) rotateX(90deg);
+    background: $about-us-accent;
+}
+
+.bottom {
+    transform: translateY(5em) rotateX(90deg);
+    background: $cyan-accent;
+}
+
+.front {
+    transform: translateZ(5em);
+    background: $yellow-accent;
+}

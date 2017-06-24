@@ -8,21 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var ProductDialogComponent = (function () {
-    function ProductDialogComponent(activeModal, jhiLanguageService, alertService, productService, authServiceProvider, productCategoryService, eventManager) {
+    function ProductDialogComponent(activeModal, jhiLanguageService, alertService, productService, authServiceProvider, productCategoryService, imageService, eventManager) {
         this.activeModal = activeModal;
         this.jhiLanguageService = jhiLanguageService;
         this.alertService = alertService;
         this.productService = productService;
         this.authServiceProvider = authServiceProvider;
         this.productCategoryService = productCategoryService;
+        this.imageService = imageService;
         this.eventManager = eventManager;
         this.imageToken = {};
         this.jhiLanguageService.setLocations(['product']);
     }
     ProductDialogComponent.prototype.onRemove = function ($event) {
         var _this = this;
-        this.productService
-            .productImageUploadCancel(this.imageToken[$event.file.name].id)
+        this.imageService
+            .imageUploadCancel(this.imageToken[$event.file.name].id, 'products')
             .subscribe(function () {
             delete _this.imageToken[$event.file.name];
         });

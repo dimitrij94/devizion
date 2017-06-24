@@ -5,7 +5,7 @@ import {AlertService, EventManager, JhiLanguageService} from 'ng-jhipster';
 import {ProductCategory} from './product-category.model';
 import {ProductCategoryService} from './product-category.service';
 import {Principal} from '../../shared';
-import {ImageService} from '../../shared/image/image.service';
+import {MyImageService} from '../../shared/image/image.service';
 
 @Component({
     selector: 'jhi-product-category',
@@ -30,7 +30,7 @@ export class ProductCategoryComponent implements OnInit, OnDestroy {
             (res: Response) => {
                 let productCategories = <ProductCategory[]> res.json();
                 productCategories.forEach((productCategory)=> {
-                    productCategory.categoryPhotoUri = ImageService.getCategoryImage(productCategory.categoryPhotoUri);
+                    productCategory.categoryPhotoUri = MyImageService.getCategoryImage(productCategory.categoryPhotoUri);
                 });
                 this.productCategories = productCategories;
             },

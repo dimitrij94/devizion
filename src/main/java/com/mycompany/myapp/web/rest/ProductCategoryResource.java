@@ -1,20 +1,25 @@
 package com.mycompany.myapp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.mycompany.myapp.domain.Product;
 import com.mycompany.myapp.domain.ProductCategory;
+import com.mycompany.myapp.service.ProductService;
+import com.mycompany.myapp.service.dto.CategoryWithProductsDTO;
 import com.mycompany.myapp.service.ImageService;
 import com.mycompany.myapp.service.ProductCategoryService;
 import com.mycompany.myapp.web.rest.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing ProductCategory.
@@ -24,14 +29,18 @@ import java.util.Optional;
 public class ProductCategoryResource {
 
     private final Logger log = LoggerFactory.getLogger(ProductCategoryResource.class);
-
+    private final int sizeOfProductsPage = 10;
     private static final String ENTITY_NAME = "productCategory";
 
     private final ProductCategoryService productCategoryService;
     private final ImageService imageService;
+    private final ProductService productService;
 
-    public ProductCategoryResource(ProductCategoryService productCategoryService, ImageService imageService) {
+    public ProductCategoryResource(ProductCategoryService productCategoryService,
+                                   ProductService productService,
+                                   ImageService imageService) {
         this.productCategoryService = productCategoryService;
+        this.productService = productService;
         this.imageService = imageService;
     }
 
@@ -97,12 +106,70 @@ public class ProductCategoryResource {
      * @param id the id of the productCategory to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the productCategory, or with status 404 (Not Found)
      */
-    @GetMapping("/product-categories/{id}")
+    @GetMapping(value = "/product-categories/{id}", params = {"includeProducts"})
     @Timed
-    public ResponseEntity<ProductCategory> getProductCategory(@PathVariable Long id) {
+    public ResponseEntity<CategoryWithProductsDTO> getProductCategory(
+        @RequestParam(value = "includeProducts", defaultValue = "false", required = false) boolean includeProducts,
+        @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+        @PathVariable Long id) {
         log.debug("REST request to get ProductCategory : {}", id);
         ProductCategory productCategory = productCategoryService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(productCategory));
+        if (productCategory == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Page<Product>  categoryProducts = null;
+        if (includeProducts) {
+            Pageable request = new PageRequest(page, this.sizeOfProductsPage);
+            categoryProducts = this.productService.findByCategoryId(productCategory.getId(), request);
+        }
+        CategoryWithProductsDTO categoryWithProductsDTO = CategoryWithProductsDTO.newInstance(productCategory);
+        categoryWithProductsDTO.setCategoryProductsPage(categoryProducts);
+        return new ResponseEntity<>(categoryWithProductsDTO, HttpStatus.OK);
+
+    }
+
+    /**
+     * GET  /product-categories/:id : get the "id" productCategory.
+     *
+     * @param includeProducts  include products array for each productCategory to retrieve
+     * @param productsPageSize size of list of products in each category
+     * @return the ResponseEntity with status 200 (OK) and with body the productCategory, or with status 404 (Not Found)
+     */
+    @GetMapping(value = "product-categories", params = {"includeProducts", "productsPageSize"})
+    public ResponseEntity<CategoryWithProductsDTO[]> getAllProductCategories(
+        @RequestParam("includeProducts") boolean includeProducts,
+        @RequestParam("productsPageSize") int productsPageSize) {
+        log.debug("REST request to get ProductCategory with products pages included: {}");
+        Pageable productsPageRequest = new PageRequest(0, productsPageSize);
+
+        List<ProductCategory> productCategories = productCategoryService.findAll();
+        CategoryWithProductsDTO[] productCategoryDtos = new CategoryWithProductsDTO[productCategories.size()];
+        for (int i = 0; i < productCategories.size(); i++) {
+            ProductCategory category = productCategories.get(i);
+            Page<Product>  categoryProducts = this.productService.findByCategoryId(category.getId(), productsPageRequest);
+            productCategoryDtos[i] = CategoryWithProductsDTO.newInstance(category);
+            productCategoryDtos[i].setCategoryProductsPage(categoryProducts);
+        }
+        return new ResponseEntity<>(productCategoryDtos, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /product-categories/:id : get the "id" productCategory.
+     *
+     * @return the ResponseEntity with status 200 (OK) and with body the productCategory, or with status 404 (Not Found)
+     */
+    @GetMapping(value = "/product-categories/first", params = {"includeProducts"})
+    public ResponseEntity<CategoryWithProductsDTO> getFirstProductCategory(
+        @RequestParam(value = "includeProducts", defaultValue = "false", required = false) boolean includeProducts) {
+        log.debug("REST request to get first ProductCategory : {}");
+        ProductCategory productCategory = productCategoryService.getFirst();
+        if (productCategory == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Page<Product> categoryProducts = null;
+        if (includeProducts) {
+            Pageable request = new PageRequest(0, this.sizeOfProductsPage);
+            categoryProducts = this.productService.findByCategoryId(productCategory.getId(), request);
+        }
+        CategoryWithProductsDTO categoryWithProductsDTO = CategoryWithProductsDTO.newInstance(productCategory);
+        categoryWithProductsDTO.setCategoryProductsPage(categoryProducts);
+        return new ResponseEntity<>(categoryWithProductsDTO, HttpStatus.OK);
     }
 
     /**

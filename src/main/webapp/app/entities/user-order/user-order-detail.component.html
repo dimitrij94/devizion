@@ -20,10 +20,10 @@
         <dd>
             <span>{{userOrder.orderedAt | date:'mediumDate'}}</span>
         </dd>
-        <dt><span jhiTranslate="devizionApp.userOrder.orderedProduct">Ordered Product</span></dt>
+        <dt><span jhiTranslate="devizionApp.userOrder.product">Ordered Product</span></dt>
         <dd>
-            <div *ngIf="userOrder.orderedProduct">
-                <a [routerLink]="['/product', userOrder.orderedProduct?.id]">{{userOrder.orderedProduct?.id}}</a>
+            <div *ngIf="userOrder.product">
+                <a [routerLink]="['/product', userOrder.product?.id]">{{userOrder.product?.id}}</a>
             </div>
         </dd>
         <dt><span jhiTranslate="devizionApp.userOrder.custumer">Custumer</span></dt>

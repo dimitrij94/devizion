@@ -37,18 +37,21 @@ public class Product implements Serializable {
     @Column(name = "product_description", nullable = false)
     private String productDescription;
 
-    @Column(name = "product_self_cost")
-    private Float productSelfCost;
-
     @Column(name = "product_image_uri")
     private String productImageUri;
 
-    @OneToMany(mappedBy = "orderedProduct")
+    @Column(name = "cropped_image_uri")
+    private String croppedImageUri;
+
+    @Column(name = "product_self_cost")
+    private Float productSelfCost;
+
+    @OneToMany(mappedBy = "product")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<UserOrder> userOrders = new HashSet<>();
+    private Set<UserOrder> orderedProducts = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ProductCategory productCategory;
 
     public Long getId() {
@@ -98,19 +101,6 @@ public class Product implements Serializable {
         this.productDescription = productDescription;
     }
 
-    public Float getProductSelfCost() {
-        return productSelfCost;
-    }
-
-    public Product productSelfCost(Float productSelfCost) {
-        this.productSelfCost = productSelfCost;
-        return this;
-    }
-
-    public void setProductSelfCost(Float productSelfCost) {
-        this.productSelfCost = productSelfCost;
-    }
-
     public String getProductImageUri() {
         return productImageUri;
     }
@@ -124,29 +114,42 @@ public class Product implements Serializable {
         this.productImageUri = productImageUri;
     }
 
-    public Set<UserOrder> getUserOrders() {
-        return userOrders;
+    public Float getProductSelfCost() {
+        return productSelfCost;
     }
 
-    public Product userOrders(Set<UserOrder> userOrders) {
-        this.userOrders = userOrders;
+    public Product productSelfCost(Float productSelfCost) {
+        this.productSelfCost = productSelfCost;
         return this;
     }
 
-    public Product addUserOrder(UserOrder userOrder) {
-        this.userOrders.add(userOrder);
-        userOrder.setOrderedProduct(this);
+    public void setProductSelfCost(Float productSelfCost) {
+        this.productSelfCost = productSelfCost;
+    }
+
+    public Set<UserOrder> getOrderedProducts() {
+        return orderedProducts;
+    }
+
+    public Product orderedProducts(Set<UserOrder> userOrders) {
+        this.orderedProducts = userOrders;
         return this;
     }
 
-    public Product removeUserOrder(UserOrder userOrder) {
-        this.userOrders.remove(userOrder);
-        userOrder.setOrderedProduct(null);
+    public Product addOrderedProduct(UserOrder userOrder) {
+        this.orderedProducts.add(userOrder);
+        userOrder.setProduct(this);
         return this;
     }
 
-    public void setUserOrders(Set<UserOrder> userOrders) {
-        this.userOrders = userOrders;
+    public Product removeOrderedProduct(UserOrder userOrder) {
+        this.orderedProducts.remove(userOrder);
+        userOrder.setProduct(null);
+        return this;
+    }
+
+    public void setOrderedProducts(Set<UserOrder> userOrders) {
+        this.orderedProducts = userOrders;
     }
 
     public ProductCategory getProductCategory() {
@@ -189,8 +192,8 @@ public class Product implements Serializable {
             ", productName='" + productName + "'" +
             ", productPrice='" + productPrice + "'" +
             ", productDescription='" + productDescription + "'" +
-            ", productSelfCost='" + productSelfCost + "'" +
             ", productImageUri='" + productImageUri + "'" +
+            ", productSelfCost='" + productSelfCost + "'" +
             '}';
     }
 }

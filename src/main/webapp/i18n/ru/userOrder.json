@@ -19,7 +19,7 @@
             "description": "Description",
             "orderNotes": "Order Notes",
             "orderedAt": "Ordered At",
-            "orderedProduct": "Ordered Product",
+            "product": "Ordered Product",
             "custumer": "Custumer"
         }
     }

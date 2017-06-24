@@ -3,14 +3,14 @@
     "relationships": [
         {
             "relationshipType": "one-to-many",
-            "relationshipName": "userOrder",
+            "relationshipName": "orderedProduct",
             "otherEntityName": "userOrder",
-            "otherEntityRelationshipName": "orderedProduct"
+            "otherEntityRelationshipName": "product"
         },
         {
+            "relationshipType": "many-to-one",
             "relationshipName": "productCategory",
             "otherEntityName": "productCategory",
-            "relationshipType": "many-to-one",
             "otherEntityField": "id"
         }
     ],
@@ -37,17 +37,17 @@
             ]
         },
         {
-            "fieldName": "productSelfCost",
-            "fieldType": "Float"
-        },
-        {
             "fieldName": "productImageUri",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "productSelfCost",
+            "fieldType": "Float"
         }
     ],
     "changelogDate": "20170406065251",
     "entityTableName": "product",
     "dto": "no",
-    "pagination": "no",
+    "pagination": "infinite-scroll",
     "service": "serviceImpl"
 }

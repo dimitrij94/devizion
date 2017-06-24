@@ -3,37 +3,43 @@ entity Product{
 	productName String required
     productPrice Float required
 	productDescription String required
-    
     productImageUri String
+    productSelfCost Float
 }
 entity ImageToken{
-	path String
+	path String required
 }
 entity UserOrder{
 	photoUri String
+    cropedUri String
     description String
-	orderNotes String
 	orderedAt LocalDate
 }
+
 entity Custumer{
-    custumerName String
-    custumerSurname String
+    custumerName String required
+    custumerSurname String required
     custumerContactNumber String
 	custumerImageUri String
 }
 entity ProductCategory{
-	categoryName String
+	categoryName String required
     categoryPhotoUri String
 }
 
+
 relationship OneToMany{
-	ProductCategory{categoryProducts} to Product
+	ProductCategory{categoryProductsPage} to Product{productCategory}
 }
 relationship OneToMany{
-	Custumer{custumerOrders} to UserOrder
+	Custumer{custumerOrders} to UserOrder{custumer}
 }
 relationship OneToMany{
-	Product to UserOrder{orderedProduct}
+	Product{orderedProduct} to UserOrder{product}
 }
+
+
+paginate all  with infinite-scroll except ImageToken
+
 // Set service options to all except few
 service all with serviceImpl

@@ -1,0 +1,14 @@
+.portfolio-card-wrapper {
+    width: 100%;
+    height: 100%;
+
+    .portfolio-image-wrapper {
+        overflow: hidden;
+        .portfolio-image {
+            z-index:0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}

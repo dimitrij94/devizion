@@ -1,78 +1,69 @@
-<!--<lamps xmlns="http://www.w3.org/1999/html"></lamps>-->
+<div class="my-fullpage-container">
+    <lamps #lampsComponentElementRef *ngIf="!showMobileNavbar"></lamps>
 
-<div fxLayout.lt-md="column" fxLayout="row"
-     fxLayoutAlign.lt-md="start-stretch" fxLayoutAlign="space-between center"
-     id="why-us">
-    <div fxFlex.lt-md="100" fxFlex="20" class="theme-block question-bar" fxFlexLayout="row" fxLayoutAlign="end center">
-        <h3>ЧОМУ<br>САМЕ<br>МИ?</h3>
-        <div class="bar-horizontal-line"></div>
-    </div>
-    <div fxFlex.lt-md="100" fxFlex="80" fxFlex="80" class="answer">
-        <span jhiTranslate="home.whyUs.answer"></span>
-    </div>
-</div>
-
-<div fxLayout="column" fxLayout.gt-sm="row" id="services"
-     fxLayoutAlign="start stretch"
-     fxLayoutAlign.gt-sm="space-around center">
-
-    <div fxFlexOrder="2" fxFlexOrder.gt-sm="1"
-         fxFlex="100" fxFlex.gt-sm="80">
-        <md-tab-group id="services-tab-container" (selectChange)="selectActiveTabIndex($event)">
-            <md-tab *ngFor="let category of categories">
-                <ng-template md-tab-label>
-                    <h4>{{category.categoryName}}</h4>
-                </ng-template>
-                <div fxLayout="row"
-                     fxLayoutAlign="space-around center"
-                     id="cards-wrapper">
-                    <img id="left-scroller"
-                         class="scroller"
-                         (click)="shuffleBackwardAnimationSubject.next()"
-                         [src]="leftChevronUrl"/>
-                    <div id="cards-container"
-                         [@animateCardsGroupShift]="orientation"
-                         *ngFor="let cardGroup of cardsGroups"
-                         fxLayout="row" fxLayoutAlign="space-around center">
-                        <jhi-service-card *ngFor="let service of cardGroup; let i =index"
-                                          fxFlex
-                                          [service]="service"
-                                          (mouseenter)="pauseTimer()"
-                                          (mouseleave)="resumeTimer()">
-
-                        </jhi-service-card>
-                    </div>
-                    <img id="right-scroller"
-                         class="scroller"
-                         (click)="shuffleForwardAnimationSubject.next()"
-                         [src]="rightChevronUrl"/>
-                </div>
-            </md-tab>
-        </md-tab-group>
+    <div #navbarElementRef>
+        <jhi-navbar (positionChanged)="scrollToPosition($event)"
+                    [categories]="categories"
+                    [positionSubject]="navbarPositionSubject"
+                    #navbarComponentElRef id="navbar">
+        </jhi-navbar>
     </div>
 
-    <div class="theme-block"
-         id="about-us-block"
-         fxFlex="100" fxFlex.gt-sm="20"
-         fxFlexOrder="1" fxFlexOrder.gt-sm="2"
-         fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout.lt-md="column" fxLayout="row"
+         #whyUsElement
+         class="page-part"
+         fxLayoutAlign.lt-md="start-stretch" fxLayoutAlign="space-between center"
+         id="why-us">
 
-        <div class="bar-horizontal-line"></div>
-        <h3>НАШІ<br>ПОСЛУГИ</h3>
+        <div fxFlex.lt-md="100" fxFlex="80" fxFlex="80" class="answer">
+            <span jhiTranslate="home.whyUs.answer"></span>
+        </div>
     </div>
-</div>
-<div id="portfolio" *ngFor="let portfolio of portfolioGroups; let i = index">
-    <jhi-portfolio [portfolio]="portfolio"
-                   [portfolioSize]="portfolioSize[i]">
 
-    </jhi-portfolio>
-    <div *ngIf="i===Math.floor(portfolioGroups.lenght/2)"
-         id="portfolio-block"
-         fxFlex="100" fxFlex.gt-sm="20"
-         fxFlexOrder="1" fxFlexOrder.gt-sm="2"
-         fxLayout="row" fxLayoutAlign="start center">
+    <div id="services" #servicesElementRef class="page-part">
 
-        <div class="bar-horizontal-line"></div>
-        <h3>НАШE<br>ПОРТФОЛІО</h3>
+        <div id="services-tabs-container-wrapper">
+            <md-tab-group id="services-tab-container"
+                          [selectedCategoryTabIndex]="categoryTabIndex"
+                          (selectChange)="selectActiveTabIndex($event)">
+
+                <md-tab *ngFor="let category of categories; let c = index">
+                    <ng-template md-tab-label class="tab-label-template">
+                        <h5>{{category.categoryName}}</h5>
+                    </ng-template>
+                    <shuffle-cards-row [allProducts]="category.categoryProductsPage"
+                                       *ngIf="showCategoryRow[c]">
+
+                    </shuffle-cards-row>
+                </md-tab>
+
+            </md-tab-group>
+
+            <div id="loader">
+                <inter-routes-spinner></inter-routes-spinner>
+            </div>
+        </div>
     </div>
+
+    <div id="porfolio-wrapper" class="page-part" #portfolioWrapperEl>
+        <jhi-portfolio class="fp-tableCell"
+                       id="portfolio"
+                       #portfolioElRef
+                       [portfolio]="portfolio"
+                       [numOfCols]="numberOfPortfolioCols">
+        </jhi-portfolio>
+    </div>
+
+    <div #aboutUsWrapperEL class="page-part" id="about-us">
+        <about-us></about-us>
+    </div>
+
+    <div id="parallax-strips" #parallaxStripsElRef>
+        <div id="wrapper">
+            <div id="left" class="strips"></div>
+            <div id="right" class="strips"></div>
+        </div>
+    </div>
+    <!-- <div class="window-parallax" id="products-window" #productWindowEl></div>
+     <div class="window-parallax" id="portfolio-window" #portfolioWindowEl></div>-->
 </div>

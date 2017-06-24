@@ -15,6 +15,7 @@
             "detail": {
                 "title": "Custumer"
             },
+            "custumerPhoto":"Customer photo",
             "custumerName": "Custumer Name",
             "custumerSurname": "Custumer Surname",
             "custumerContactNumber": "Custumer Contact Number",

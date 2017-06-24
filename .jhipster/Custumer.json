@@ -11,20 +11,30 @@
     "fields": [
         {
             "fieldName": "custumerName",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         },
         {
             "fieldName": "custumerSurname",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         },
         {
             "fieldName": "custumerContactNumber",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "custumerImageUri",
             "fieldType": "String"
         }
     ],
     "changelogDate": "20170406065253",
     "entityTableName": "custumer",
     "dto": "no",
-    "pagination": "no",
+    "pagination": "infinite-scroll",
     "service": "serviceImpl"
 }

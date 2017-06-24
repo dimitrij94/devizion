@@ -1,0 +1,30 @@
+@import "../../../../content/scss/_varibles.scss";
+
+$card-content-padding: 24px;
+
+md-card {
+    .service-card-image {
+        -webkit-background-size: cover !important;
+        height: auto;
+        width: 100%;
+        background-size: cover !important;
+        margin-bottom: 15px;
+    }
+}
+
+.product-price {
+    background-color: $magenta-accent-border;
+    color: white;
+    margin-right: -$card-content-padding;
+    padding: 5px;
+    padding-right: 24px;
+}
+
+.my-card-content {
+    padding: $card-content-padding;
+}
+
+.mat-card {
+    padding: 0 !important;
+}
+

@@ -34,11 +34,11 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="product_self_cost" type="${floatType}">
+            <column name="product_image_uri" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="product_image_uri" type="varchar(255)">
+            <column name="product_self_cost" type="${floatType}">
                 <constraints nullable="true" />
             </column>
 

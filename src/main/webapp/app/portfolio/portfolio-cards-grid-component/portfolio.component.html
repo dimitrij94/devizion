@@ -1,0 +1,47 @@
+<div id="main-grid" #portfolioGridWrapper>
+    <div id="main-grid-wrapper">
+        <md-grid-list [cols]="numOfCols">
+            <div *ngFor="let entry of activePortfolio; let i = index">
+
+                <md-grid-tile *ngIf="i===(numOfCols*2)-1"
+                              id="'tile_'+(numOfCols*2)-1">
+                    <div id="cards-controlls">
+                        <div class="scroller backward" (click)="manualScrollBackward()"></div>
+                        <div class="caption">Наше портфоліо</div>
+                        <div class="scroller forward" (click)="manualScrollForward()"></div>
+                    </div>
+                </md-grid-tile>
+
+                <md-grid-tile [id]="'tile_'+i">
+                    <portfolio-flipping-card class="my-grid-tile"
+                                             (modalSwitch)="openPortfolioModal($event)"
+                                             [index]="i"
+                                             [togglingObservable]="flipCardToggle"
+                                             [showTileSubject]="showSubject"
+                                             [initialValue]="entry">
+
+                    </portfolio-flipping-card>
+                    <!-- Info block occupy place in the end of the second row -->
+                </md-grid-tile>
+            </div>
+        </md-grid-list>
+    </div>
+    <div id="modal-window"
+         [@modalShadowStatus]="modalDescriptionStatus"
+         *ngIf="modalLoading || showModal"
+         #modalWindow
+         [ngStyle]="modalWindowStyle">
+        <img id="portfolio-image"
+             [ngStyle]="modalImageStyle"
+             #portfolioModalImage/>
+
+        <inter-routes-spinner *ngIf="modalLoading && !showModal" id="preloader"></inter-routes-spinner>
+
+        <div id="modal-controls" [@modalDescriptionStatus]="modalDescriptionStatus" *ngIf="!modalLoading && showModal">
+            <div id="close-switch" (click)="closeModal()"></div>
+            <h3 id="product-name">{{modalPortfolio.product.productName}}</h3>
+            <p id="product-description">{{modalPortfolio.description}}</p>
+            <small id="order-date">{{modalPortfolio.orderedAt|date}}</small>
+        </div>
+    </div>
+</div>

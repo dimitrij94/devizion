@@ -16,6 +16,7 @@ import {
     productCategoryPopupRoute,
 } from './';
 import {ImageUploadModule} from 'angular2-image-upload'
+import {FirstProductCategoryResolver, ProductCategoriesResolver} from "./product-category.resolver";
 let ENTITY_STATES = [
     ...productCategoryRoute,
     ...productCategoryPopupRoute,
@@ -45,6 +46,8 @@ let ENTITY_STATES = [
     providers: [
         ProductCategoryService,
         ProductCategoryPopupService,
+        FirstProductCategoryResolver,
+        ProductCategoriesResolver
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

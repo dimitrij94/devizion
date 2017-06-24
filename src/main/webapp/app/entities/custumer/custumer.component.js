@@ -7,19 +7,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var image_service_1 = require("../../shared/image/image.service");
+var image_size_model_1 = require("../../shared/image/image-size.model");
 var CustumerComponent = (function () {
-    function CustumerComponent(jhiLanguageService, custumerService, alertService, eventManager, principal) {
+    function CustumerComponent(jhiLanguageService, custumerService, alertService, eventManager, imageService, principal) {
         this.jhiLanguageService = jhiLanguageService;
         this.custumerService = custumerService;
         this.alertService = alertService;
         this.eventManager = eventManager;
+        this.imageService = imageService;
         this.principal = principal;
         this.jhiLanguageService.setLocations(['custumer']);
     }
     CustumerComponent.prototype.loadAll = function () {
         var _this = this;
         this.custumerService.query().subscribe(function (res) {
-            _this.custumers = res.json();
+            var custumers = res.json();
+            custumers.forEach(function (custumer) {
+                custumer.custumerImageUri = image_service_1.MyImageService.getImagePathOfSize(image_service_1.custumerSubdirectory, custumer.custumerImageUri, window.innerWidth, image_size_model_1.twentyScalar);
+            });
+            _this.custumers = custumers;
         }, function (res) { return _this.onError(res.json()); });
     };
     CustumerComponent.prototype.ngOnInit = function () {
@@ -48,7 +55,8 @@ var CustumerComponent = (function () {
 CustumerComponent = __decorate([
     core_1.Component({
         selector: 'jhi-custumer',
-        templateUrl: './custumer.component.html'
+        templateUrl: './custumer.component.html',
+        styleUrls: ['./custumer.component.style.scss']
     })
 ], CustumerComponent);
 exports.CustumerComponent = CustumerComponent;

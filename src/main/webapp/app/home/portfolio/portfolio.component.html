@@ -1,9 +1,0 @@
-<div fxLayout="row" fxLayoutAlign="start center" id="main-row" >
-    <div *ngFor="let entry of portfolioWithDesc" [fxFlex]="100/portfolioSize" class="portfolio-entry">
-        <img class="portfolio-image" [src]="entry.portfolio.photoUri"/>
-        <div class="desctiption" [hidden]="entry.descActive">
-            <h4>{{"entry.portfolio.custumer.custumerName"}}</h4>
-            <small>{{entry.portfolio.description}}</small>
-        </div>
-    </div>
-</div>

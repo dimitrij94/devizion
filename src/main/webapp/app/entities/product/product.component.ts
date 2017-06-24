@@ -6,7 +6,7 @@ import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 import {Product} from "./product.model";
 import {ProductService} from "./product.service";
 import {Principal} from "../../shared";
-import {ImageService, productSubdirectory} from "../../shared/image/image.service";
+import {MyImageService, productSubdirectory} from "../../shared/image/image.service";
 import {fortyScalar, twentyScalar} from "../../shared/image/image-size.model";
 
 @Component({
@@ -34,7 +34,7 @@ export class ProductComponent implements OnInit, OnDestroy {
             (res: Response) => {
                 let products = <Product[]> res.json();
                 products.forEach((product) => {
-                    product.productImageUri = ImageService.getImagePathOfSize(
+                    product.productImageUri = MyImageService.getImagePathOfSize(
                         productSubdirectory,
                         product.productImageUri,
                         window.innerWidth,

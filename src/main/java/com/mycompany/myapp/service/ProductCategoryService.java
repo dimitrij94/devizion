@@ -18,7 +18,7 @@ public interface ProductCategoryService {
 
     /**
      *  Get all the productCategories.
-     *  
+     *
      *  @return the list of entities
      */
     List<ProductCategory> findAll();
@@ -37,4 +37,7 @@ public interface ProductCategoryService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    ProductCategory getFirst();
+
 }

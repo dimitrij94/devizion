@@ -1,0 +1,83 @@
+@import '../../../content/scss/_varibles';
+
+.map-baloon-image {
+    width: 10em;
+    top: 0;
+    margin-left: -5em;
+    left: 50%;
+    height: 7em;
+    position: absolute;
+    background: url('../../../content/images/md_logo.svg') no-repeat center center;
+}
+
+.map-baloon-image-holder {
+    width: 10em;
+    height: 7em;
+    margin: auto;
+}
+
+#about-us-wrapper {
+    height: 89vh;
+    background-color: $about-us-accent;
+    .map-wrapper {
+        height: 85%;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 24px;
+        .map {
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            .map-baloon {
+                .map-baloon-image {
+                    width: 70%;
+                    height: 20%;
+                    margin: auto;
+                    background: url('../../../content/images/md_logo.svg') no-repeat center center;
+                }
+            }
+        }
+    }
+    #departments-info {
+        height: 85%;
+        #logo-wrapper {
+            #logo {
+                height: 6em;
+                width: 24em;
+                margin: auto;
+                margin-bottom: 0.6em;
+                background: url('../../../content/images/md_logo.svg') no-repeat center center;
+                background-size: contain;
+            }
+            #header {
+                font-size: 1.5em;
+                margin-bottom: 0;
+            }
+            #subheader {
+                font-size: 0.8em;
+            }
+            .logo-text {
+                color: white;
+                text-align: center;
+                font-family: Roboto, "Helvetica Neue", sans-serif;
+            }
+        }
+        .department-list-wrapper {
+            .departments-list {
+                color: white;
+                .department-list-item {
+                    cursor: pointer;
+                    padding: 24px;
+                    p {
+                        margin-bottom: 0.45em;
+                    }
+                    &.active {
+                        background-color: rgba(255, 255, 255, 0.1) !important;
+                    }
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.05);
+                    }
+                }
+            }
+        }
+    }
+}

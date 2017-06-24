@@ -1,9 +1,224 @@
-#stage{
-    height:500px;
+@import "./../../../content/scss/varibles";
+
+#stage {
+    width: 100vw;
+    height: $screen-height;
     position: relative;
     overflow: hidden;
-    width:100%;
-    #brick-background{
-        position:absolute;
+    @include transform-style(preserve-3d);
+    @include perspective(1000px);
+    #background {
+        position: absolute;
+        height: $hidden-screen-height;
+        width: $hidden-screen-width;
+        left: -(($hidden-screen-width) - 100vw)/2;
+        top: -(($hidden-screen-height) - $screen-height)/2;
+        @include transition(transform 0s linear);
+        .bg-part {
+            position: absolute;
+            height: $hidden-screen-height;
+            background-size: contain !important;
+        }
+
+        #bg-left {
+            left: 0;
+            width: $hidden-screen-left-w;
+            background: url('../../../content/images/heder__01.png') no-repeat left top;
+        }
+
+        #bg-center {
+            left: $hidden-screen-left-w;
+            width: $hidden-screen-center-w;
+            background: url('../../../content/images/heder__02.jpg') no-repeat left top;
+        }
+
+        #bg-right {
+            left: $hidden-screen-left-w + $hidden-screen-center-w;
+            width: $hidden-screen-right-w;
+            background: url('../../../content/images/heder__03.png') no-repeat left top;
+            margin-left: -1px;
+        }
+
+        z-index: 2;
+        #rotating-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            #logo-cube-wrapper {
+                top: 5%;
+                left: 5%;
+                width: 90%;
+                height: 90%;
+                z-index: 2;
+                position: absolute;
+                @include transform-style(preserve-3d);
+                @include perspective(2000px);
+
+                #logo-cube {
+                    #cube-button-wrapper {
+                        transform-style: preserve-3d;
+                        position: relative;
+                        width: 100%;
+                        height: 100%;
+                    }
+                    z-index: 3;
+                    width: $logo-cube-side-size;
+                    height: $logo-cube-side-size;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    margin-left: -$logo-cube-side-size/2;
+                    margin-top: - $logo-cube-side-size/2;
+                    /*&:hover {
+                        .front {
+                            transform: translateZ($logo-cube-side-size);
+                        }
+                        .back {
+                            transform: translateZ(0);
+                        }
+
+                        .left {
+                            transform: translateX(-$logo-cube-side-size/2) rotateY(90deg) translateZ($logo-cube-side-size/2);
+                        }
+
+                        .right {
+                            transform: translateX($logo-cube-side-size/2) rotateY(90deg) translateZ($logo-cube-side-size/2);
+                        }
+
+                        .top {
+                            transform: translateY(-$logo-cube-side-size/2) translateZ($logo-cube-side-size/2) rotateX(90deg);
+                        }
+
+                        .bottom {
+                            transform: translateY($logo-cube-side-size/2) translateZ($logo-cube-side-size/2) rotateX(90deg);
+                        }
+                    }*/
+                    .side {
+                        //@include transition(transform 1s linear);
+                        position: absolute;
+                        width: $logo-cube-side-size;
+                        height: $logo-cube-side-size;
+                    }
+                    .back {
+                        transform: translateZ(-$logo-cube-side-size/2);
+                        z-index: 3;
+                        background-color: rgba(255, 255, 255, 0.4);
+                    }
+
+                    .left {
+                        transform: translateX(-$logo-cube-side-size/2) rotateY(90deg);
+                        background-color: rgba(255, 255, 255, 0.9);
+                        background-size: contain;
+                        z-index: 4;
+                    }
+
+                    .right {
+                        transform: translateX($logo-cube-side-size/2) rotateY(90deg);
+                        background-color: rgba(255, 255, 255, 0.9);
+                        background-size: contain;
+                        z-index: 4;
+                    }
+
+                    .top {
+                        transform: translateY(-$logo-cube-side-size/2) rotateX(90deg);
+                        z-index: 3;
+                    }
+
+                    .bottom {
+                        transform: translateY($logo-cube-side-size/2) rotateX(90deg);
+                        z-index: 3;
+                    }
+
+                    .front {
+                        cursor: pointer;
+                        transform: translateZ($logo-cube-side-size/2);
+                        background-color: rgba(255, 255, 255, 0.9);
+                        background-size: contain;
+                        z-index: 5;
+                        #logo-wrapper {
+                            height: 100%;
+                            #logo {
+                                height: 28%;
+                                margin-top: 22%;
+                                margin-bottom: 0.6em;
+                                background: url('../../../content/images/md_logo.svg') no-repeat center center;
+                                background-size: contain;
+                            }
+                            .logo-text-wrapper {
+                                font-size: calc(2vw / 1.3);
+                                margin-top: 1em;
+                                #header {
+                                    font-size: 1.5em;
+                                    margin-bottom: 0;
+                                }
+                                #subheader {
+                                    font-size: 0.8em;
+                                }
+                                .logo-text {
+                                    color: black;
+                                    text-align: center;
+                                    font-family: Roboto, "Helvetica Neue", sans-serif;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            #lamps-wrapper {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                #left-lamps-line-container {
+                    $distanceToWallCornerL: $hidden-screen-width * (394/$background-wall-width);
+                    $distanceToWallCornerT: $hidden-screen-height * (215/$background-wall-height);
+                    $lineWidth: $distanceToWallCornerT/0.43837;
+                    $triangleBase: 0;
+                    width: $lineWidth;
+                    margin-left: $distanceToWallCornerL - $lineWidth;
+                    position: absolute;
+                    top: -3%;
+                    left: 1%;
+                    transform: rotate(26deg);
+                    overflow: visible;
+                    lamp {
+                        transform: rotate(-26deg);
+                    }
+                }
+                #right-lamps-line-container {
+                    $distanceToWallCornerR: $hidden-screen-width * (1591/$background-wall-width);
+                    $distanceToWallCornerT: $hidden-screen-height * (215/$background-wall-height);
+                    $lineWidth: $distanceToWallCornerT/0.43837;
+                    width: $lineWidth;
+                    margin-left: -($hidden-screen-width - ($distanceToWallCornerR + $lineWidth));
+                    position: absolute;
+                    top: -3%;
+                    right: -3%;
+                    transform: rotate(-26deg);
+                    overflow: visible;
+                    lamp {
+                        transform: rotate(26deg);
+                    }
+                }
+                lamp {
+                    z-index: 3;
+                }
+            }
+        }
     }
+
+    #window-background {
+        position: absolute;
+        z-index: 1;
+        left: -($window-bg-w - 100vw)/2;
+        top: -($window-bg-h - $screen-height)/2;
+
+        width: $window-bg-w;
+        height: $window-bg-h;
+        background: url('../../../content/images/room-windows-bg.jpg') no-repeat center center;
+        background-size: cover;
+    }
+
 }
+

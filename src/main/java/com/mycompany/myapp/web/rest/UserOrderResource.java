@@ -3,13 +3,10 @@ package com.mycompany.myapp.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.mycompany.myapp.domain.UserOrder;
 import com.mycompany.myapp.service.UserOrderService;
-import com.mycompany.myapp.service.dto.user_order.UserOrderPortfolioDto;
 import com.mycompany.myapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,25 +90,7 @@ public class UserOrderResource {
         return userOrderService.findAll();
     }
 
-    @GetMapping("/portfolio/product/{productId}")
-    public Page<UserOrderPortfolioDto> getProductPortfolio(
-        @RequestParam("page") int page,
-        @PathVariable("productId") long productId) {
-        log.debug("REST request to get product Portfolio");
-        return userOrderService.findAllPortfoliosByProductId(new PageRequest(page, this.pageSize), productId);
-    }
 
-    @GetMapping("/portfolio")
-    public Page<UserOrderPortfolioDto> getPortfolio(@RequestParam("page") int page) {
-        log.debug("REST request to get Portfolio");
-        return userOrderService.findAllPortfolios(new PageRequest(page, this.pageSize));
-    }
-
-    @GetMapping("/portfolio/{portfolioId}")
-    public UserOrderPortfolioDto getPortfolio(@PathVariable("portfolioId") Long portfolioId) {
-        log.debug("REST request to get all UserOrders");
-        return userOrderService.findOnePortfolio(portfolioId);
-    }
 
     /**
      * GET  /user-orders/:id : get the "id" userOrder.

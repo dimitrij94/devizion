@@ -1,64 +1,14 @@
-<div>
+<!--<div>
     <router-outlet name="navbar"></router-outlet>
-</div>
+</div>-->
 <div>
-    <md-sidenav-container>
-        <md-sidenav mode="over" [opened]="sidenavOpened" #sidenav *ngIf="isAuthenticated()">
-            <a (click)="toggleSidenav()">Close sidenav</a>
-            <md-nav-list>
-                <!-- Products menu -->
-                <md-list-item id="enteties-menu">
-                    <span jhiTranslate="global.menu.entities.main">Сущности</span>
-                </md-list-item>
-                <a md-list-item *ngFor="let menu of entitiesMenuItem" routerLinkActive="active"
-                   [routerLink]="menu.routerLink">
-                    <span [jhiTranslate]="menu.translateVar">{{name}}</span>
-                </a>
-                <div mdListDivider></div>
-                <!-- Administration menu -->
-                <md-list-item id="administration-menu">
-                    <span jhiTranslate="global.menu.admin.main">Адміністрування</span>
-                </md-list-item>
-
-                <a md-list-item *ngFor="let menu of adminMenuItem" routerLinkActive="active"
-                   [routerLink]="menu.routerLink">
-                    <span [jhiTranslate]="menu.translateVar">{{name}}</span>
-                </a>
-
-                <a md-list-item href="/h2-console">
-                    <span jhiTranslate="global.menu.admin.database">Database</span>
-                </a>
-                <div MdListDivider></div>
-                <!-- Profile menu -->
-                <md-list-item id="profile-menu">
-                    <span jhiTranslate="global.menu.account.main">Profile</span>
-                </md-list-item>
-
-                <a md-list-item *ngFor="let menu of profileMenuItem" routerLinkActive="active"
-                   [routerLink]="menu.routerLink">
-                    <span [jhiTranslate]="menu.translateVar">{{name}}</span>
-                </a>
-
-                <a md-list-item
-                   id="logout"
-                   (click)="logout()"
-                   href="javascript:void(0)">
-                    <span jhiTranslate="global.menu.account.logout">Sign out</span>
-                </a>
-
-                <a md-list-item
-                   routerLinkActive="active"
-                   routerLink="register"
-                   href="javascript:void(0)">
-                    <span jhiTranslate="global.menu.account.register">Register</span>
-                </a>
-
-            </md-nav-list>
-        </md-sidenav>
-
-        <router-outlet fxLayoutFill></router-outlet>
-    </md-sidenav-container>
-
+    <router-outlet fxLayoutFill></router-outlet>
+    <div class="loader-wrapper" *ngIf="loading">
+        <div class="spinner-wrapper">
+            <span class="dot animated"></span>
+            <span class="dot animated"></span>
+            <span class="dot animated"></span>
+        </div>
+    </div>
     <router-outlet name="popup"></router-outlet>
-    <jhi-footer></jhi-footer>
 </div>

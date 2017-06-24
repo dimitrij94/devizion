@@ -4,8 +4,9 @@ import {Observable} from 'rxjs/Rx';
 
 import {UserOrder} from './user-order.model';
 import {DateUtils} from 'ng-jhipster';
-import {ImageService, portfolioSubdirectory} from "../../shared/image/image.service";
-import {ImageScalar} from "../../shared/image/image-size.model";
+import {MyImageService, portfolioSubdirectory} from "../../shared/image/image.service";
+import {fortyScalar, ImageScalar} from "../../shared/image/image-size.model";
+import {DomSanitizer} from "@angular/platform-browser/src/security/dom_sanitization_service";
 @Injectable()
 export class UserOrderService {
 
@@ -15,7 +16,7 @@ export class UserOrderService {
     }
 
     getImageUri(photoName: string, imageScalar: ImageScalar, imageSize: number) {
-        return ImageService.getImagePathOfSize(portfolioSubdirectory, photoName, imageSize, imageScalar)
+        return MyImageService.getImagePathOfSize(portfolioSubdirectory, photoName, imageSize, imageScalar)
     }
 
 
@@ -49,16 +50,26 @@ export class UserOrderService {
     query(req?: any): Observable<Response> {
         let options = this.createRequestOption(req);
         return this.http.get(this.resourceUrl, options)
-            .map((res: any) => this.convertResponse(res))
-            ;
+            .map((res: any) => this.convertResponse(res));
     }
 
     delete(id: number): Observable<Response> {
         return this.http.delete(`${this.resourceUrl}/${id}`);
     }
 
+    private convertPageableRespponse(res: any) {
+        let jsonResponse = res.json();
+        let content = jsonResponse.content;
+        for (let i = 0; i < content.length; i++) {
+            content[i].orderedAt = this.dateUtils
+                .convertLocalDateFromServer(content[i].orderedAt);
+        }
+        jsonResponse.content = content;
+        res._body = jsonResponse;
+        return res;
+    }
 
-    private convertResponse(res: any): any {
+    private convertResponse(res: any) {
         let jsonResponse = res.json();
         for (let i = 0; i < jsonResponse.length; i++) {
             jsonResponse[i].orderedAt = this.dateUtils
@@ -82,5 +93,19 @@ export class UserOrderService {
             options.search = params;
         }
         return options;
+    }
+
+    parsePortfolio(userOrders: UserOrder[], domSanitizer:DomSanitizer) {
+        userOrders.forEach((portfolio) => {
+            let photoUrl = MyImageService.getImagePathOfSize(
+                portfolioSubdirectory,
+                portfolio.cropedUri,
+                window.innerWidth,
+                fortyScalar);
+            domSanitizer.bypassSecurityTrustUrl(photoUrl);
+            domSanitizer.bypassSecurityTrustStyle(photoUrl);
+            portfolio.cropedUri = photoUrl;
+        });
+        return userOrders;
     }
 }

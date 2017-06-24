@@ -59,11 +59,13 @@ public class DevizionApp {
             log.error("You have misconfigured your application! It should not" +
                 "run with both the 'dev' and 'cloud' profiles at the same time.");
         }
-        /*
+/*
         Authority userAuthority = new Authority();
         userAuthority.setName(AuthoritiesConstants.USER);
+
         Authority adminAuthority = new Authority();
         adminAuthority.setName(AuthoritiesConstants.ADMIN);
+
         Authority anonymousAuthority = new Authority();
         anonymousAuthority.setName(AuthoritiesConstants.ANONYMOUS);
 
@@ -71,9 +73,9 @@ public class DevizionApp {
         authorityRepository.save(adminAuthority);
         authorityRepository.save(anonymousAuthority);
 
-        userService.createUser("admin","admin", "Dmitrij", "Kost", "dim.kost.admin94@gmail.com",null, "ru_RU");
-        userService.createAdmin("user","user", "Dmitrij", "Kost", "dim.kost.94.user@gmail.com",null, "ru_RU");
-        */
+        userService.createUser("user","user", "Dmitrij", "Kost", "dim.kost.admin94@gmail.com",null, "ru");
+        userService.createAdmin("admin","admin", "Dmitrij", "Kost", "dim.kost.94.user@gmail.com",null, "ru");
+*/
 
     }
 

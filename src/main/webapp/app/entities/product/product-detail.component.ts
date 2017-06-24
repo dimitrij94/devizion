@@ -5,6 +5,7 @@ import { EventManager , JhiLanguageService  } from 'ng-jhipster';
 
 import { Product } from './product.model';
 import { ProductService } from './product.service';
+import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
 
 @Component({
     selector: 'jhi-product-detail',
@@ -20,7 +21,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         private eventManager: EventManager,
         private jhiLanguageService: JhiLanguageService,
         private productService: ProductService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private authServiceProvider: AuthServerProvider
     ) {
         this.jhiLanguageService.setLocations(['product']);
     }

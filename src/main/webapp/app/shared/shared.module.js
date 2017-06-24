@@ -10,6 +10,8 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var cookies_service_1 = require("angular2-cookie/services/cookies.service");
 var _1 = require("./");
+var sidenav_service_1 = require("./sidenav.service");
+var image_service_1 = require("./image/image.service");
 var DevizionSharedModule = (function () {
     function DevizionSharedModule() {
     }
@@ -23,7 +25,7 @@ DevizionSharedModule = __decorate([
         ],
         declarations: [
             _1.JhiLoginModalComponent,
-            _1.HasAnyAuthorityDirective
+            _1.HasAnyAuthorityDirective,
         ],
         providers: [
             cookies_service_1.CookieService,
@@ -36,7 +38,9 @@ DevizionSharedModule = __decorate([
             _1.AuthServerProvider,
             _1.AuthService,
             _1.UserService,
-            common_1.DatePipe
+            common_1.DatePipe,
+            sidenav_service_1.SidenavService,
+            image_service_1.MyImageService
         ],
         entryComponents: [_1.JhiLoginModalComponent],
         exports: [

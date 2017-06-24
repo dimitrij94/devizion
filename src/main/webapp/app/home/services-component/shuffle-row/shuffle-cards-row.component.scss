@@ -1,0 +1,59 @@
+@import "../../../../content/scss/varibles";
+
+#wrapper {
+    overflow: hidden;
+    position: relative;
+    #row-wrapper {
+        //animated shadow and Y translate margin
+        padding: 37px 0;
+        overflow: auto;
+        width: 150%;
+        margin-left: -25%;
+        white-space: nowrap;
+        .animated-card {
+            position: relative;
+            float: left;
+            white-space: normal;
+            opacity: 0;
+            transform: scale(0.5);
+            &.shown {
+                opacity: 1;
+                transform: scale(1);
+            }
+            &.animated {
+                @include transition(left 0.6s ease-in-out, opacity 0.5s linear, transform 0.5s ease-out);
+            }
+            &.not-animated {
+                @include transition(none !important);
+                -o-transition: left 0s linear, opacity 0.8s linear, transform 0s linear !important;
+            }
+        }
+        .scroller {
+            background-color: #f5f5f5 !important;
+            background-size: contain !important;
+            border-radius: 50%;
+            position: absolute;
+            filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .27));
+            z-index: 10;
+            cursor: pointer;
+            height: 4em;
+            width: 4em;
+            top: 50%;
+            margin-top: -2em;
+            @include transition(filter 275ms linear 0s, transform 275ms linear 0s);
+            &:hover {
+                filter: drop-shadow(0 21px 16px rgba(0, 0, 0, .18));
+                transform: translateY(-0.5em);
+            }
+            &.left {
+                background: url("../../../../content/images/icons/ic_chevron_left_24px.svg") no-repeat center center;
+                left: 0;
+            }
+            &.right {
+                background: url("../../../../content/images/icons/ic_chevron_right_24px.svg") no-repeat center center;
+                right: 0;
+            }
+        }
+    }
+
+}

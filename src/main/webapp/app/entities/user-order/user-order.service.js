@@ -8,12 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
+var image_service_1 = require("../../shared/image/image.service");
+var image_size_model_1 = require("../../shared/image/image-size.model");
 var UserOrderService = (function () {
     function UserOrderService(http, dateUtils) {
         this.http = http;
         this.dateUtils = dateUtils;
         this.resourceUrl = 'api/user-orders';
     }
+    UserOrderService.prototype.getImageUri = function (photoName, imageScalar, imageSize) {
+        return image_service_1.MyImageService.getImagePathOfSize(image_service_1.portfolioSubdirectory, photoName, imageSize, imageScalar);
+    };
     UserOrderService.prototype.create = function (userOrder) {
         var copy = Object.assign({}, userOrder);
         copy.orderedAt = this.dateUtils
@@ -48,6 +53,17 @@ var UserOrderService = (function () {
     UserOrderService.prototype.delete = function (id) {
         return this.http.delete(this.resourceUrl + "/" + id);
     };
+    UserOrderService.prototype.convertPageableRespponse = function (res) {
+        var jsonResponse = res.json();
+        var content = jsonResponse.content;
+        for (var i = 0; i < content.length; i++) {
+            content[i].orderedAt = this.dateUtils
+                .convertLocalDateFromServer(content[i].orderedAt);
+        }
+        jsonResponse.content = content;
+        res._body = jsonResponse;
+        return res;
+    };
     UserOrderService.prototype.convertResponse = function (res) {
         var jsonResponse = res.json();
         for (var i = 0; i < jsonResponse.length; i++) {
@@ -70,6 +86,15 @@ var UserOrderService = (function () {
             options.search = params;
         }
         return options;
+    };
+    UserOrderService.prototype.parsePortfolio = function (userOrders, domSanitizer) {
+        userOrders.forEach(function (portfolio) {
+            var photoUrl = image_service_1.MyImageService.getImagePathOfSize(image_service_1.portfolioSubdirectory, portfolio.cropedUri, window.innerWidth, image_size_model_1.fortyScalar);
+            domSanitizer.bypassSecurityTrustUrl(photoUrl);
+            domSanitizer.bypassSecurityTrustStyle(photoUrl);
+            portfolio.cropedUri = photoUrl;
+        });
+        return userOrders;
     };
     return UserOrderService;
 }());

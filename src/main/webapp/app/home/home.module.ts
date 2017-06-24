@@ -1,17 +1,23 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
+import {RouterModule} from "@angular/router";
 
-import { DevizionSharedModule } from '../shared';
+import {DevizionSharedModule} from "../shared";
 
-import { HOME_ROUTE, HomeComponent } from './';
-import {LampsComponent} from './lapm-component/lamps.component';
-import {CommonModule} from '@angular/common';
-import {LampParallaxJSComponent} from './lamp-component-paralaxjs/lamp-parallaxjs.component';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {MdCardModule, MdCoreModule, MdTabsModule, MdIconModule, MdIconRegistry} from '@angular/material';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { ServiceCardComponent } from './service-card/service-card.component';
-import { PortfolioComponent } from './portfolio/portfolio.component';
+import {HOME_ROUTE, HomeComponent} from "./";
+import {CommonModule} from "@angular/common";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MdCardModule, MdTabsModule} from "@angular/material";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {PortfolioModule} from "../portfolio/portfolio.module";
+import {ServiceCardComponent} from "./services-component/service-card/service-card.component";
+import {AboutUsComponent} from "./about-us-component/about-us.component";
+import {AgmCoreModule} from "angular2-google-maps/core";
+import {LampsComponent} from "./lapm-component/lamps.component";
+import {BackgroundShiftDirective} from "./lapm-component/background-shift.directive";
+import {LampComponent} from "./lapm-component/lamp/lamp.component";
+import {NavbarModule} from "../layouts/navbar/navbar.module";
+import {ShuffleCardsRowComponent} from "./services-component/shuffle-row/shuffle-cards-row.component";
+import {AnimatedCardComponent} from "./services-component/shuffle-row/animated-card.component";
 
 
 @NgModule({
@@ -19,23 +25,29 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
         DevizionSharedModule,
         BrowserAnimationsModule,
         MdCardModule,
+        PortfolioModule,
         MdTabsModule,
         CommonModule,
-        RouterModule.forRoot([ HOME_ROUTE ], { useHash: true }),
+        NavbarModule,
         FlexLayoutModule,
+        RouterModule.forRoot([HOME_ROUTE], {useHash: true}),
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyB8zBoprWQ7ce1BmFYBmqyErY0rrueQxPw'
+        })
     ],
     declarations: [
         HomeComponent,
-        LampsComponent,
-        LampParallaxJSComponent,
         ServiceCardComponent,
-        PortfolioComponent
+        ShuffleCardsRowComponent,
+        AnimatedCardComponent,
+        AboutUsComponent,
+        LampsComponent,
+        LampComponent,
+        BackgroundShiftDirective
     ],
-    entryComponents: [
-
-    ],
-    providers: [
-    ],
+    entryComponents: [],
+    providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DevizionHomeModule {}
+export class DevizionHomeModule {
+}

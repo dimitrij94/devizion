@@ -1,7 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRouteSnapshot, NavigationEnd, RoutesRecognized} from '@angular/router';
+import {Component, ElementRef, NgZone, OnInit, Renderer, ViewChild} from "@angular/core";
+import {
+    ActivatedRouteSnapshot,
+    Event as RouterEvent,
+    NavigationCancel,
+    NavigationEnd,
+    NavigationError,
+    NavigationStart,
+    Router
+} from "@angular/router";
 
-import {JhiLanguageHelper, StateStorageService} from '../../shared';
+import {JhiLanguageHelper, StateStorageService} from "../../shared";
 import {UserMenuOption} from "../navbar/navbar.component";
 import {LoginModalService} from "../../shared/login/login-modal.service";
 import {LoginService} from "../../shared/login/login.service";
@@ -14,72 +22,60 @@ import {SidenavService} from "../../shared/sidenav.service";
     templateUrl: './main.component.html'
 })
 export class JhiMainComponent implements OnInit {
-    sidenavOpened:boolean;
+    loading: boolean = true;
+    sidenavOpened: boolean;
     adminMenuItem: UserMenuOption[] = [
         {
-            id: '',
             name: 'User management',
             routerLink: 'user-management',
-            translateVar: 'global.menu.admin.userManagement',
-            childNodes: undefined
+            translateVar: 'global.menu.admin.userManagement'
         },
         {
-            id: '',
             name: 'Configuration',
             routerLink: 'jhi-configuration',
-            translateVar: 'global.menu.admin.configuration',
-            childNodes: undefined
+            translateVar: 'global.menu.admin.configuration'
         },
         {
-            id: '',
             name: 'Health',
             routerLink: 'jhi-health',
-            translateVar: 'global.menu.admin.health',
-            childNodes: undefined
+            translateVar: 'global.menu.admin.health'
         },
         {
-            id: '',
             name: 'Audits',
             routerLink: 'audits',
-            translateVar: 'global.menu.admin.audits',
-            childNodes: undefined
+            translateVar: 'global.menu.admin.audits'
         },
         {
-            id: '',
             name: 'API',
             routerLink: 'docs',
-            translateVar: 'global.menu.admin.apidocs',
-            childNodes: undefined
+            translateVar: 'global.menu.admin.apidocs'
         },
         {
-            id: '',
             name: 'Logs',
             routerLink: 'logs',
-            translateVar: 'global.menu.admin.logs',
-            childNodes: undefined
+            translateVar: 'global.menu.admin.logs'
         }
     ];
     entitiesMenuItem: UserMenuOption[] = [
         {
-            id: '',
             name: 'Custumer',
             routerLink: 'custumer',
-            translateVar: 'global.menu.entities.custumer',
-            childNodes: undefined
+            translateVar: 'global.menu.entities.custumer'
         },
         {
-            id: '',
             name: 'User Order',
             routerLink: 'user-order',
-            translateVar: 'global.menu.entities.userOrder',
-            childNodes: undefined
+            translateVar: 'global.menu.entities.userOrder'
         },
         {
-            id: '',
             name: 'Product',
             routerLink: 'product',
-            translateVar: 'global.menu.entities.product',
-            childNodes: undefined
+            translateVar: 'global.menu.entities.product'
+        },
+        {
+            name: 'Product Category',
+            routerLink: 'product-category',
+            translateVar: 'global.menu.entities.productCategory'
         }
     ];
     profileMenuItem: UserMenuOption[] = [
@@ -96,14 +92,61 @@ export class JhiMainComponent implements OnInit {
     ];
     modalRef: NgbModalRef;
 
-    constructor(private sidenavService: SidenavService,
+    constructor(private router: Router,
+                private ngZone: NgZone,
+                private renderer: Renderer,
+                private sidenavService: SidenavService,
                 private jhiLanguageHelper: JhiLanguageHelper,
-                private router: Router,
                 private principal: Principal,
                 private loginModalService: LoginModalService,
                 private loginService: LoginService,
                 private $storageService: StateStorageService,) {
+        router.events.subscribe(this.navigationInterceptor.bind(this));
+        this.setupPolyfillRequestAnimationFrame();
     }
+
+    setupPolyfillRequestAnimationFrame() {
+        let lastTime = 0;
+        let vendors = ['ms', 'moz', 'webkit', 'o'];
+        for (let x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
+                || window[vendors[x] + 'CancelRequestAnimationFrame'];
+        }
+        if (!window.requestAnimationFrame)
+            window.requestAnimationFrame = (callback, element?) => {
+                let currTime = new Date().getTime();
+                let timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                let id = window.setTimeout(function () {
+                        callback(currTime + timeToCall);
+                    },
+                    timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+        if (!window.cancelAnimationFrame)
+            window.cancelAnimationFrame = (id) => {
+                clearTimeout(id);
+            };
+    }
+
+    private navigationInterceptor(event: RouterEvent): void {
+        if (event instanceof NavigationStart) {
+            this.loading = true;
+        }
+        if (event instanceof NavigationEnd) {
+            this.loading = false;
+        }
+
+        // Set loading state to false in both of the below events to hide the spinner in case a request fails
+        if (event instanceof NavigationCancel) {
+            this.loading = false;
+        }
+        if (event instanceof NavigationError) {
+            this.loading = false;
+        }
+    }
+
 
     toggleSidenav() {
         this.sidenavService.toggle();
@@ -137,6 +180,8 @@ export class JhiMainComponent implements OnInit {
                 this.jhiLanguageHelper.updateTitle(this.getPageTitle(this.router.routerState.snapshot.root));
             }
         });
-        this.sidenavService.statusSubject.subscribe((status)=>this.sidenavOpened = status);
+        this.sidenavService.statusSubject.subscribe((status) => this.sidenavOpened = status);
     }
+
+
 }
