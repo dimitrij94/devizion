@@ -10,23 +10,31 @@ import {DevizionAccountModule} from "./account/account.module";
 import {DevizionEntityModule} from "./entities/entity.module";
 import {FlexLayoutModule} from "@angular/flex-layout";
 
-import {
-    ActiveMenuDirective,
-    ErrorComponent,
-    JhiMainComponent,
-    LayoutRoutingModule,
-    NavbarAdminMenuItemComponent,
-    ProfileService
-} from "./layouts";
+import {ErrorComponent, JhiMainComponent, LayoutRoutingModule, ProfileService} from "./layouts";
 import {customHttpProvider} from "./blocks/interceptor/http.provider";
 import {PaginationConfig} from "./blocks/config/uib-pagination.config";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MdListModule, MdSidenavModule} from "@angular/material";
 import {NavbarModule} from "./layouts/navbar/navbar.module";
-
+import "hammerjs";
 declare var require: WebpackRequire;
 declare var $: any;
+interface WebpackRequireEnsureCallback {
+    (req: WebpackRequire): void
+}
+
+interface WebpackRequire {
+    (id: string): any;
+    (paths: string[], callback: (...modules: any[]) => void): void;
+    ensure(ids: string[], callback: WebpackRequireEnsureCallback, chunkName?: string): void;
+    context(directory: string, useSubDirectories?: boolean, regExp?: RegExp): WebpackContext;
+}
+
+interface WebpackContext extends WebpackRequire {
+    keys(): string[];
+}
+// Opera 8.0+
 @NgModule({
     imports: [
         MdSidenavModule,
@@ -46,9 +54,7 @@ declare var $: any;
     ],
     declarations: [
         JhiMainComponent,
-        ErrorComponent,
-        ActiveMenuDirective,
-        NavbarAdminMenuItemComponent
+        ErrorComponent
     ],
     providers: [
         ProfileService,
@@ -59,4 +65,5 @@ declare var $: any;
     bootstrap: [JhiMainComponent]
 })
 export class DevizionAppModule {
+
 }

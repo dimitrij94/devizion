@@ -1,15 +1,23 @@
 import {
-    AfterViewInit, Component, ElementRef, HostListener, Inject, Input, OnChanges, OnInit, SimpleChanges,
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
     ViewChild
 } from "@angular/core";
 import {UserOrder} from "../../entities/user-order/user-order.model";
-import {DomSanitizer, DOCUMENT} from "@angular/platform-browser";
+import {DOCUMENT} from "@angular/platform-browser";
 import {FlipCardSubscriptionDto} from "../flip-card-component/flip-card-subscription-dto";
 import {Observable, Subject, Subscription} from "rxjs";
 import {Timer} from "../../shared/timer";
 import {UserOrderService} from "../../entities/user-order/user-order.service";
-import {hundredScalar} from "../../shared/image/image-size.model";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {MySidenavWrapperService} from "../../entities/my-sidenav-wrapper/my-sidenav-wrapper.service";
 
 interface ModalCoordinates {
     width?: number | string;
@@ -37,7 +45,12 @@ interface ModalCoordinates {
         ])
     ]
 })
-export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges {
+export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+    flipOnOfSubscription: Subscription;
+    scrollingContainerObservable: Subscription;
+    gridTileHeight: number;
+    openModalTileIndex: number;
+    tileOfOpenModal: HTMLDivElement;
     static hasScrollAppeared = false;
     showHideSubscription: Subscription;
 
@@ -82,27 +95,72 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges {
     //num of cards scrolled by user manualy
     numCardsScrolled = 0;
     numCardsScrolledByTimer = 0;
+    @Input('title')
+    title: string = 'Наше портфоліо';
+
+    @Input('includeSidenavMargin')
+    includeSidenavMargin: boolean = false;
+
+    //width of the document
+    vw: number;
+
+    @Input('controlsTilePosition')
+    controlsTilePosition: number;
+    @Input('modalVerticalAlign')
+    modalVerticalAlign: string = 'middle';
+    @Input('maxRows')
+    maxRows: number = 3;
+    private scrollOffsetTop: number = 0;
 
     constructor(private portfolioEl: ElementRef,
                 private userOrderService: UserOrderService,
+                private mySidenavWrapperService: MySidenavWrapperService,
                 @Inject(DOCUMENT) private document: Document) {
 
     }
 
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.activePortfolio = this.portfolio.slice(0, (this.numOfCols * this.numOfRows) - 1);
+        let portfolioChanged = changes['portfolio'];
+        if (changes['numCols'] || portfolioChanged) {
+            this.numOfRows = this.getNumberOfRows();
+            this.activePortfolio = this.portfolio.slice(0, (this.numOfCols * this.numOfRows) - 1);
+        }
     }
 
+
     ngOnInit() {
+        this.vw = this.document.body.clientWidth;
+        if (this.controlsTilePosition == null)
+            this.controlsTilePosition = (this.numOfCols * 2) - 1;
+        this.numOfRows = this.getNumberOfRows();
         this.flipCardToggle = new Subject<FlipCardSubscriptionDto>();
         //2 stands for 1 - absent card in  info block and 1 - index 0 base
         this.activePortfolio = this.portfolio.slice(0, (this.numOfCols * this.numOfRows) - 1);
+        //this.updateActivePortfolio();
         this.createFlippingTimer();
         this.pauseFlippingTimer();
-        this.portfolio.forEach((portfolio) => {
-            portfolio.photoUri = this.userOrderService.getImageUri(portfolio.photoUri, hundredScalar, window.innerWidth);
-        });
+        this.userOrderService.parsePortfolioModalImages(this.portfolio);
+        if (this.modalVerticalAlign == 'top')
+            this.scrollingContainerObservable =
+                this.mySidenavWrapperService.scrollingObservable.subscribe(($event) => {
+                    this.scrollOffsetTop = $event.target.scrollTop;
+                })
+    }
+
+
+    ngOnDestroy(): void {
+        this.scrollingContainerObservable && this.scrollingContainerObservable.unsubscribe();
+        this.showHideSubscription && this.showHideSubscription.unsubscribe();
+        this.flipOnOfSubscription && this.flipOnOfSubscription.unsubscribe();
+    }
+
+    updateActivePortfolio() {
+        let numberOfCells = this.numOfCols * this.numOfRows;
+        if (numberOfCells > (this.controlsTilePosition + 1)) {
+            numberOfCells -= 1;
+        }
+        this.activePortfolio = this.portfolio.slice(0, numberOfCells);
     }
 
     ngAfterViewInit(): void {
@@ -110,9 +168,25 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges {
             .skip(5)
             .subscribe(this.showScroll.bind(this));
 
-        this.windowScrollSubject
+        this.flipOnOfSubscription = this.windowScrollSubject
             .skip(5)
             .subscribe(this.flipScroll.bind(this));
+    }
+
+    getNumberOfRows() {
+        let numOfRows = 1;
+        let numOfCols = this.numOfCols;
+        let numberOfUserOrders = this.portfolio.length;
+        let hasMore = true;
+        while (hasMore) {
+            hasMore = (numOfRows * numOfCols) < numberOfUserOrders;
+            if (hasMore) {
+                numOfRows += 1;
+            }
+            if (!hasMore || numOfRows >= this.maxRows) {
+                return numOfRows;
+            }
+        }
     }
 
     closeModal() {
@@ -122,23 +196,32 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges {
         this.modalDescriptionStatus = 'hidden';
         let self = this;
         setTimeout(() => {
+            self.tileOfOpenModal.style.display = 'block';
             self.showModal = false;
             self.flipTimer.resume();
         }, 1000)
     }
 
     openPortfolioModal(dto: { index: number, order: UserOrder }) {
+        this.vw = this.document.body.clientWidth;
+
         if (this.showModal || this.modalLoading) return;
         this.flipTimer.pause();
-        let rowNum = Math.floor(dto.index / this.numOfCols);
-        let selectedTile = this.document.getElementById('tile_' + dto.index);
+
+        let rowNum = Math.floor((dto.index >= this.controlsTilePosition ? dto.index + 1 : dto.index) / this.numOfCols);
+        this.openModalTileIndex = dto.index;
+        let selectedTile = <HTMLDivElement>this.document.getElementById('tile_' + dto.index);
         let selectedTilePosition = selectedTile.getBoundingClientRect();
         let tileHeight = selectedTile.offsetHeight;
-        let tilesMargin = 2;
+        this.gridTileHeight = tileHeight;
+        this.tileOfOpenModal = selectedTile;
+
+        let tilesMargin = 1;
+
         this.modalWindowStyle = {
             width: selectedTile.offsetWidth + 'px',
             height: tileHeight + 'px',
-            left: selectedTilePosition.left + 'px',
+            left: selectedTilePosition.left - (this.includeSidenavMargin ? 300 : 0) + 'px',
             top: ((rowNum) * tileHeight) + (rowNum) * tilesMargin + 'px'
         };
         this.modalLoading = true;
@@ -181,26 +264,27 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     onModalImageLoad($event) {
+        let sidenavMargin = (this.includeSidenavMargin ? 300 : 0);
         let gridHeight = this.portfolioGridWrapper.nativeElement.offsetHeight;
         this.portfolioModalImage.nativeElement.src = $event.target.src;
         let originalImageWidthPx = $event.target.width;
         let originalImageHeightPx = $event.target.height;
-
+        //48 stands for 24 px padding from each side
+        let modalMaxWidth = this.vw - sidenavMargin - 48;
         /* final size of the modal window in px after animation finished*/
         /* modal height is determined from the original image proportions in px */
-        let documentWidth = this.document.body.clientWidth;
         let modalHeightPx = window.innerHeight * 0.75;
         let modalWidthPx = this.getWidthFromAspectRatio(originalImageWidthPx, originalImageHeightPx, modalHeightPx);
-        if (modalWidthPx > documentWidth) {
-            modalWidthPx = documentWidth - 48;
+        if (modalWidthPx > modalMaxWidth) {
+            modalWidthPx = modalMaxWidth;
             modalHeightPx = this.getHeightFromAspectRatio(originalImageWidthPx, originalImageHeightPx, modalWidthPx);
         }
 
-        let modalX = (window.innerWidth - modalWidthPx) / 2;
+        let modalX = ((this.vw - sidenavMargin) - modalWidthPx) / 2;
         let modalY = 0;
 
         this.modalWindowStyle.left = modalX + 'px';
-        this.modalWindowStyle.top = (gridHeight / 2) - (modalHeightPx / 2) + 'px';
+        this.modalWindowStyle.top = this.getModalFinalPositionY(this.modalVerticalAlign, gridHeight, modalHeightPx);
         this.modalWindowStyle.height = modalHeightPx + 'px';
         this.modalWindowStyle.width = modalWidthPx + 'px';
 
@@ -211,15 +295,30 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges {
 
         this.modalLoading = false;
         this.showModal = true;
-        this.showHideModalDescription();
+        this.showModalDescription();
+
+        //hide opened modal original tile
+        this.tileOfOpenModal.style.display = 'none';
     }
 
-    showHideModalDescription() {
+    getModalFinalPositionY(align: string, gridHeight: number, modalHeightPx: number) {
+        switch (align) {
+            case 'middle':
+                return (gridHeight / 2) - (modalHeightPx / 2) + 'px';
+            case 'top':
+                return this.scrollOffsetTop + 'px';
+            case 'bottom':
+                return (gridHeight - modalHeightPx) + 'px';
+        }
+    }
+
+    showModalDescription() {
         this.modalDescriptionStatus = 'shown';
     }
 
     closePortfolioModal() {
         this.showModal = false;
+        this.tileOfOpenModal.style.display = 'block';
         this.modalPortfolio = undefined;
     }
 
@@ -259,9 +358,12 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges {
         //index starts with zero and increases with each timer cycle generating next card index
         let nextCardIndex = lastCardIndex + index + 1;
         //after all cards inside portfolio have bean shown start all over again
-        if (nextCardIndex >= this.portfolio.length)
+        if (nextCardIndex >= this.portfolio.length) {
             nextCardIndex = nextCardIndex % this.portfolio.length;
-
+        }
+        else if (nextCardIndex < 0) {
+            nextCardIndex = Math.abs(index % this.portfolio.length)
+        }
         this.flipCardToggle.next({index: flippingCardIndex, nextEntity: this.portfolio[nextCardIndex]});
     }
 

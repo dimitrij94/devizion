@@ -18,22 +18,35 @@
             background-color: $cyan-accent;
             display: table;
             .caption {
+                color: white;
+                text-align: center;
                 font-size: 1.5em;
                 font-family: Roboto, "Helvetica Neue", sans-serif;
-                width: 40%;
-                vertical-align: middle;
-                display: table-cell;
             }
-            .scroller {
-                width: 30%;
-                height: 2em;
-                display: table-cell;
+            .scroller-wrapper {
+                height: 15%;
+                background-color: rgba(255, 255, 255, 0.2);
                 cursor: pointer;
+                border-radius: 50%;
+                &:hover{
+                    background-color: rgba(255, 255, 255, 0.4);
+                }
+                .scroller {
+                    width: 70%;
+                    height: 70%;
+                    top: 15%;
+                    left: 15%;
+                    position: relative;
+                }
                 &.forward {
-                    background: url('../../../content/images/icons/ic_chevron_right_24px.svg') no-repeat center center;
+                    .scroller {
+                        background: url('../../../content/images/icons/ic_chevron_right_white_24px.svg') no-repeat center center;
+                    }
                 }
                 &.backward {
-                    background: url('../../../content/images/icons/ic_chevron_left_24px.svg') no-repeat center center;
+                    .scroller {
+                        background: url('../../../content/images/icons/ic_chevron_left_white_24px.svg') no-repeat center center;
+                    }
                 }
             }
         }
@@ -43,6 +56,7 @@
         background-color: rgba(255, 255, 255, 0.3);
         overflow: hidden;
         transition: left 1s, top 1s, width 1s, height 1s;
+        z-index: 10;
         #preloader {
             font-size: 2em;
         }
@@ -51,28 +65,41 @@
             position: absolute;
         }
         #modal-controls {
-            @include transition(opacity 0.3s linear);
-            opacity: 1;
+            @include transition(backgrund-color 0.3s linear);
+
             position: absolute;
             right: -14em;
             top: 0;
             width: 14em;
             height: 100%;
             padding: 12px;
-            background-color: white;
+            background-color: rgba(38, 126, 255, 0.8);
             &:hover {
-                opacity: 0.3;
+                background-color: rgba(38, 126, 255, 0.3);
             }
-            #close-switch {
-                background: url('../../../content/images/icons/ic_clear_black_24px.svg');
-                width: 1.5em;
-                height: 1.5em;
-                background-size: contain;
-                right: 0;
-                position: absolute;
+            .controls-text {
+                color: white;
+            }
+            #close-switch-wrapper {
+                width: 2em;
+                height: 2em;
+                position: relative;
                 cursor: pointer;
-                top: 0;
-                z-index: 12;
+                float: right;
+                z-index: 8;
+                right: 0;
+                @include borderRadius(50%);
+
+                background-color: #f0f0f0;
+                #close-switch {
+                    position: relative;
+                    width: 70%;
+                    height: 70%;
+                    top: 15%;
+                    left: 15%;
+                    background: url('../../../content/images/icons/ic_clear_black_24px.svg') no-repeat center center;
+                    background-size: contain;
+                }
             }
         }
     }

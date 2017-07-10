@@ -2,11 +2,18 @@
 Bootstrap tweaks
 ===============================================================*/
 
-
-
-
 body, h1, h2, h3, h4 {
     font-weight: 300;
+}
+
+.mat-slider-thumb {
+    cursor: -webkit-grab;
+    cursor: grab;
+
+    &:active {
+        cursor: -webkit-grabbing;
+        cursor: grabbing;
+    }
 }
 
 /* ==========================================================================

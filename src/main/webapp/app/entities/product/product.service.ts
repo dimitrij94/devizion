@@ -1,14 +1,14 @@
 import {Injectable} from "@angular/core";
 import {BaseRequestOptions, Http, Response, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs/Rx";
-import {Product} from "./product.model";
+import {Product, ProductWithPortfolio} from "./product.model";
 import {MyImageService, productSubdirectory} from "../../shared/image/image.service";
-import {fortyScalar, hundredScalar, sixtyScalar, twentyScalar} from "../../shared/image/image-size.model";
+import {fortyScalar, hundredScalar, sixtyScalar} from "../../shared/image/image-size.model";
 import {DomSanitizer} from "@angular/platform-browser";
-import {ProductCategory} from "../product-category/product-category.model";
 import {widthOfServiceCard} from "../../home/home.component";
 import {Page, PageRequest} from "../../shared/page.model";
-import {HttpCommonService} from "../../shared/http-commons/http-common.service";
+import {servicesRowWidthPrcnt} from "../../home/services-component/shuffle-row/shuffle-cards-row.component";
+import {GenericResponse} from "@angular/http/src/static_response";
 
 @Injectable()
 export class ProductService {
@@ -16,7 +16,7 @@ export class ProductService {
     private resourceUrl = 'api/products';
     private imagesDirectory = '../../../content/images/products';
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private imageService: MyImageService) {
     }
 
     getProductScalar() {
@@ -33,45 +33,20 @@ export class ProductService {
         if (numberOfServicesDisplayed >= 1) return hundredScalar;
     }
 
-    mapProductImageUrls(products: Product[], domSanitizer: DomSanitizer): Product[] {
-        let scalar = this.getProductScalar();
+    parseProductCroppedImageUrls(products: Product[], domSanitizer: DomSanitizer, productImageWidthPrcnt: number): Product[] {
+        let optimalImageSize = this.imageService.getOptimalSize(productImageWidthPrcnt, window.innerWidth * servicesRowWidthPrcnt);
+
         products.forEach((product) => {
-            product.productImageUri = MyImageService.getImagePathOfSize(
+            product.croppedImageUri = this.imageService.getImageUrlFromImageSize(
                 productSubdirectory,
-                product.productImageUri,
-                window.innerWidth,
-                scalar
+                product.croppedImageUri,
+                optimalImageSize
             );
-            domSanitizer.bypassSecurityTrustUrl(product.productImageUri);
+            domSanitizer.bypassSecurityTrustUrl(product.croppedImageUri);
         });
         return products;
     }
 
-    parseProducts(products: Product[], domSanitizer: DomSanitizer): ProductCategory[] {
-        let categories = {};
-        let parsedCategories: ProductCategory[] = [];
-        let scalar = this.getProductScalar();
-
-        products.forEach((product: Product) => {
-            //product.productImageUri = ImageService.getProductImageUri(product.productImageUri);
-            product.productImageUri = MyImageService.getImagePathOfSize(
-                productSubdirectory,
-                product.productImageUri,
-                window.innerWidth,
-                scalar
-            );
-            domSanitizer.bypassSecurityTrustUrl(product.productImageUri);
-            let cId = product.productCategory.id;
-            if (!categories[cId]) categories[cId] = product.productCategory;
-            delete product.productCategory;
-            if (!categories[cId].categoryProducts) categories[cId].categoryProducts = [];
-            categories[cId].categoryProducts.push(product);
-        });
-        for (let category in categories) {
-            parsedCategories.push(categories[category]);
-        }
-        return parsedCategories;
-    }
 
     create(product: Product): Observable<Product> {
         let copy: Product = Object.assign({}, product);
@@ -126,10 +101,20 @@ export class ProductService {
         return options;
     }
 
-    findByCategoryId(id: number, page: PageRequest): Observable<Page<Array<Product>>> {
-        let options = HttpCommonService.wrapAsRequestOptions({page: page.page, categoryId: id});
+    findByCategoryId(id: number, page: number, pageSize = 20): Observable<Page<Product>> {
+        let options = new URLSearchParams();
+        options.set('page', page.toString());
+        options.set('categoryId', id.toString());
+        options.set('size', pageSize.toString());
+        return this.http.get(this.resourceUrl, {search: options}).map((res: Response) =>
+            (<Page<Product>> res.json()));
+    }
 
-        return this.http.get(this.resourceUrl, options).map((res: Response) =>
-            (<Page<Array<Product>>>res.json()));
+    findWithProductPortfolio(id: number, page = 0, pageSize = 20): Observable<GenericResponse<ProductWithPortfolio>> {
+        let query = new URLSearchParams();
+        query.set('includePortfolio', 'true');
+        query.set('page', page.toString());
+        query.set('pageSize', pageSize.toString());
+        return this.http.get(`${this.resourceUrl}/${id}`, {search: query});
     }
 }

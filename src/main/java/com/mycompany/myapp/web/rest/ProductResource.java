@@ -1,11 +1,12 @@
 package com.mycompany.myapp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.mycompany.myapp.domain.ImageToken;
 import com.mycompany.myapp.domain.Product;
+import com.mycompany.myapp.domain.UserOrder;
 import com.mycompany.myapp.service.ImageService;
-import com.mycompany.myapp.service.ImageTokenService;
 import com.mycompany.myapp.service.ProductService;
+import com.mycompany.myapp.service.UserOrderService;
+import com.mycompany.myapp.service.dto.ProductWithPortfolio;
 import com.mycompany.myapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -15,14 +16,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * REST controller for managing Product.
@@ -38,10 +37,12 @@ public class ProductResource {
 
     private final ProductService productService;
     private final ImageService imageService;
+    private final UserOrderService userOrderService;
 
-    public ProductResource(ProductService productService, ImageService imageService) {
+    public ProductResource(ProductService productService, ImageService imageService, UserOrderService userOrderService) {
         this.productService = productService;
         this.imageService = imageService;
+        this.userOrderService = userOrderService;
     }
 
     /**
@@ -118,15 +119,32 @@ public class ProductResource {
      * @param page       the page of the
      * @return the ResponseEntity with status 200 (OK) and with body the products Page, or with status 404 (Not Found)
      */
-    @GetMapping(params = {"page", "categoryId"})
+    @GetMapping(params = {"categoryId"})
     @Timed
     public ResponseEntity<Page<Product>> getProduct(
         @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+        @RequestParam(value = "size", defaultValue = "20", required = false) int size,
         @RequestParam(value = "categoryId") Long categoryId) {
         log.debug("REST request to get Product : {}", categoryId);
-        Page<Product> productsPage = productService.findByCategoryId(categoryId, new PageRequest(page, productsPageSize));
-        if (productsPage.hasContent())
-            return new ResponseEntity<>(productsPage, HttpStatus.OK);
+        Page<Product> productsPage = productService.findByCategoryId(categoryId, new PageRequest(page, size));
+        return new ResponseEntity<>(productsPage, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}", params = {"page", "pageSize", "includePortfolio"})
+    public ResponseEntity<ProductWithPortfolio> getProductWithPortfolio(@PathVariable("id") Long id,
+                                                                        @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                        @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
+                                                                        @RequestParam("includePortfolio") boolean includePortfolio) {
+        log.debug("REST request to get Product with Portfolio: {}", id);
+        Product product = this.productService.findOne(id);
+        if (product != null) {
+            ProductWithPortfolio productWithPortfolio = new ProductWithPortfolio(product);
+            if (includePortfolio) {
+                Page<UserOrder> userOrders = this.userOrderService.findAllByProductId(new PageRequest(page, pageSize), id);
+                productWithPortfolio.setCategoryProductsPage(userOrders);
+            }
+            return new ResponseEntity<>(productWithPortfolio, HttpStatus.OK);
+        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

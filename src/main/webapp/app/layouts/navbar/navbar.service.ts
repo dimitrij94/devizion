@@ -12,7 +12,7 @@ export interface MobileNavbarItem {
 
 export interface MobileNavbarSubmenuItem {
     label: string;
-    routerLink?: string;
+    routerLink: string;
     clickCallback?: ($event: any) => void;
 }
 
@@ -48,7 +48,7 @@ export class NavbarService {
         return category.map((value) => {
             return (<MobileNavbarSubmenuItem> {
                 label: value.categoryName,
-                routerLink: '/category/' + routerSubLink + '/' + value.id
+                routerLink: '/product-category/' + value.id
             });
         })
     }

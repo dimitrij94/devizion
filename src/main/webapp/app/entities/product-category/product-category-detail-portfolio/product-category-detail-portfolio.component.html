@@ -1,0 +1,97 @@
+<jhi-my-sidenav [allCategories]="allCategories">
+    <div id="sidenav-content" fxLayout="column" position="sidenav-content">
+        <img [src]="productCategory.categoryPhotoUri" id="category-photo"/>
+
+        <div id="controls" class="devizion-dark-theme" fxFlex>
+
+            <md-select placeholder="Категорія"
+                       color="primary"
+                       [(ngModel)]="activeCategoryId"
+                       (change)="changeCategory(activeCategoryId)"
+                       class="select-category">
+                <md-option *ngFor="let category of allCategories"
+                           [value]="category.id" color="accent">
+                    {{category.categoryName}}
+                </md-option>
+            </md-select>
+
+
+
+            <md-input-container color="primary">
+                <div mdPrefix class="input-prefix">
+                    <div class="search-icon"></div>
+                </div>
+                <input type="text" mdInput placeholder="Пошук" [formControl]="searchControl" [mdAutocomplete]="auto"/>
+
+                <md-hint align="start">Відображенна кількість портфоліо</md-hint>
+                <md-hint align="end">{{numberOfFilteredPortfolios.count}} / {{totalNumberOfCategoryPortfolios}}</md-hint>
+            </md-input-container>
+            <md-autocomplete #auto="mdAutocomplete">
+                <md-option *ngFor="let product of filteredUniqueProducts|async"
+                           (onSelectionChange)="onAutocompleteSelectionChange(product)"
+                           [value]="product.productName">
+                    {{product.productName}}
+                </md-option>
+            </md-autocomplete>
+
+            <md-chip-list class="selected-products-chips">
+                <md-chip *ngFor="let productChip of searchChipsPrefix" color="accent">
+                    <div class="product-chip-content" fxLayout="row" fxLayoutAlign="space-around center">
+                        <span fxFlex>{{productChip.productName}}</span>
+                        <div fxFlex="18" class="delete-chip" (click)="deleteChip(productChip)"></div>
+                    </div>
+                </md-chip>
+            </md-chip-list>
+
+            <!--
+                <md-input-container>
+                    <span mdPrefix class="input-prefix">Починаючи з </span>
+                    <input mdInput [mdDatepicker]="minPicker" placeholder="дати" [(ngModel)]="minOrderDataQuery"/>
+                    <button mdSuffix [mdDatepickerToggle]="minPicker"></button>
+                </md-input-container>
+                <md-datepicker #minPicker></md-datepicker>
+
+
+                <md-input-container>
+                    <span mdPrefix class="input-prefix">Закінчуючи </span>
+                    <input mdInput [mdDatepicker]="maxPicker" placeholder="датою" [(ngModel)]="maxOrderDataQuery"/>
+                    <button mdSuffix [mdDatepickerToggle]="maxPicker"></button>
+                </md-input-container>
+                <md-datepicker #maxPicker></md-datepicker>
+               -->
+
+        </div>
+    </div>
+
+    <div position="scrolling-content">
+        <jhi-portfolio *ngIf="showPortfolio"
+                       [controlsTilePosition]="0"
+                       [includeSidenavMargin]="sidenavOpened"
+                       [maxRows]="15"
+                       [numOfCols]="numOfPortfolioCols"
+                       [portfolio]="(categoryPortfolio | portfolioByProductsPipe:searchChipsPrefix:numberOfFilteredPortfolios)"
+                       [modalVerticalAlign]="'top'"
+                       [title]="productCategory.categoryName">
+
+        </jhi-portfolio>
+
+        <div class="alert">
+            <div class="no-orders" *ngIf="nothingToShowAlert">
+                <span>Нажаль портфоліо цього продукту доки порожне</span>
+            </div>
+            <div *ngIf="loadMoreAlert">
+                <div class="load-more-orders">
+                    <button md-raised-button (click)="previousPage()"
+                            class="devizion-dark-theme" color="primary">
+                        {{lastPage - 1}}
+                    </button>
+                    <p>{{lastPage}}</p>
+                    <button md-raised-button (click)="nextPage()"
+                            class="devizion-dark-theme" color="primary">
+                        {{lastPage + 1}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</jhi-my-sidenav>

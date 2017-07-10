@@ -1,7 +1,7 @@
 /**
  * Created by Dmitrij on 05.05.2017.
  */
-import {Component} from "@angular/core";
+import {Component, Input} from "@angular/core";
 declare var google: any;
 
 interface Department {
@@ -13,6 +13,7 @@ interface Department {
     lng: number;
     isActive: boolean;
     label: string;
+    searchQuery: string;
 }
 
 @Component({
@@ -22,6 +23,8 @@ interface Department {
     moduleId: module.id
 })
 export class AboutUsComponent {
+    @Input('showMap')
+    showMap: boolean = true;
 
     departments: Department[] = [
         {
@@ -32,16 +35,18 @@ export class AboutUsComponent {
             lat: 50.731731,
             lng: 24.155610,
             isActive: true,
-            label: 'M'
+            label: 'M',
+            searchQuery: 'Міська Друкарня Нововолинськ Україна'
         }, {
             name: 'ФІЛАЛ',
             address: 'м.Володимир-Волинський, вул. Ковельска, 29',
             phoneNumber: '(03342) 3-81-71, (097) 296-45-50',
-            email: '',
+            email: 'devizion@ukr.net',
             lat: 50.848014,
             lng: 24.320563,
             isActive: false,
-            label: 'F'
+            label: 'F',
+            searchQuery: 'Міська Друкарня Володимир Волинський Україна'
         }
     ];
 
@@ -50,12 +55,20 @@ export class AboutUsComponent {
     lat: number = this.departments[0].lat;
 
     goToDepartment(dep: Department) {
-        let isActive = !dep.isActive;
         this.departments.forEach((dep) => dep.isActive = false);
-        dep.isActive = isActive;
+        dep.isActive = true;
         this.lng = dep.lng;
         this.lat = dep.lat;
     }
 
+    openDepartmentLink(department: Department) {
+        // If it's an iPhone..
+        if ((navigator.platform.indexOf("iPhone") != -1)
+            || (navigator.platform.indexOf("iPod") != -1)
+            || (navigator.platform.indexOf("iPad") != -1))
+            window.open(`geo:0,0?q=${department.searchQuery}`);
+        else
+            window.open(`http://maps.google.com/maps?q=${department.searchQuery}`);
+    }
 
 }

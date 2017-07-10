@@ -1,10 +1,9 @@
 import {
     AfterViewInit,
-    ChangeDetectorRef,
     Component,
     ElementRef,
+    HostListener,
     Inject,
-    OnDestroy,
     OnInit,
     ViewChild,
     ViewEncapsulation
@@ -14,16 +13,12 @@ import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 import {Account, LoginModalService, Principal} from "../shared";
 import {ProductService} from "../entities/product/product.service";
 import {ProductCategory, ProductCategoryWithProducts} from "../entities/product-category/product-category.model";
-import {animate, state, style, transition, trigger} from "@angular/animations";
 import {DOCUMENT, DomSanitizer} from "@angular/platform-browser";
-import {Observable, Subject, Subscription} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {UserOrder} from "../entities/user-order/user-order.model";
 import {UserOrderService} from "../entities/user-order/user-order.service";
 import {ActivatedRoute} from "@angular/router";
-
-import "fullpage.js/dist/jquery.fullpage.js";
 import {PortfolioComponent} from "../portfolio/portfolio-cards-grid-component/portfolio.component";
-import {NavbarComponent} from "../layouts/navbar/navbar.component";
 import {LampsComponent, scrollElasticX} from "./lapm-component/lamps.component";
 import {Product} from "../entities/product/product.model";
 import {Page} from "../shared/page.model";
@@ -31,9 +26,7 @@ import {Page} from "../shared/page.model";
 const numberOfPages = 5;
 const scrollMaxDuration = 7000;
 export const widthOfServiceCard = 300; //px
-enum PagesNames{
-    firsPage, secondPage, thirdPage
-}
+export const widthOfPortfolioCard = 200;
 @Component({
     selector: 'jhi-home',
     templateUrl: './home.component.html',
@@ -42,21 +35,17 @@ enum PagesNames{
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit {
+    numberOfServices: number;
     showMobileNavbar = false;
-    parallaxScrollSubscription: Subscription;
     navbarPositionY: any;
-    navbarPosition = 'relative';
-    windowScrollSubscription: Subscription;
 
     account: Account;
     modalRef: NgbModalRef;
     categories: ProductCategory[] = [];
-    categoryTabIndex = 0;
-    numberOfServicesDisplayed = 3;
+    categoryTabIndex = 1;
 
 
-    widthOfPortfolioCard = 200;
     numberOfPortfolioCols = 3;
     portfolio: Array<UserOrder>;
 
@@ -75,25 +64,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('servicesElementRef')
     servicesElementRef: ElementRef;
 
-    @ViewChild('servicesElementRef')
-    productsEl: ElementRef;
-
-    @ViewChild('navbarComponentElRef')
-    navbarComponentElRef: NavbarComponent;
-
-    /*@ViewChild('productWindowEl')
-     productWindowEl: ElementRef;*/
-
     @ViewChild('portfolioWindowEl')
     portfolioWindowEl: ElementRef;
 
-    @ViewChild('parallaxStripsElRef')
-    parallaxStripsElRef: ElementRef;
+    parallaxStripsStyle: { marginTop?: string } = {};
 
     perPxlScrollStripsParalllax: number;
-
-    private windowResizeSubscription: Subscription;
-    private portfolioOffsetsY: number;
 
     lampsRun = true;
 
@@ -103,7 +79,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('aboutUsWrapperEL')
     aboutUsWrapperEL: ElementRef;
 
-    prodWindowPerPxlChange: number;
 
     navbarIdentifierPosition = 0;
     navbarPositionSubject = new Subject<number>();
@@ -114,7 +89,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     perPxlScrollTime: number;
     categoryTabLoading: boolean = false;
     showCategoryRow: Array<boolean>;
-
+    nextServicesTabIndex: number;
+    isNavbarTransparent = true;
+    isNavbarLogoShown = false;
+    isNavbarFixed = false;
 
     constructor(private jhiLanguageService: JhiLanguageService,
                 private principal: Principal,
@@ -127,24 +105,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 private userOrderService: UserOrderService,
                 private domSanitizer: DomSanitizer) {
         this.jhiLanguageService.setLocations(['home']);
+        this.onResize();
 
-        let resolvedData = this.route.snapshot.data;
-        let categories = <Array<ProductCategory>> resolvedData['categories'].json();
-        let firstCategory = <ProductCategoryWithProducts> resolvedData['firstCategory'];
-        categories[0].categoryProducts = this.productService.mapProductImageUrls(firstCategory.categoryProductsPage.content, domSanitizer);
-        //let indexOfFirst = categories.indexOf(categories.find((category) => category.id === firstCategory.id));
-        //delete categories[indexOfFirst];
-
-
-        this.showCategoryRow = categories.map(this.isCategoryNotEmpty);
-        this.categories = [categories[0]];
-        this.portfolio = this.userOrderService.parsePortfolio(this.route.snapshot.data['portfolio'].json(), this.domSanitizer);
-    }
-
-
-    ngOnDestroy(): void {
-        this.windowResizeSubscription.unsubscribe();
-        this.windowScrollSubscription.unsubscribe();
     }
 
     ngOnInit() {
@@ -152,12 +114,24 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
             this.account = account;
         });
         this.registerAuthenticationSuccess();
-        this.onResize();
+        let resolvedData = this.route.snapshot.data;
+
+        this.portfolio = this.userOrderService
+            .parsePortfolioCroppedImages(resolvedData['portfolio'].json(),
+                this.domSanitizer,
+                (100 / this.numberOfPortfolioCols) / 100);
+
+        let categories = <Array<ProductCategory>> resolvedData['categories'].json();
+        let firstCategory = <ProductCategoryWithProducts> resolvedData['firstCategory'];
+        firstCategory.categoryProducts = this.parseLoadedProducts(firstCategory.categoryProductsPage);
+        categories[0] = firstCategory;
+        this.showCategoryRow = categories.map(this.isCategoryNotEmpty);
+        this.categories = categories;
     }
 
     ngAfterViewInit(): void {
+
         this.navbarPositionY = this.navbarElementRef.nativeElement.getBoundingClientRect().top;
-        this.portfolioOffsetsY = this.productsEl.nativeElement.getBoundingClientRect().top;
 
         let body = this.document.body,
             html = this.document.documentElement;
@@ -188,43 +162,44 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.perPxlScrollStripsParalllax = (window.innerHeight * 8) / documentHeight;
 
 
-        this.windowResizeSubscription = Observable.fromEvent(window, 'resize')
-            .subscribe(this.onResize.bind(this));
-
-        let scrollObservable = Observable.fromEvent(window, 'scroll');
-        this.windowScrollSubscription = scrollObservable
-            .skip(10)
-            .subscribe(this.onScroll.bind(this));
-
-        this.parallaxScrollSubscription = scrollObservable
-            .subscribe(this.parallaxElements.bind(this));
     }
 
-
-    onResize() {
+    @HostListener('window:resize', ['$event'])
+    onResize($event?: any) {
         let windowWidth = window.innerWidth;
         let oldNumOfPortfolios = this.numberOfPortfolioCols;
         let newNumOfPortfolios;
 
+        let oldNumOfServices = this.numberOfServices;
+        let newNumOfServices;
+
         if (windowWidth <= 599) {
+            newNumOfServices = 1;
             newNumOfPortfolios = 2;
             this.showMobileNavbar = true;
         }
 
         if (windowWidth > 599) {
+            newNumOfServices = Math.floor((windowWidth * 0.95) / widthOfServiceCard);
+            newNumOfPortfolios = Math.floor((windowWidth * 0.9) / widthOfPortfolioCard);
             this.showMobileNavbar = false;
-            newNumOfPortfolios = Math.floor((windowWidth * 0.9) / this.widthOfPortfolioCard)
         }
 
         if (oldNumOfPortfolios != newNumOfPortfolios) {
             this.numberOfPortfolioCols = newNumOfPortfolios;
         }
+
+        if (oldNumOfServices != newNumOfServices) {
+            this.numberOfServices = newNumOfServices;
+        }
     }
 
-    onScroll(event) {
+    @HostListener('window:scroll', ['$event'])
+    onScroll($event) {
+        let scrollTop = this.document.body.scrollTop;
+        this.parallaxStrips(scrollTop);
         if (!this.showMobileNavbar) {
             let viewPointMargin = 70;
-            let scrollTop = this.document.body.scrollTop;
             let viewPointPosition = scrollTop + this.navbarHeight + viewPointMargin;
 
             for (let i = 0; i < this.navbarPositionBreakpoints.length - 1; i++) {
@@ -242,60 +217,78 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (this.lampsRun) {
                     this.lampsComponentElementRef.disableEnableComponent.next(false);
                     this.lampsRun = false;
+
+                    this.isNavbarLogoShown = true;
+                    this.isNavbarFixed = true;
+                    this.isNavbarTransparent = false;
                 }
-                this.navbarComponentElRef.toggleFixedState();
             }
 
             else {
                 if (!this.lampsRun) {
                     this.lampsComponentElementRef.disableEnableComponent.next(true);
                     this.lampsRun = true;
+
+                    this.isNavbarLogoShown = false;
+                    this.isNavbarFixed = false;
+                    this.isNavbarTransparent = true;
                 }
-                this.navbarComponentElRef.toggleRelativeState();
             }
         }
     }
 
-    isCategoryNotEmpty(category: ProductCategory) {
-        return category.categoryProducts && category.categoryProducts !== []
+    parallaxStrips(scrollTop) {
+        // this.productWindowEl.nativeElement.style.marginTop = scrollTop * this.prodWindowPerPxlChange + 'px ';
+        window.requestAnimationFrame((function () {
+            this.parallaxStripsStyle.marginTop = -scrollTop / 1.5 + 'px';
+        }).bind(this));
     }
 
-    parallaxElements($event) {
-        let scrollTop = this.document.body.scrollTop;
-        // this.productWindowEl.nativeElement.style.marginTop = scrollTop * this.prodWindowPerPxlChange + 'px ';
-        this.parallaxStripsElRef.nativeElement.style.marginTop = -scrollTop / 1.5 + 'px';
+    isCategoryNotEmpty(category: ProductCategory): boolean {
+        return category.categoryProducts != null && category.categoryProducts !== []
     }
+
+    parseLoadedProducts(productsPage: Page<Product>): Product[] {
+        return this.productService.parseProductCroppedImageUrls(productsPage.content, this.domSanitizer, (100 / this.numberOfServices) / 100);
+    }
+
 
     switchShowCategoryRowTo(index: number) {
-        this.showCategoryRow.forEach((val: boolean, i: number) => {
-            val = i === index;
-        })
+        let row = this.showCategoryRow;
+        for (let i = 0; i < row.length; i++) {
+            row[i] = this.isCategoryNotEmpty(this.categories[i]);
+        }
     }
 
     selectActiveTabIndex($event) {
         let newIndex = $event.index;
         let newCategory = this.categories[newIndex];
 
-        if (this.isCategoryNotEmpty(newCategory)) {
+        if (!this.isCategoryNotEmpty(newCategory)) {
             this.categoryTabLoading = true;
             this.loadCategoryProducts(newIndex)
-                .subscribe((products: Page<Array<Product>>) => {
-                    this.categories[newIndex].categoryProducts = products.content;
-                    this.categoryTabLoading = false;
+                .subscribe((products: Page<Product>) => {
+                    this.categories[newIndex].categoryProducts = this.parseLoadedProducts(products);
                     this.switchShowCategoryRowTo(newIndex);
-                    this.categoryTabIndex = newIndex;
+                    this.nextServicesTabIndex = newIndex;
                 });
-            return false;
         }
         else {
             this.switchShowCategoryRowTo(newIndex);
             this.categoryTabIndex = newIndex;
         }
+        return false;
+    }
+
+    productsRowLoaded(index: number) {
+        this.showCategoryRow[index] = true;
+        this.categoryTabIndex = this.nextServicesTabIndex;
+        this.categoryTabLoading = false;
     }
 
 
-    loadCategoryProducts(index: number): Observable<Page<Array<Product>>> {
-        return this.productService.findByCategoryId(this.categories[index].id, {page: 0});
+    loadCategoryProducts(index: number): Observable<Page<Product>> {
+        return this.productService.findByCategoryId(this.categories[index].id, 0);
     }
 
     private onError(error) {

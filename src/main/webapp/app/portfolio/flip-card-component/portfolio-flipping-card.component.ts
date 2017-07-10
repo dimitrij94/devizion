@@ -1,12 +1,13 @@
 /**
  * Created by Dmitrij on 29.04.2017.
  */
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
 import {UserOrder} from "../../entities/user-order/user-order.model";
 import {Subject} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {FlipCardSubscriptionDto} from "./flip-card-subscription-dto";
 import {PortfolioComponent} from "../portfolio-cards-grid-component/portfolio.component";
+import {Subscription} from "rxjs/Subscription";
 @Component({
     selector: 'portfolio-flipping-card',
     templateUrl: './portfolio-flipping-card.component.html',
@@ -26,19 +27,18 @@ import {PortfolioComponent} from "../portfolio-cards-grid-component/portfolio.co
             state('backSideActive', style({
                 transform: 'rotateY(180deg)'
             })),
-            transition('frontSideActive <=> backSideActive', [
+            transition('frontSideActive => backSideActive', [
                 //style({transformStyle:'preserve-3d'}),
-                animate('600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)')
-            ])
-            /*,
+                animate('800ms cubic-bezier(0.175, 0.885, 0.32, 1.275)')
+            ]),
              transition('backSideActive => frontSideActive', [
              //style({transformStyle:'preserve-3d'}),
-             animate('600ms cubic-bezier(0.6, -0.28, 0.735, 0.045)')
-             ])*/
+             animate('800ms cubic-bezier(0.6, -0.28, 0.735, 0.045)')
+             ])
         ])
     ]
 })
-export class PortfolioFlippingCard implements OnInit {
+export class PortfolioFlippingCard implements OnInit, OnDestroy {
     showDescAfterFlipAnimationFinish: boolean = false;
 
     flipReady = false;
@@ -66,8 +66,8 @@ export class PortfolioFlippingCard implements OnInit {
 
     backImageScaleStatus = 'hidden';
 
-    frontCardIsActive = true;
-    backCardIsActive = false;
+    //frontCardIsActive = true;
+    //backCardIsActive = false;
 
     @Output('modalSwitch')
     modalSwitch: EventEmitter<{ order: UserOrder, index: number }> = new EventEmitter();
@@ -76,6 +76,8 @@ export class PortfolioFlippingCard implements OnInit {
     flipObservable: Subject<FlipCardSubscriptionDto>;
 
     tileShown: string;
+    private flipSubscription: Subscription;
+    private showSubscription: Subscription;
 
     constructor(private changeDetector: ChangeDetectorRef) {
 
@@ -89,7 +91,7 @@ export class PortfolioFlippingCard implements OnInit {
         this.tileShown = PortfolioComponent.hasScrollAppeared ? 'shown' : 'hidden';
         this.backSidePortfolio = this.frontSidePortfolio;
         this.activeCard = this.frontSidePortfolio;
-        this.flipObservable.subscribe(
+        this.flipSubscription = this.flipObservable.subscribe(
             (flipDto) => {
                 //index is selected at random and if it matches the card index it is being flipped
                 if (this.index === flipDto.index) {
@@ -105,19 +107,25 @@ export class PortfolioFlippingCard implements OnInit {
                     }
                 }
             });
-        this.showSubject.subscribe((val) => {
+        this.showSubscription = this.showSubject.subscribe((val) => {
             val && setTimeout(this.showTile.bind(this), this.index * 150)
         });
+    }
+
+
+    ngOnDestroy(): void {
+        this.showSubscription && this.showSubscription.unsubscribe();
+        this.flipSubscription && this.flipSubscription.unsubscribe()
     }
 
     setNextCard(portfolio: UserOrder) {
         this.activeCard = portfolio;
         if (this.flipStatus === 'frontSideActive') {
-            this.backCardIsActive = true;
+            //this.backCardIsActive = true;
             this.backSidePortfolio = portfolio;
         }
         else {
-            this.frontCardIsActive = true;
+            //this.frontCardIsActive = true;
             this.frontSidePortfolio = portfolio;
         }
     }
@@ -130,34 +138,32 @@ export class PortfolioFlippingCard implements OnInit {
         this.isHovered = true;
         if (this.flipStatus === 'frontSideActive') {
             this.frontImageScaleStatus = 'shown';
+            this.backImageScaleStatus = 'hidden';
         }
         else {
+            this.frontImageScaleStatus = 'hidden';
             this.backImageScaleStatus = 'shown';
         }
     }
 
     reverseScaleImage() {
         this.isHovered = false;
-        if (this.flipStatus === 'frontSideActive') {
-            this.frontImageScaleStatus = 'hidden';
-        }
-        else {
-            this.backImageScaleStatus = 'hidden';
-        }
+        this.frontImageScaleStatus = 'hidden';
+        this.backImageScaleStatus = 'hidden';
     }
 
 
-    //being toggled by (onLoad) event of the img to prevent the flipping before the img has loaded
+//being toggled by (onLoad) event of the img to prevent the flipping before the img has loaded
     toggleFlip() {
         if (this.flipReady) {
             if (this.flipStatus === 'frontSideActive') {
                 this.flipStatus = 'backSideActive';
-                this.frontCardIsActive = false;
-                this.backCardIsActive = true;
+                //this.frontCardIsActive = false;
+                //this.backCardIsActive = true;
             } else {
                 this.flipStatus = 'frontSideActive';
-                this.frontCardIsActive = true;
-                this.backCardIsActive = false;
+                //this.frontCardIsActive = true;
+                //this.backCardIsActive = false;
             }
         }
     }

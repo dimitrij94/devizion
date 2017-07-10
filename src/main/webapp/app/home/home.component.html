@@ -4,8 +4,11 @@
     <div #navbarElementRef>
         <jhi-navbar (positionChanged)="scrollToPosition($event)"
                     [categories]="categories"
+                    [isTransparent]="isNavbarTransparent"
+                    [isPositionFixed]="isNavbarFixed"
+                    [showLogo]="isNavbarLogoShown"
                     [positionSubject]="navbarPositionSubject"
-                    #navbarComponentElRef id="navbar">
+                    id="navbar">
         </jhi-navbar>
     </div>
 
@@ -27,19 +30,15 @@
                           [selectedCategoryTabIndex]="categoryTabIndex"
                           (selectChange)="selectActiveTabIndex($event)">
 
-                <md-tab *ngFor="let category of categories; let c = index">
-                    <ng-template md-tab-label class="tab-label-template">
-                        <h5>{{category.categoryName}}</h5>
-                    </ng-template>
-                    <shuffle-cards-row [allProducts]="category.categoryProductsPage"
-                                       *ngIf="showCategoryRow[c]">
-
-                    </shuffle-cards-row>
+                <md-tab *ngFor="let category of categories; let c = index" [label]="category.categoryName">
+                    <shuffle-cards-row [allProducts]="category.categoryProducts"
+                                       [numOfServices]="numberOfServices"
+                                       (onRowImagesLoaded)="productsRowLoaded(c)"
+                                       *ngIf="showCategoryRow[c]"></shuffle-cards-row>
                 </md-tab>
-
             </md-tab-group>
 
-            <div id="loader">
+            <div id="loader" *ngIf="categoryTabLoading">
                 <inter-routes-spinner></inter-routes-spinner>
             </div>
         </div>
@@ -55,10 +54,10 @@
     </div>
 
     <div #aboutUsWrapperEL class="page-part" id="about-us">
-        <about-us></about-us>
+        <about-us [showMap]="!showMobileNavbar"></about-us>
     </div>
 
-    <div id="parallax-strips" #parallaxStripsElRef>
+    <div id="parallax-strips" [ngStyle]="parallaxStripsStyle">
         <div id="wrapper">
             <div id="left" class="strips"></div>
             <div id="right" class="strips"></div>

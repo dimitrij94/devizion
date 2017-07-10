@@ -1,7 +1,6 @@
 import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router";
 import {ProductService} from "./product.service";
-import {Product} from "./product.model";
 import {Observable} from "rxjs";
 import {Response} from "@angular/http";
 /**
@@ -30,6 +29,6 @@ export class ProductByIdResolver implements Resolve<Response> {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Response>
         | Promise<Response>
         | Response {
-        return this.productService.find(route.params['id']);
+        return this.productService.findWithProductPortfolio(route.params['id']);
     }
 }

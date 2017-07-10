@@ -7,6 +7,9 @@ import com.mycompany.myapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +28,6 @@ public class UserOrderResource {
     private final Logger log = LoggerFactory.getLogger(UserOrderResource.class);
 
     private static final String ENTITY_NAME = "userOrder";
-
-    private final int pageSize = 20;
 
     private final UserOrderService userOrderService;
 
@@ -91,7 +92,6 @@ public class UserOrderResource {
     }
 
 
-
     /**
      * GET  /user-orders/:id : get the "id" userOrder.
      *
@@ -104,6 +104,27 @@ public class UserOrderResource {
         log.debug("REST request to get UserOrder : {}", id);
         UserOrder userOrder = userOrderService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(userOrder));
+    }
+
+    @GetMapping(value = "/user-orders", params = {"productId", "page", "size"})
+    public ResponseEntity<Page<UserOrder>> getUserOrdersOfProduct(@RequestParam("productId") Long id,
+                                                                  @RequestParam("page") int page,
+                                                                  @RequestParam("size") int size) {
+        log.debug("REST request to get UserOrder of product with id: {}", id);
+        Page<UserOrder> userOrderPage = userOrderService.findAllByProductId(new PageRequest(page, size), id);
+        if (!userOrderPage.hasContent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(userOrderPage, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/user-orders", params = {"categoryId"})
+    public ResponseEntity<Page<UserOrder>> getUserOrdersOfCategory(@RequestParam("categoryId") Long id,
+                                                                   @RequestParam("page") int page,
+                                                                   @RequestParam("size") int size) {
+        log.debug("REST request to get UserOrder of category with id: {}", id);
+        Page<UserOrder> userOrderPage = userOrderService.findAllByCategoryId(id, new PageRequest(page, size));
+        return new ResponseEntity<>(userOrderPage, HttpStatus.OK);
     }
 
     /**

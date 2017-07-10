@@ -1,7 +1,7 @@
 @import "../../../content/scss/varibles";
 
 md-sidenav {
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     width: 16.92rem;
 }
 
@@ -26,8 +26,8 @@ a {
 
 @import '../../../content/scss/varibles';
 
-$dot-size: 0.7em;
-
+$dot-size: 0.45em;
+$dot-margins: 0.3em;
 @keyframes bouncy {
     0%, 100% {
         transform: translateY(0em) scale(1);
@@ -40,32 +40,33 @@ $dot-size: 0.7em;
     }
 }
 
-
 .loader-wrapper {
-    padding: calc(50vh - 0.35em);
-    position: relative;
+    position: fixed;
     text-align: center;
     font-size: 4rem;
-
+    height: 100vh;
+    width: 100vw;
+    z-index: 99999;
+    background-color: rgba(255, 255, 255, 0.8);
+    top: 0;
     .spinner-wrapper {
         position: relative;
         display: block;
-        margin: -$dot-size auto auto;
-        width: 4em;
+        margin: -$dot-size/2 auto auto;
+        width: $dot-size*3 + $dot-margins*2;
+        top: 50%;
         height: $dot-size;
 
         .dot {
-            margin-left: -0.5em;
             width: $dot-size;
             position: absolute;
             top: 0px;
-            height: 100%;
-            border-radius: 0.45em;
-
+            height: $dot-size;
+            border-radius: 50%;
 
             &:nth-child(1) {
                 background-color: $magenta-accent;
-                left: 0.75em;
+                left: 0;
                 &.animated {
                     animation: bouncy 1s ease-in-out infinite;
                 }
@@ -73,14 +74,14 @@ $dot-size: 0.7em;
 
             &:nth-child(2) {
                 background-color: $yellow-accent;
-                margin-top: 0;
+                left: $dot-size + $dot-margins;
                 &.animated {
                     animation: bouncy 1s ease-in-out 0.33s infinite;
                 }
             }
             &:nth-child(3) {
                 background-color: $cyan-accent;
-                left: 3.25em;
+                left: $dot-size*2 + $dot-margins*2;
                 &.animated {
                     animation: bouncy 1s ease-in-out infinite;
                 }

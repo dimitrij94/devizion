@@ -3,10 +3,10 @@ package com.mycompany.myapp.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.mycompany.myapp.domain.Product;
 import com.mycompany.myapp.domain.ProductCategory;
-import com.mycompany.myapp.service.ProductService;
-import com.mycompany.myapp.service.dto.CategoryWithProductsDTO;
 import com.mycompany.myapp.service.ImageService;
 import com.mycompany.myapp.service.ProductCategoryService;
+import com.mycompany.myapp.service.ProductService;
+import com.mycompany.myapp.service.dto.CategoryWithProductsDTO;
 import com.mycompany.myapp.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,14 +110,15 @@ public class ProductCategoryResource {
     @Timed
     public ResponseEntity<CategoryWithProductsDTO> getProductCategory(
         @RequestParam(value = "includeProducts", defaultValue = "false", required = false) boolean includeProducts,
+        @RequestParam(value = "size", defaultValue = "20") int sizeOfProductsPage,
         @RequestParam(value = "page", defaultValue = "0", required = false) int page,
         @PathVariable Long id) {
         log.debug("REST request to get ProductCategory : {}", id);
         ProductCategory productCategory = productCategoryService.findOne(id);
         if (productCategory == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        Page<Product>  categoryProducts = null;
+        Page<Product> categoryProducts = null;
         if (includeProducts) {
-            Pageable request = new PageRequest(page, this.sizeOfProductsPage);
+            Pageable request = new PageRequest(page, sizeOfProductsPage);
             categoryProducts = this.productService.findByCategoryId(productCategory.getId(), request);
         }
         CategoryWithProductsDTO categoryWithProductsDTO = CategoryWithProductsDTO.newInstance(productCategory);
@@ -144,7 +145,7 @@ public class ProductCategoryResource {
         CategoryWithProductsDTO[] productCategoryDtos = new CategoryWithProductsDTO[productCategories.size()];
         for (int i = 0; i < productCategories.size(); i++) {
             ProductCategory category = productCategories.get(i);
-            Page<Product>  categoryProducts = this.productService.findByCategoryId(category.getId(), productsPageRequest);
+            Page<Product> categoryProducts = this.productService.findByCategoryId(category.getId(), productsPageRequest);
             productCategoryDtos[i] = CategoryWithProductsDTO.newInstance(category);
             productCategoryDtos[i].setCategoryProductsPage(categoryProducts);
         }

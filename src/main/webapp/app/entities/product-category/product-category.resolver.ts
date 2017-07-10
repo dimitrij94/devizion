@@ -23,17 +23,41 @@ export class ProductCategoriesResolver implements Resolve<Observable<Response>> 
 }
 
 @Injectable()
+export class ProductCategoryByIdResolver implements Resolve<Observable<ProductCategory>> {
+
+    constructor(private productCategoryService:ProductCategoryService){
+
+    }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Observable<ProductCategory>> | Promise<Observable<ProductCategory>> | Observable<ProductCategory> {
+        return this.productCategoryService.find(route.params['id']);
+    }
+}
+
+@Injectable()
 export class ProductCategoriesWithProductsResolver implements Resolve<Observable<ProductCategoryWithProducts>> {
 
     constructor(private productCategoryService: ProductCategoryService) {
 
     }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
-        Observable<Observable<ProductCategoryWithProducts>>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Observable<ProductCategoryWithProducts>>
         | Promise<Observable<ProductCategoryWithProducts>>
         | Observable<ProductCategoryWithProducts> {
         return this.productCategoryService.queryWithProducts();
+    }
+}
+@Injectable()
+export class ProductCategoryByIdWithProductsResolver implements Resolve<Observable<ProductCategoryWithProducts>> {
+
+    constructor(private productCategoryService: ProductCategoryService) {
+
+    }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Observable<ProductCategoryWithProducts>>
+        | Promise<Observable<ProductCategoryWithProducts>>
+        | Observable<ProductCategoryWithProducts> {
+        return this.productCategoryService.findWithProducts(route.params['id']);
     }
 }
 
@@ -44,8 +68,7 @@ export class FirstProductCategoryResolver implements Resolve<Observable<ProductC
 
     }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
-        Observable<Observable<ProductCategoryWithProducts>>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Observable<ProductCategoryWithProducts>>
         | Promise<Observable<ProductCategoryWithProducts>>
         | Observable<ProductCategoryWithProducts> {
         return this.productCategoryService.findFirst();

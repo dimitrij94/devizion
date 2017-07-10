@@ -20,19 +20,18 @@
                 <div class="toggler" *ngIf="item.hasSubmenu" (click)="toggleSubmenu(item)"></div>
             </div>
 
-            <div class="placeholder"
-                 [ngStyle]="{height:item.submenuHeight, maxHeight:item.submenuMaxHeight}">
-            </div>
-
-            <div class="accordion-content" [@menuOpened]="item.opened">
+            <div class="accordion-content" [style.zIndex]="-1-i" [@menuOpened]="item.opened">
                 <div class="item" *ngFor="let submenuItem of item.submenu">
-                    <div class="label"
-                         [routerLink]="submenuItem.routerLink"
-                         (click)="submenuItem.clickCallback">
-                        {{submenuItem.label}}
+                    <div class="label" (click)="submenuItem.clickCallback">
+                        <a [routerLink]="submenuItem.routerLink">{{submenuItem.label}}</a>
                     </div>
                 </div>
             </div>
+
+            <div class="placeholder"
+                 [ngStyle]="{height:item.submenuHeight, maxHeight:item.submenuMaxHeight, zIndex:-2-i}">
+            </div>
+
         </div>
     </div>
 </div>

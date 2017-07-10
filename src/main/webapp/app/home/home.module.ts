@@ -6,30 +6,30 @@ import {DevizionSharedModule} from "../shared";
 import {HOME_ROUTE, HomeComponent} from "./";
 import {CommonModule} from "@angular/common";
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {MdCardModule, MdTabsModule} from "@angular/material";
+import {MdTabsModule, MdTooltipModule} from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PortfolioModule} from "../portfolio/portfolio.module";
-import {ServiceCardComponent} from "./services-component/service-card/service-card.component";
 import {AboutUsComponent} from "./about-us-component/about-us.component";
 import {AgmCoreModule} from "angular2-google-maps/core";
 import {LampsComponent} from "./lapm-component/lamps.component";
-import {BackgroundShiftDirective} from "./lapm-component/background-shift.directive";
 import {LampComponent} from "./lapm-component/lamp/lamp.component";
 import {NavbarModule} from "../layouts/navbar/navbar.module";
-import {ShuffleCardsRowComponent} from "./services-component/shuffle-row/shuffle-cards-row.component";
-import {AnimatedCardComponent} from "./services-component/shuffle-row/animated-card.component";
+import {SpinnerModule} from "../spinner/spinner.module";
+import {DevizionServicesModule} from "./services-component/services.module";
 
 
 @NgModule({
     imports: [
         DevizionSharedModule,
         BrowserAnimationsModule,
-        MdCardModule,
+        SpinnerModule,
+        MdTooltipModule,
         PortfolioModule,
         MdTabsModule,
         CommonModule,
         NavbarModule,
         FlexLayoutModule,
+        DevizionServicesModule,
         RouterModule.forRoot([HOME_ROUTE], {useHash: true}),
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyB8zBoprWQ7ce1BmFYBmqyErY0rrueQxPw'
@@ -37,13 +37,9 @@ import {AnimatedCardComponent} from "./services-component/shuffle-row/animated-c
     ],
     declarations: [
         HomeComponent,
-        ServiceCardComponent,
-        ShuffleCardsRowComponent,
-        AnimatedCardComponent,
         AboutUsComponent,
         LampsComponent,
-        LampComponent,
-        BackgroundShiftDirective
+        LampComponent
     ],
     entryComponents: [],
     providers: [],

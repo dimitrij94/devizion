@@ -1,29 +1,77 @@
+<jhi-my-sidenav [allCategories]="allCategories">
+    <div position="sidenav-content" class="devizion-dark-theme" id="sidenav-content" fxLayout="column">
 
-<div *ngIf="productCategory">
-    <h2><span jhiTranslate="devizionApp.productCategory.detail.title">Product Category</span> {{productCategory.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="devizionApp.productCategory.categoryName">Category Name</span></dt>
-        <dd>
-            <span>{{productCategory.categoryName}}</span>
-        </dd>
-        <dt><span jhiTranslate="devizionApp.productCategory.categoryPhotoUri">Category Photo Uri</span></dt>
-        <dd>
-            <span>{{productCategory.categoryPhotoUri}}</span>
-        </dd>
-    </dl>
+        <img class="category-photo" [src]="productCategory.categoryPhotoUri"/>
+        <div class="search-controlls-wrapper" fxFlex>
+            <div class="category-search-input category devizion-dark-theme" >
+                <md-select placeholder="Категорія"
+                           [(ngModel)]="activeCategoryId"
+                           (change)="changeCategory(activeCategoryId)"
+                           class="search-component">
+                    <md-option *ngFor="let category of allCategories" [value]="category.id">
+                        {{category.categoryName}}
+                    </md-option>
+                </md-select>
+            </div>
+            <div class="category-search-input query">
+                <md-input-container class="search-component">
+                    <div mdPrefix class="my-input-prefix"></div>
+                    <input type="text" [(ngModel)]="searchQuery" mdInput placeholder="Пошук">
+                    <md-hint class="devizion-dark-theme" align="start">Відображенно продуктів</md-hint>
+                    <md-hint class="devizion-dark-theme" align="end">{{numberOfFilteredProducts.count}} / {{totalNumberOfCategoryProducts}}</md-hint>
+                </md-input-container>
+            </div>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
+            <div class="category-search-input min-price">
+                <md-input-container>
+                    <span mdPrefix class="my-input-prefix">Мінімальна</span>
+                    <input mdInput type="number" [(ngModel)]="selectedMinPrice" placeholder="ціна"/>
+                    <span mdSuffix>UAH</span>
+                </md-input-container>
+                <md-slider [max]="maxPrice"
+                           [min]="minPrice"
+                           [thumb-label]="true"
+                           [step]="1"
+                           [value]="selectedMinPrice"
+                           (change)="minPriceChanged($event)"
+                           class="search-component">
+                </md-slider>
+            </div>
 
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'product-category/'+ productCategory.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
-</div>
+            <div class="category-search-input max-price">
+                <md-input-container>
+                    <span mdPrefix class="my-input-prefix">Максимальна</span>
+                    <input mdInput type="number" [(ngModel)]="selectedMaxPrice" placeholder="ціна"/>
+                    <span mdSuffix>UAH</span>
+                </md-input-container>
+                <md-slider [max]="maxPrice"
+                           [min]="minPrice"
+                           [thumb-label]="true"
+                           [step]="1"
+                           [value]="selectedMaxPrice"
+                           (change)="maxPriceChanged($event)"
+                           class="search-component">
+                </md-slider>
+            </div>
+        </div>
+    </div>
+
+    <div position="scrolling-content" id="products-container">
+        <div class="service-card"
+             *ngFor="let service of (productCategory.categoryProducts
+                         | productFitsUserQuery:searchQuery:selectedMinPrice:selectedMaxPrice:numberOfFilteredProducts)">
+            <jhi-service-card [service]="service"></jhi-service-card>
+        </div>
+
+        <div class="alert">
+            <div class="no-orders" *ngIf="nothingToShowAlert">
+                <span>Нажаль в цій категорії поки відсутні продукти</span>
+            </div>
+            <div class="load-more-orders" *ngIf="loadMoreAlert">
+                <button md-raised-button (click)="loadMoreProducts()"
+                        class="devizion-dark-theme" color="primary">Завантажити більше замовлень
+                </button>
+            </div>
+        </div>
+    </div>
+</jhi-my-sidenav>

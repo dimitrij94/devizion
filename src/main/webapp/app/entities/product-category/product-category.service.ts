@@ -1,8 +1,10 @@
-import {Injectable} from '@angular/core';
-import {Http, Response, URLSearchParams, BaseRequestOptions} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
-import {ProductCategory, ProductCategoryWithProducts} from './product-category.model';
+import {Injectable} from "@angular/core";
+import {BaseRequestOptions, Http, Response, URLSearchParams} from "@angular/http";
+import {Observable} from "rxjs/Rx";
+import {ProductCategory, ProductCategoryWithProducts} from "./product-category.model";
 import {HttpCommonService} from "../../shared/http-commons/http-common.service";
+import {DomSanitizer} from "@angular/platform-browser";
+import {categorySubdirectory, MyImageService} from "../../shared/image/image.service";
 
 @Injectable()
 export class ProductCategoryService {
@@ -10,7 +12,7 @@ export class ProductCategoryService {
     private resourceUrl = 'api/product-categories';
     imageDirectory = '/content/images/categories';
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private imageService: MyImageService) {
     }
 
     create(productCategory: ProductCategory): Observable<ProductCategory> {
@@ -28,11 +30,11 @@ export class ProductCategoryService {
     }
 
     find(id: number, includeProducts = false, productsPageSize = 10): Observable<ProductCategoryWithProducts> {
-        let requestParams = HttpCommonService.wrapAsRequestOptions({
-            includeProducts: includeProducts,
-            productsPageSize: productsPageSize
-        });
-        return this.http.get(`${this.resourceUrl}/${id}`, requestParams).map((res: Response) => {
+        let options = new URLSearchParams();
+        options.set('id', id.toString());
+        options.set('includeProducts', includeProducts.toString());
+        options.set('size', productsPageSize.toString());
+        return this.http.get(`${this.resourceUrl}/${id}`, {search: options}).map((res: Response) => {
             return res.json();
         });
     }
@@ -82,5 +84,21 @@ export class ProductCategoryService {
         let requestParams: URLSearchParams = new URLSearchParams();
         requestParams.set('token_id', category_id.toString());
         return this.http.delete('api/category/image', {search: requestParams});
+    }
+
+    findWithProducts(id: number, page = 0, size = 1): Observable<ProductCategoryWithProducts> {
+        let requestParams = new URLSearchParams();
+        requestParams.set('includeProducts', 'true');
+        requestParams.set('page', page.toString());
+        requestParams.set('size', size.toString());
+        return this.http.get(`${this.resourceUrl}/${id}`, {params: requestParams})
+            .map((res: Response) => res.json());
+    }
+
+    parsePhotoUrl(photoUrl: string, domSanitizer: DomSanitizer, scalarPrcnt: number, rowWidth: number) {
+        let size = this.imageService.getOptimalSize(scalarPrcnt, rowWidth);
+        let newUrl = this.imageService.getImageUrlFromImageSize(categorySubdirectory, photoUrl, size);
+        domSanitizer.bypassSecurityTrustUrl(newUrl);
+        return newUrl;
     }
 }

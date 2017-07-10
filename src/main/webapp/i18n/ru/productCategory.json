@@ -2,9 +2,12 @@
     "devizionApp": {
         "productCategory" : {
             "home": {
-                "title": "Product Categories",
+                "title": "Категорія продуктів",
                 "createLabel": "Создать новый Product Category",
                 "createOrEditLabel": "Создать или отредактировать Product Category"
+            },
+            "portfolio":{
+                "title":"Портфоліо категорії"
             },
             "created": "Новый Product Category создан с идентификатором {{ param }}",
             "updated": "Product Category обновлен с идентификатором {{ param }}",

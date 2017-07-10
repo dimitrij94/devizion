@@ -38,9 +38,9 @@ eg $input-color: red;
   #services-menu-item:hover {
     border-bottom: 4px solid #b90062; }
 
-#portfolio-menu-item {
+#portfolio-menu-link {
   border-bottom: 4px solid #00a2ff; }
-  #portfolio-menu-item:hover {
+  #portfolio-menu-link:hover {
     border-bottom: 4px solid #088fff; }
 
 .user-menu-link {

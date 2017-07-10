@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$devizion-theme-primary: mat-palette($mat-blue);
+$devizion-theme-accent: mat-palette($mat-pink);
+
+$devizion-theme: mat-light-theme($devizion-theme-primary, $devizion-theme-accent);
+
+
+$devizion-dark-theme: mat-dark-theme($devizion-theme-primary, $devizion-theme-accent);
+
+@include angular-material-theme($devizion-theme);
+
+.devizion-dark-theme {
+    @include angular-material-theme($devizion-dark-theme);
+}
+
+@mixin devizion-main-theme($theme) {
+    $primary: map_get($theme, primary);
+    $accent: map_get($theme, accent);
+    $warging: map_get($theme, warning);
+}

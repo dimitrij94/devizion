@@ -1,15 +1,15 @@
 package com.mycompany.myapp.service.impl;
 
-import com.mycompany.myapp.service.UserOrderService;
 import com.mycompany.myapp.domain.UserOrder;
 import com.mycompany.myapp.repository.UserOrderRepository;
+import com.mycompany.myapp.service.UserOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,13 +39,17 @@ public class UserOrderServiceImpl implements UserOrderService {
     @Override
     public Page<UserOrder> findAllByProductId(Pageable pageable, Long productId) {
         log.debug("Request to get Portfolio of the product with id: {}", productId);
-        return this.userOrderRepository.findAllByProductId(pageable, productId);
+        return this.userOrderRepository.findByProductId(pageable, productId);
+    }
+
+    @Override
+    public Page<UserOrder> findAllByCategoryId(Long id, PageRequest pageRequest) {
+        return this.userOrderRepository.findByProductProductCategoryId(pageRequest, id);
     }
 
 
-
     public Page<UserOrder> findAllByProductId(PageRequest pageRequest, long productId) {
-        return this.userOrderRepository.findAllByProductId(pageRequest, productId);
+        return this.userOrderRepository.findByProductId(pageRequest, productId);
     }
 
 

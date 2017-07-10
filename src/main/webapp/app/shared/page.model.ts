@@ -2,7 +2,7 @@
  * Created by Dmitrij on 25.04.2017.
  */
 export interface Page<T> {
-    content: T[];
+    content: Array<T>;
     last: boolean;
     totalPages: number;
     totalElements: number;

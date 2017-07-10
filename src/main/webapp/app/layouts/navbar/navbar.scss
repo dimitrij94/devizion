@@ -30,84 +30,29 @@ $navbar-inactive-menu: #ffffff;
 
 #navbar-position-wrapper {
     width: 100%;
-
-    &.fixed {
-        height: $navbar-fixed-height;
-        position: fixed;
-
-        #navbar-super-wrapper {
-            transform: translateY(0em);
-            background-color: white;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, .18);
-            #site-logo-wrapper {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            .navbar-menu-item {
-                background-color: white;
-                height: 100%;
-                .user-menu-link {
-                    line-height: 3.6em;
-                    height: 100%;
-                }
-                &#services-menu-item {
+    z-index: 4;
+    &.showLogo {
+        #site-logo-wrapper {
+            #transform-wrapper {
+                transform: translateY(0) !important;
+                #site-logo {
+                    transform: translateY(0) scale(0.82) !important;
                     &:hover {
-                        .service-sub-menu {
-                            transform: translateY(0%);
-                        }
+                        transform: translateY(0) scale(0.9) !important
                     }
-
-                    .service-sub-menu {
-                        display: block;
-                        position: absolute;
-                        top: $navbar-fixed-height;
-                        z-index: -1;
-                        width: 197%;
-                        text-align: center;
-                        transform: translateY(-100%);
-                        right: 0;
-                        transition: transform 0.25s ease-in-out;
-
-                        .menu-item {
-                            height: 3em;
-                            text-decoration: none;
-                            line-height: 2.9em;
-                            text-align: center;
-
-                            background-color: $magenta-accent;
-                            border-bottom: 2px solid $magenta-accent-border;
-                            &:hover {
-                                border-bottom: 2px solid $magenta-accent-border-hover;
-                                background-color: $magenta-accent-border;
-                            }
-                            a {
-                                color: whitesmoke;
-                                text-decoration: none !important;
-                            }
-                            a:hover {
-                                color: white;
-                            }
-                        }
+                    &:active {
+                        transform: translateY(0) scale(0.5) !important;
                     }
                 }
             }
         }
-
     }
 
-    &.relative {
+    &.transparent {
         height: $navbar-relative-height;
-        position: relative;
-
         #navbar-super-wrapper {
             transform: translateY(-$navbar-relative-height);
             background-color: rgba(255, 255, 255, 0.3);
-
-            #site-logo-wrapper {
-                opacity: 0;
-                transform: translateY(-$navbar-relative-height);
-            }
 
             .navbar-menu-item {
                 .user-menu-link {
@@ -117,12 +62,109 @@ $navbar-inactive-menu: #ffffff;
             }
 
             #services-menu-item {
-                .service-sub-menu {
+                .sub-menu {
+                    display: none;
+                }
+            }
+            #portfolio-menu-item {
+                .sub-menu {
                     display: none;
                 }
             }
 
         }
+    }
+
+    &.not-transparent {
+        height: $navbar-fixed-height;
+        #navbar-super-wrapper {
+            transform: translateY(0em);
+            background-color: white;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .18);
+
+            .navbar-menu-item {
+                background-color: white;
+                height: 100%;
+                .user-menu-link {
+                    line-height: 3.6em;
+                    height: 100%;
+                }
+                .sub-menu {
+                    display: block;
+                    position: absolute;
+                    top: $navbar-fixed-height;
+                    z-index: -1;
+                    text-align: center;
+                    transform: translateY(-100%);
+                    transition: transform 0.25s ease-in-out;
+
+                    .menu-item {
+                        width: 100%;
+                        padding: 12px;
+                        text-decoration: none;
+                        text-align: center;
+                        display: table;
+                        line-height: 1.2em;
+                        a {
+                            display: table-cell;
+                            vertical-align: middle;
+                            color: whitesmoke;
+                            text-decoration: none !important;
+                            font-size: 0.9em;
+                            font-family: Roboto, "Helvetica Neue", sans-serif;
+                        }
+                        a:hover {
+                            color: white;
+                        }
+                    }
+                }
+                &#portfolio-menu-item {
+                    .sub-menu {
+                        left: 0;
+                        .menu-item {
+                            background-color: $cyan-accent;
+                            border-bottom: 1px solid $cyan-accent-border;
+                            &:hover {
+                                background-color: $cyan-accent-border;
+                                border-bottom: 1px solid $cyan-accent-border-hover;
+                            }
+                        }
+                    }
+                    &:hover {
+                        .sub-menu {
+                            transform: translateY(0%);
+                        }
+                    }
+                }
+                &#services-menu-item {
+                    .sub-menu {
+                        right: 0;
+                        .menu-item {
+                            background-color: $magenta-accent;
+                            border-bottom: 1px solid $magenta-accent-border;
+                            &:hover {
+                                background-color: $magenta-accent-border;
+                                border-bottom: 1px solid $magenta-accent-border-hover;
+                            }
+                        }
+                    }
+                    &:hover {
+                        .sub-menu {
+                            transform: translateY(0%);
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    &.fixed {
+        position: fixed;
+    }
+
+    &.relative {
+        position: relative;
     }
 
     #navbar-super-wrapper {
@@ -132,42 +174,50 @@ $navbar-inactive-menu: #ffffff;
         #navbar {
             height: 100%;
             #site-logo-wrapper {
-                height: 4em;
+                height: 100%;
                 overflow: hidden;
                 display: inline-block;
-                width: 30%;
                 float: left;
 
-                #site-logo {
-                    transition: transform 250ms ease-in 200ms;
-                    background: url("../../../content/images/md_logo.svg") no-repeat center center;
-                    background-size: contain;
-                    height: 90%;
-                    position: relative;
-                    top: 5%;
-                    float: left;
-                    display: inline-block;
-                    width: 46%;
-                }
-                #logo-text {
-                    color: black;
-                    text-align: center;
-                    float: right;
-                    display: inline-block;
-                    width: 50%;
-                    position: relative;
-                    font-size: calc(2vw / 1.3);
-                    transform: translateY(-50%);
-                    top: 50%;
-                    font-family: Roboto, "Helvetica Neue", sans-serif;
-                    p {
-                        margin-bottom: 0;
+                #transform-wrapper {
+                    height: 100%;
+                    @include transition(transform 0.5s linear);
+                    transform: translateY(-100%);
+                    #site-logo {
+                        @include transition(transform 0.25s linear);
+                        transform: translateY(-100%);
+                        background: url("../../../content/images/md_logo.svg") no-repeat center center;
+                        background-size: contain;
+                        height: 90%;
+                        position: relative;
+                        top: 5%;
+                        float: left;
+                        display: inline-block;
+                        width: 8em;
                     }
-                    #header {
-                        font-size: 1em;
-                    }
-                    #subheader {
-                        font-size: 0.55em;
+                    #logo-text {
+                        color: black;
+                        text-align: center;
+                        float: right;
+                        position: relative;
+                        margin-left: 5px;
+                        display: table;
+                        font-family: Roboto, "Helvetica Neue", sans-serif;
+                        height: 100%;
+                        #text {
+                            display: table-cell;
+                            vertical-align: middle;
+                            * {
+                                margin-bottom: 0;
+                            }
+                        }
+                        #header {
+                            font-size: 1.2em;
+                            line-height: 1.2em;
+                        }
+                        #subheader {
+                            font-size: 0.6em;
+                        }
                     }
                 }
             }
@@ -210,7 +260,7 @@ $navbar-inactive-menu: #ffffff;
                             @include navbar-menu-item($about-us-accent-border, $about-us-accent-border-hover)
                         }
 
-                        #portfolio-menu-item {
+                        #portfolio-menu-link {
                             @include navbar-menu-item($cyan-accent-border, $cyan-accent-border-hover);
 
                         }

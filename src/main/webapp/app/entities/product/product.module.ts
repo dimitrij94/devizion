@@ -1,23 +1,30 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
+import {RouterModule} from "@angular/router";
 
-import { DevizionSharedModule } from '../../shared';
+import {DevizionSharedModule} from "../../shared";
 
 import {
-    ProductService,
-    ProductPopupService,
     ProductComponent,
+    ProductDeleteDialogComponent,
+    ProductDeletePopupComponent,
     ProductDetailComponent,
     ProductDialogComponent,
     ProductPopupComponent,
-    ProductDeletePopupComponent,
-    ProductDeleteDialogComponent,
-    productRoute,
     productPopupRoute,
-} from './';
-import {ImageUploadModule} from 'angular2-image-upload';
-import {ProductResolver} from "./product.resolver";
-import {FirstProductCategoryResolver} from "../product-category/product-category.resolver";
+    ProductPopupService,
+    productRoute,
+    ProductService
+} from "./";
+import {ProductByIdResolver, ProductResolver} from "./product.resolver";
+import {MyCroppedImageUploaderModule} from "../../shared/image/my-image-cropper/my-cropped-image-uploader.module";
+import {MdButtonModule, MdInputModule} from "@angular/material";
+import {PortfolioModule} from "../../portfolio/portfolio.module";
+import {DevizionUserOrderModule} from "../user-order/user-order.module";
+import {MySidenavWrapperModule} from "../my-sidenav-wrapper/my-sidenav-wrapper.module";
+import {DevizionProductCategoryModule} from "../product-category/product-category.module";
+import {FormsModule} from "@angular/forms";
+import {ProductDetailOrdersPipe} from "./product-detail-orders.pipe";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 let ENTITY_STATES = [
     ...productRoute,
@@ -25,9 +32,17 @@ let ENTITY_STATES = [
 ];
 @NgModule({
     imports: [
+        MdInputModule,
+        MySidenavWrapperModule,
+        DevizionUserOrderModule,
+        FormsModule,
+        FlexLayoutModule,
+        PortfolioModule,
         DevizionSharedModule,
-        ImageUploadModule.forRoot(),
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
+        DevizionProductCategoryModule,
+        MyCroppedImageUploaderModule,
+        MdButtonModule,
+        RouterModule.forRoot(ENTITY_STATES, {useHash: true})
     ],
     declarations: [
         ProductComponent,
@@ -36,6 +51,7 @@ let ENTITY_STATES = [
         ProductDeleteDialogComponent,
         ProductPopupComponent,
         ProductDeletePopupComponent,
+        ProductDetailOrdersPipe
     ],
     entryComponents: [
         ProductComponent,
@@ -48,7 +64,9 @@ let ENTITY_STATES = [
         ProductResolver,
         ProductService,
         ProductPopupService,
+        ProductByIdResolver
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DevizionProductModule {}
+export class DevizionProductModule {
+}

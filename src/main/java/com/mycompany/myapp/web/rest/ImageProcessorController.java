@@ -5,8 +5,10 @@ import com.mycompany.myapp.service.ImageService;
 import com.mycompany.myapp.service.ImageTokenService;
 import com.mycompany.myapp.service.dto.ImageBounds;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,17 +51,23 @@ public class ImageProcessorController {
         return imageService.saveCroppedImage("/" + directory + "/", cropBounds);
     }
 
-    @GetMapping(value = "/api/image/{directory}", produces = "image/*")
+    @GetMapping(value = "/api/image/{directory}")
     public ResponseEntity<byte[]> getImageBody(@PathVariable("directory") String directory,
                                                @RequestParam("imageName") String imageName) throws IOException {
         File image = new File(this.imageStoragePath + "\\" + directory + "\\" + imageName);
         if (image.exists() && image.canRead()) {
-            return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(image), HttpStatus.OK);
+            byte[] responceBody = FileUtils.readFileToByteArray(image);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentLength(responceBody.length);
+            headers.setCacheControl("max-age=100000");
+            headers.setContentType(MediaType.parseMediaType("image/" + FilenameUtils.getExtension(imageName)));
+
+            return new ResponseEntity<byte[]>(responceBody, headers, HttpStatus.OK);
         } else return new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
     }
 
 
-    @GetMapping(value = "/api/image/size/{directory}", produces = "image/*")
+    @GetMapping(value = "/api/image/size/{directory}")
     public ResponseEntity<byte[]> getImageBodyOfSize(@PathVariable("directory") String directory,
                                                      @RequestParam("imageName") String imageName,
                                                      @RequestParam("imageScalarSize") String imageScalarSize,
@@ -74,7 +82,9 @@ public class ImageProcessorController {
             byte[] responceBody = FileUtils.readFileToByteArray(image);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentLength(responceBody.length);
-            headers.setCacheControl("max-age=1000");
+            headers.setCacheControl("max-age=100000");
+            headers.setContentType(MediaType.parseMediaType("image/" + FilenameUtils.getExtension(imageName)));
+
             return new ResponseEntity<>(responceBody, headers, HttpStatus.OK);
         } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

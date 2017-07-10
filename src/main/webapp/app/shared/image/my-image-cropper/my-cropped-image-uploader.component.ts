@@ -1,8 +1,7 @@
-import {Component, ElementRef, EventEmitter, Output, ViewChild} from "@angular/core";
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
 import {Bounds, CropperSettings, ImageCropperComponent} from "ng2-img-cropper";
-import {Header, ImageService} from "angular2-image-upload/lib/image.service";
 import {AuthServerProvider} from "../../auth/auth-jwt.service";
-import {MyImageService, MyCropBounds, portfolioSubdirectory} from "../image.service";
+import {MyCropBounds, MyImageService} from "../image.service";
 import {ImageToken} from "../../../entities/image-token/image-token.model";
 /**
  * Created by Dmitrij on 02.05.2017.
@@ -62,6 +61,9 @@ export class MyCroppedImageUploaderComponent {
     @Output('originalImageUploadCanceled')
     originalImageUploadCanceled: EventEmitter<{}> = new EventEmitter();
 
+    @Input('postDirectory')
+    postDirectory: string;
+
     constructor(private myImageService: MyImageService,
                 private authProvider: AuthServerProvider) {
         this.cropperSettings = new CropperSettings();
@@ -102,50 +104,13 @@ export class MyCroppedImageUploaderComponent {
         this.bounds = bounds;
     }
 
-    /*
-     postCroppedImage() {
-     this.myImageService
-     .postImage(
-     '/api/portfolio/image',
-     new File([this.dataURItoBlob(this.data.image)],
-     'cropped_' + this.uploadedImageName),
-     [this.getAuthorizationHeader()]
-     ).subscribe((res) => {
-     if (res.status === 200) {
-     this.croppedImageUploaded.next(JSON.parse(res.response));
-     this.isImageSaved = true;
-     }
-     });
-     }
-
-     dataURItoBlob(dataURI) {
-     // convert base64 to raw binary data held in a string
-     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-     var byteString = atob(dataURI.split(',')[1]);
-
-     // separate out the mime component
-     var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-
-     // write the bytes of the string to an ArrayBuffer
-     var ab = new ArrayBuffer(byteString.length);
-     var ia = new Uint8Array(ab);
-     for (var i = 0; i < byteString.length; i++) {
-     ia[i] = byteString.charCodeAt(i);
-     }
-
-     // write the ArrayBuffer to a blob, and you're done
-     var bb = new Blob([ab]);
-     return bb;
-     }
-     */
-
     postCroppedImage(fileName: string, bounds: Bounds) {
         let cropBounds = new MyCropBounds(bounds);
         cropBounds.fileName = fileName;
         this.myImageService
             .postCropBounds(
                 cropBounds,
-                portfolioSubdirectory
+                this.postDirectory
             )
             .subscribe((imageToken: ImageToken) => {
                 this.croppedImageUploaded.next(imageToken);
@@ -172,7 +137,7 @@ export class MyCroppedImageUploaderComponent {
         let self = this;
         this.myImageService
             .postImage(
-                '/api/portfolio/image',
+                `/api${this.postDirectory}/image`,
                 file,
                 [this.getAuthorizationHeader()]
             )

@@ -1,8 +1,7 @@
-import {Component, OnInit, ElementRef, ViewChild} from '@angular/core';
-import {Observable, Subject, Subscription} from 'rxjs/Rx';
-import 'rxjs/add/operator/switchMap';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {Observable, Subject, Subscription} from "rxjs/Rx";
+import "rxjs/add/operator/switchMap";
 import {MoveSubscriptionDTO} from "./lamp/lamp.component";
-import {DomSanitizer} from "@angular/platform-browser";
 
 import {animate, state, style, transition, trigger} from "@angular/animations";
 const backgroundWallWidth = 2900;
@@ -11,7 +10,7 @@ const backgroundWallX = 0.224532;
 const backgroundWallY = 0.1545454;
 const mrefreshinterval = 40; // update display every imageX ms to measure the mouse speed
 const mouseMinSpeed = 100;//ms minimum mouse speed to trigger the swinging animation
-export const maxHiddenScreenTilt = 15; //absolute value of maximum rotation of the hidden screen
+export const maxHiddenScreenTilt = 17; //absolute value of maximum rotation of the hidden screen
 const perspective = 1000;
 const windowBgWidth = 3325;
 const windowBgHeight = 1100;
@@ -49,7 +48,8 @@ interface LampDto {
 
     ]
 })
-export class LampsComponent implements OnInit {
+export class LampsComponent implements OnInit, OnDestroy {
+    mouseMoveSubscription: Subscription;
     mouseTravelDistaceEvaluator: number;
 
     lastMousePosition: { x: number, y: number };
@@ -92,7 +92,7 @@ export class LampsComponent implements OnInit {
     //hiddenScreenProjectionWidthDeltaY = this.hiddenScreenHalfH * Math.sin(maxHiddenScreenTilt * (Math.PI / 180));
 
     //perPxlChangeY: number = ((this.hiddenScreenH - this.screenH) / this.screenH) / 2;
-    perPxlRotation = (maxHiddenScreenTilt / this.screenW);
+    perPxlRotation = (maxHiddenScreenTilt / this.screenW)*2;
 
     //deltaHeight = this.calculateTrapecyDeltaHeight(0);
 
@@ -120,7 +120,8 @@ export class LampsComponent implements OnInit {
     private speedSubscription: Subscription;
     private windowBgStyle: { left: string } = {left: "0px"};
     private hiddenScreenStyle: { transform: string } = {transform: 'rotate(0deg)'};
-    private cubeWrapperElStyle: { perspectiveOrigin: string } = {perspectiveOrigin: '50% center'};
+    private cubeWrapperElStyle: any = {perspectiveOrigin: '50% center'};
+    private disableEnableComponentSubscription: Subscription;
 
     /* MEASURING MOUSE SPEED VARs*/
     constructor() {
@@ -163,16 +164,23 @@ export class LampsComponent implements OnInit {
          */
         this.mouseMove = Observable.fromEvent(this.stageView.nativeElement, 'mousemove');
 
-        let backgroundShiftSubject = this.mouseMove.map(this.getBackgroundShift.bind(this));
-
-        backgroundShiftSubject.subscribe(this.animateBackgroundShift.bind(this));
+        this.mouseMoveSubscription = this.mouseMove.map(this.getBackgroundShift.bind(this))
+            .subscribe(this.animateBackgroundShift.bind(this));
 
         //estimate mouse speed
         this.startMouseSpeedometr();
-        this.disableEnableComponent.subscribe((enable) => {
+
+        this.disableEnableComponentSubscription = this.disableEnableComponent.subscribe((enable) => {
             if (enable) this.startMouseSpeedometr();
             else this.stopMouseSpeedometr();
-        })
+        });
+    }
+
+
+    ngOnDestroy(): void {
+        this.mouseMoveSubscription && this.mouseMoveSubscription.unsubscribe();
+        this.speedSubscription && this.speedSubscription.unsubscribe();
+        this.disableEnableComponentSubscription && this.disableEnableComponentSubscription.unsubscribe();
     }
 
     startMouseSpeedometr() {
@@ -183,10 +191,6 @@ export class LampsComponent implements OnInit {
     stopMouseSpeedometr() {
         this.speedSubscription.unsubscribe();
         window.clearInterval(this.mouseTravelDistaceEvaluator);
-    }
-
-    disableComponent() {
-
     }
 
     getLeftLampsLineHiphothenuzeAndAngle() {
@@ -260,6 +264,14 @@ export class LampsComponent implements OnInit {
         }, pushedClicked)
     }
 
+    setPerspectiveOrigin(style: string) {
+        let val: any = {};
+        val.webkitPerspectiveOrigin = style;
+        val.mozPerspectiveOrigin = style;
+        val.perspectiveOrigin = style;
+        this.cubeWrapperElStyle = val;
+    }
+
     bowEaseIn(timeFraction, x) {
         return Math.pow(timeFraction, 2) * ((x + 1) * timeFraction - x)
     }
@@ -272,10 +284,6 @@ export class LampsComponent implements OnInit {
 
 
     changeHiddenScreenPosition() {
-        //this.hiddenScreenElRef.nativeElement.style.left = this.backgroundPositionX + 'px';
-        //this.hiddenScreenElRef.nativeElement.style.top = this.backgroundPositionY + 'px';
-        //this.hiddenScreenElRef.nativeElement.style.transform = 'rotateY(' + this.hiddenScreenTilt + 'deg)';
-        //this.windowBgElRef.nativeElement.style.left = this.windowBgX + 'px';
         this.windowBgStyle.left = this.windowBgX + 'px';
         this.hiddenScreenStyle.transform = 'rotateY(' + this.hiddenScreenTilt + 'deg)';
     }
@@ -303,17 +311,17 @@ export class LampsComponent implements OnInit {
         let rotation = this.hiddenScreenTilt + rotationChange;
         if (rotation <= maxHiddenScreenTilt && rotation >= (-maxHiddenScreenTilt)) {
             //this.deltaHeight = this.calculateTrapecyDeltaHeight(rotation);
-            this.hiddenScreenTilt = rotation;
-            let rotationPrcnt = (rotation / maxHiddenScreenTilt) * 100;
-            this.cubeWrapperElStyle = {perspectiveOrigin: 50 - (rotationPrcnt / 4) + '% center'};
-            //this.cubeWrapperEl.nativeElement.style.perspectiveOrigin = 50 - (rotationPrcnt / 4) + '% center';
-
-
-            let changeX = this.windowBgPerPxlChange * shift.deltaX;
-            this.windowBgX = this.windowBgX + changeX;
-            this.changeHiddenScreenPosition();
+            window.requestAnimationFrame((function () {
+                this.hiddenScreenTilt = rotation;
+                let rotationPrcnt = (rotation / maxHiddenScreenTilt) * 100;
+                this.setPerspectiveOrigin(50 - (rotationPrcnt / 4) + '% center');
+                let changeX = this.windowBgPerPxlChange * shift.deltaX;
+                this.windowBgX = this.windowBgX + changeX;
+                this.changeHiddenScreenPosition();
+            }).bind(this));
         }
     }
+
 
     /*
      calculateTrapecyDeltaHeight(hiddenScreenTilt: number) {

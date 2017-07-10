@@ -1,9 +1,20 @@
-import {Component, ElementRef, Inject, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges
+} from "@angular/core";
 import {Product} from "../../../entities/product/product.model";
-import {Observable, Subject} from "rxjs";
-import {paddingPrcnt} from "./shuffle-cards-row.component";
-import * as assert from "assert";
+import {Subject} from "rxjs";
+import {servicesRowWidthPrcnt, ShuffleCardsRowComponent} from "./shuffle-cards-row.component";
 import {DOCUMENT} from "@angular/platform-browser";
+import {Subscription} from "rxjs/Subscription";
 
 const upfrontPosition = true;
 const endPosition = false;
@@ -14,22 +25,23 @@ const endPosition = false;
     selector: 'animated-card',
     template: `
         <div class="card-wrapper">
-            <jhi-service-card [service]="service"></jhi-service-card>
+            <div class="shadow-wrapper">
+                <jhi-service-card (onProductPhotoLoaded)="productImageLoaded.emit(true)"
+                                  [service]="service">
+                </jhi-service-card>
+            </div>
         </div>`,
-    //language=CSS
-    styles: [`
-        .card-wrapper{
-            box-sizing: border-box;
-            padding:` + paddingPrcnt + `vw;
-        }
-    `]
+    styleUrls: ['./animated-card.component.scss']
 })
-export class AnimatedCardComponent implements OnInit {
+export class AnimatedCardComponent implements OnInit, OnDestroy {
 
     isDisplayed: boolean;
     @Input()
     service: Product;
 
+
+    @Output('productImageLoaded')
+    productImageLoaded: EventEmitter<boolean> = new EventEmitter();
     /*
      start position determines the position of the card on initialization determined by its position inside of the array
      and starts with 1 but can take value from the 0 to num of cards + 1 */
@@ -51,6 +63,8 @@ export class AnimatedCardComponent implements OnInit {
     perCardMargin: number;
 
     animationEnabled: boolean;
+    private moveSubscription: Subscription;
+    private appearSubscription: Subscription;
 
     constructor(private cardsRef: ElementRef,
                 @Inject(DOCUMENT) private document: any,) {
@@ -58,6 +72,33 @@ export class AnimatedCardComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.assighnStartingPosition();
+
+        this.moveSubscription = this.moveObservable.subscribe((moveTo: { product: Product, forward: boolean }) => {
+            if (moveTo.forward) this.shuffleForward(moveTo.product);
+            else this.shuffleBackward(moveTo.product);
+        });
+
+
+        if (ShuffleCardsRowComponent.showCardsOnInit)
+            this.appear(true);
+        else
+            this.appearSubscription = this.appearObservable.subscribe(this.appear.bind(this));
+    }
+
+
+    ngOnChanges(changes: SimpleChanges): void {
+        this.assighnStartingPosition();
+    }
+
+
+    ngOnDestroy(): void {
+        this.moveSubscription && this.moveSubscription.unsubscribe();
+        this.appearSubscription && this.appearSubscription.unsubscribe();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    assighnStartingPosition() {
         this.position = this.startPosition;
         this.isDisplayed = this.position != this.numberOfCards;
 
@@ -67,18 +108,6 @@ export class AnimatedCardComponent implements OnInit {
 
         this.optimizePositioning();
         this.moveToPosition(this.position + 1, false);
-
-        this.moveObservable.subscribe((moveTo: { product: Product, forward: boolean }) => {
-            if (moveTo.forward) this.shuffleForward(moveTo.product);
-            else this.shuffleBackward(moveTo.product);
-        });
-        this.appearObservable.subscribe(this.appear.bind(this));
-    }
-
-
-    ngOnChanges(changes: SimpleChanges): void {
-        this.moveToPosition(this.position + 1, false);
-        this.optimizePositioning();
     }
 
     appear(appear: boolean) {
@@ -89,7 +118,7 @@ export class AnimatedCardComponent implements OnInit {
     }
 
     optimizePositioning() {
-        this.assignCardWidthAndPerCardMargin(this.document.body.clientWidth);
+        this.assignCardWidthAndPerCardMargin(this.document.body.clientWidth * servicesRowWidthPrcnt);
     }
 
     assignCardWidthAndPerCardMargin(rowWidth: number) {

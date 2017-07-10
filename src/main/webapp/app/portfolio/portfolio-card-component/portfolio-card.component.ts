@@ -1,7 +1,4 @@
-import {
-    Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges,
-    ViewChild
-} from "@angular/core";
+import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from "@angular/core";
 import {UserOrder} from "../../entities/user-order/user-order.model";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 /**
@@ -37,13 +34,16 @@ export class PortfolioCardComponent implements OnChanges {
     imageLoadedEventEmitter = new EventEmitter<boolean>();
 
     @ViewChild('imageEl')
-    imageElRef:ElementRef;
+    imageElRef: ElementRef;
 
 
     ngOnChanges(changes: SimpleChanges): void {
-        let image = new Image();
-        image.onload = this.portfolioImageLoaded.bind(this);
-        image.src = this.portfolioEntry.cropedUri;
+        let portfolioEntityChanges = changes['portfolioEntry'];
+        if (portfolioEntityChanges) {
+            let image = new Image();
+            image.onload = this.portfolioImageLoaded.bind(this);
+            image.src = this.portfolioEntry.cropedUri;
+        }
     }
 
     portfolioImageLoaded($event) {

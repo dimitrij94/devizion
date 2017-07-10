@@ -1,13 +1,12 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.DevizionApp;
-
 import com.mycompany.myapp.domain.Product;
 import com.mycompany.myapp.repository.ProductRepository;
 import com.mycompany.myapp.service.ImageService;
 import com.mycompany.myapp.service.ProductService;
+import com.mycompany.myapp.service.UserOrderService;
 import com.mycompany.myapp.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,6 +69,9 @@ public class ProductResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
+    private UserOrderService userOrderService;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restProductMockMvc;
@@ -79,7 +81,7 @@ public class ProductResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ProductResource productResource = new ProductResource(productService, imageService);
+        ProductResource productResource = new ProductResource(productService, imageService, userOrderService);
         this.restProductMockMvc = MockMvcBuilders.standaloneSetup(productResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -88,7 +90,7 @@ public class ProductResourceIntTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */

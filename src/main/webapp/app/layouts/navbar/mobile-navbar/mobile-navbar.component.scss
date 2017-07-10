@@ -76,12 +76,27 @@ $navigation-height: 5em;
             &:hover {
                 border-bottom: 1px solid rgba(0, 0, 0, 0.3);
             }
-
+            &:nth-child(2) {
+                .accordion-content {
+                    .item {
+                        background-color: $magenta-accent;
+                        border-color: $magenta-accent-border;
+                    }
+                }
+            }
+            &:nth-child(3) {
+                .accordion-content {
+                    .item {
+                        background-color: $cyan-accent;
+                        border-color: $cyan-accent-border;
+                    }
+                }
+            }
             .panel {
                 height: 40px;
                 background-color: white;
                 &:hover {
-                    color:black;
+                    color: black;
                     background: #efefef;
                 }
                 .title {
@@ -110,18 +125,26 @@ $navigation-height: 5em;
             }
 
             .accordion-content {
-                z-index: -1;
                 position: absolute;
                 width: 100%;
                 bottom: 0;
-                background: white;
+
                 .item {
-                    padding-left:60px;
+                    border-bottom: 1px solid;
+                    padding-left: 60px;
                     line-height: 40px;
-                    background-color: rgb(95,46,116);
                     color: white;
                     position: relative;
                     height: 40px;
+                    .label {
+                        a {
+                            color: whitesmoke;
+                            text-decoration: none;
+                            &:hover {
+                                color: white;
+                            }
+                        }
+                    }
                 }
             }
         }

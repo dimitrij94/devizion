@@ -1,19 +1,18 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Response} from '@angular/http';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Response} from "@angular/http";
 
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {EventManager, AlertService, JhiLanguageService} from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import {UserOrder} from './user-order.model';
-import {UserOrderPopupService} from './user-order-popup.service';
-import {UserOrderService} from './user-order.service';
-import {Product, ProductService} from '../product';
-import {Custumer, CustumerService} from '../custumer';
+import {UserOrder} from "./user-order.model";
+import {UserOrderPopupService} from "./user-order-popup.service";
+import {UserOrderService} from "./user-order.service";
+import {Product, ProductService} from "../product";
+import {Custumer, CustumerService} from "../custumer";
 import {ImageToken} from "../image-token";
 import {MyImageService, portfolioSubdirectory} from "../../shared/image/image.service";
 import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
-import {Bounds} from "ng2-img-cropper";
 import {CropCoordinates} from "../../shared/image/my-image-cropper/my-cropped-image-uploader.component";
 
 @Component({
@@ -28,7 +27,7 @@ export class UserOrderDialogComponent implements OnInit {
     originalImageToken: ImageToken;
     croppedImageToken: ImageToken;
     products: Product[];
-
+    portfolioSubdirectory = portfolioSubdirectory;
     custumers: Custumer[];
 
     constructor(public activeModal: NgbActiveModal,

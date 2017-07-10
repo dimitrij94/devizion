@@ -1,20 +1,17 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Response} from '@angular/http';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Rx';
-import {EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertService} from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Response} from "@angular/http";
+import {Subscription} from "rxjs/Rx";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import {Custumer} from './custumer.model';
-import {CustumerService} from './custumer.service';
-import {ITEMS_PER_PAGE, Principal} from '../../shared';
-import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
+import {Custumer} from "./custumer.model";
+import {CustumerService} from "./custumer.service";
+import {Principal} from "../../shared";
 import {custumerSubdirectory, MyImageService} from "../../shared/image/image.service";
-import {twentyScalar} from "../../shared/image/image-size.model";
 
 @Component({
     selector: 'jhi-custumer',
     templateUrl: './custumer.component.html',
-    styleUrls:['./custumer.component.style.scss']
+    styleUrls: ['./custumer.component.style.scss']
 })
 export class CustumerComponent implements OnInit, OnDestroy {
     custumers: Custumer[];
@@ -35,13 +32,13 @@ export class CustumerComponent implements OnInit, OnDestroy {
             (res: Response) => {
                 let custumers = res.json();
                 custumers.forEach((custumer) => {
-                    custumer.custumerImageUri = MyImageService.getImagePathOfSize(
+                    custumer.custumerImageUri = this.imageService.getImagePathOfSize(
                         custumerSubdirectory,
                         custumer.custumerImageUri,
                         window.innerWidth,
-                        twentyScalar)
+                        15)
                 });
-                this.custumers =custumers;
+                this.custumers = custumers;
             },
             (res: Response) => this.onError(res.json())
         );

@@ -16,7 +16,7 @@ import {
     UserOrderService
 } from "./";
 import {MyCroppedImageUploaderModule} from "../../shared/image/my-image-cropper/my-cropped-image-uploader.module";
-import {UserOrderResolver} from "./user-order.resolver";
+import {UserOrderResolver, UserOrdersOfCategoryByIdResolver} from "./user-order.resolver";
 
 let ENTITY_STATES = [
     ...userOrderRoute,
@@ -46,6 +46,7 @@ let ENTITY_STATES = [
     ],
     providers: [
         UserOrderResolver,
+        UserOrdersOfCategoryByIdResolver,
         UserOrderService,
         UserOrderPopupService,
     ],

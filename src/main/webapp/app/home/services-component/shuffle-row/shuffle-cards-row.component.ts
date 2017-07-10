@@ -3,22 +3,22 @@
  */
 
 import {
+    AfterViewInit,
     Component,
     ElementRef,
+    EventEmitter,
     HostListener,
+    Inject,
     Input,
     OnChanges,
     OnInit,
-    SimpleChanges,
-    ViewChild,
-    Inject, AfterViewInit
+    Output
 } from "@angular/core";
-import {Observable, Subject, Subscription} from "rxjs";
+import {Subject} from "rxjs";
 import {Product} from "../../../entities/product/product.model";
 import {Timer} from "../../../shared/timer";
 import {DOCUMENT} from "@angular/platform-browser";
-import {widthOfServiceCard} from "../../home.component";
-
+export const servicesRowWidthPrcnt = 0.9;
 export const paddingPrcnt = 0.35;
 
 @Component({
@@ -28,7 +28,7 @@ export const paddingPrcnt = 0.35;
         <div id="wrapper">
             <div id="row-wrapper" #rowWrapperEl
                  [ngStyle]="{marginLeft: rowMarginLeft + '%',width: rowWidth + '%'}">
-                <div class="scroller left" (click)="backward()"></div>
+                <div class="scroller left" mdTooltip="Попередній продукт" (click)="backward()"></div>
                 <animated-card
                     class="animated-card"
                     *ngFor="let rowCard of cardsRow; let i = index"
@@ -36,15 +36,18 @@ export const paddingPrcnt = 0.35;
                     [numberOfCards]="numberOfServices"
                     [appearObservable]="appearSubject"
                     [service]="rowCard"
+                    (productImageLoaded)="productImageLoaded(i)"
                     [startIndex]="i">
                 </animated-card>
-                <div class="scroller right" (click)="forward()"></div>
+                <div class="scroller right" mdTooltip="Наступний продукт" (click)="forward()"></div>
             </div>
         </div>
     `,
     styleUrls: ['./shuffle-cards-row.component.scss']
 })
-export class ShuffleCardsRowComponent implements OnInit, AfterViewInit {
+export class ShuffleCardsRowComponent implements OnInit, AfterViewInit, OnChanges {
+    public static showCardsOnInit = false;
+
     componentEnabled: boolean = false;
 
     scrollingTimer: Timer;
@@ -54,7 +57,7 @@ export class ShuffleCardsRowComponent implements OnInit, AfterViewInit {
 
 
     cardsRow: Array<Product>;
-
+    @Input('numOfServices')
     numberOfServices: number = 3;
 
     moveSubject: Subject<{ product: Product, forward: boolean }> = new Subject();
@@ -70,6 +73,11 @@ export class ShuffleCardsRowComponent implements OnInit, AfterViewInit {
     appearSubject: Subject<boolean> = new Subject();
     offsetTop: number;
     viewPointMargin: number;
+    private loaddedCards: any = {};
+    private numOfCardsLoaded: number = 0;
+
+    @Output('onRowImagesLoaded')
+    private onRowLoaded: EventEmitter<boolean> = new EventEmitter();
 
 
     constructor(private elRef: ElementRef, @Inject(DOCUMENT) private document: Document) {
@@ -82,38 +90,29 @@ export class ShuffleCardsRowComponent implements OnInit, AfterViewInit {
         //this.perCardMargin = w / this.numberOfServices;
         this.lastProductIndex = this.numberOfServices - 1;
         this.cardsRow = this.getCardsRow();
-        this.onResize();
+        this.ngOnChanges();
 
         this.scrollingTimer = new Timer(6000, this.forward.bind(this));
         this.pauseTimer();
 
     }
 
-    @HostListener('window:resize', ['$event'])
-    onResize() {
-        let windowWidth = window.innerWidth;
-        let oldNumOfServices = this.numberOfServices;
-        let newNumOfServices;
-        if (windowWidth <= 599) {
-            newNumOfServices = 1;
-        }
-        if (windowWidth > 599) {
-            newNumOfServices = Math.floor((windowWidth * 0.95) / widthOfServiceCard);
-        }
-
-        if (oldNumOfServices != newNumOfServices) {
-            this.numberOfServices = newNumOfServices;
-            this.ngOnChanges();
-        }
-    }
 
     ngAfterViewInit(): void {
         this.offsetTop = this.elRef.nativeElement.getBoundingClientRect().top;
         this.viewPointMargin = (window.innerHeight * 0.45);
-
-        let scrollObservable = Observable.fromEvent(window, 'scroll').skip(5);
-        scrollObservable.subscribe(this.onScrollEnableDisable.bind(this));
     }
+
+    ngOnChanges(): void {
+        this.cardsRow = this.getCardsRow();
+        this.lastProductIndex = this.numberOfServices - 1;
+
+        let cardWidthPrcnt = 100 / this.numberOfServices;
+        this.rowWidth = cardWidthPrcnt * (this.numberOfServices + 2);
+        this.rowMarginLeft = -cardWidthPrcnt;
+    }
+
+
 
     disableComponent(): void {
         this.pauseTimer();
@@ -123,12 +122,15 @@ export class ShuffleCardsRowComponent implements OnInit, AfterViewInit {
     enableComponent(): void {
         if (!this.hasAppeared) {
             this.appearSubject.next(true);
+            this.hasAppeared = true;
+            ShuffleCardsRowComponent.showCardsOnInit = true;
         }
         this.resumeTimer();
         this.componentEnabled = true;
     }
 
-    onScrollEnableDisable($event) {
+    @HostListener('window:scroll', ['$event'])
+    onScroll($event) {
         let offsetTop = this.elRef.nativeElement.getBoundingClientRect().top;
         let scrollTop = this.document.body.scrollTop;
         if (scrollTop < offsetTop) {
@@ -142,6 +144,12 @@ export class ShuffleCardsRowComponent implements OnInit, AfterViewInit {
         }
     }
 
+    productImageLoaded(cardIndex: number) {
+        this.loaddedCards[cardIndex] = true;
+        this.numOfCardsLoaded += 1;
+        if (this.numOfCardsLoaded === this.numberOfServices - 1)
+            this.onRowLoaded.emit(true);
+    }
 
     pauseTimer() {
         this.scrollingTimer.pause();
@@ -151,14 +159,6 @@ export class ShuffleCardsRowComponent implements OnInit, AfterViewInit {
         //this.scrollingTimer.resume();
     }
 
-    ngOnChanges(): void {
-        this.cardsRow = this.getCardsRow();
-        this.lastProductIndex = this.numberOfServices - 1;
-
-        let cardWidthPrcnt = 100 / this.numberOfServices;
-        this.rowWidth = cardWidthPrcnt * (this.numberOfServices + 2);
-        this.rowMarginLeft = -cardWidthPrcnt;
-    }
 
     getCardsRow() {
         let cardsRow = this.products.slice(0, this.numberOfServices);

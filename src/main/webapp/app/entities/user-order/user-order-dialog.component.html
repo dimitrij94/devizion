@@ -55,6 +55,7 @@
     </div>
 
     <my-cropped-image-uploader
+        [postDirectory]="portfolioSubdirectory"
         (croppedImageUploadCanceled)="onOriginalImageRemove()"
         (croppedImageUploaded)="onCroppedImageLoad($event)"
         (originalImageUploadCanceled)="onCroppedImageRemove()"

@@ -1,24 +1,36 @@
-import {Injectable} from '@angular/core';
-import {Http, Response, URLSearchParams, BaseRequestOptions} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import {Injectable} from "@angular/core";
+import {BaseRequestOptions, Http, Response, URLSearchParams} from "@angular/http";
+import {Observable} from "rxjs/Rx";
 
-import {UserOrder} from './user-order.model';
-import {DateUtils} from 'ng-jhipster';
+import {UserOrder} from "./user-order.model";
+import {DateUtils} from "ng-jhipster";
 import {MyImageService, portfolioSubdirectory} from "../../shared/image/image.service";
-import {fortyScalar, ImageScalar} from "../../shared/image/image-size.model";
 import {DomSanitizer} from "@angular/platform-browser/src/security/dom_sanitization_service";
+import {GenericResponse} from "@angular/http/src/static_response";
+import {Page} from "../../shared/page.model";
 @Injectable()
 export class UserOrderService {
 
     private resourceUrl = 'api/user-orders';
 
-    constructor(private http: Http, private dateUtils: DateUtils) {
+    constructor(private http: Http, private dateUtils: DateUtils, private imageService: MyImageService) {
     }
 
-    getImageUri(photoName: string, imageScalar: ImageScalar, imageSize: number) {
-        return MyImageService.getImagePathOfSize(portfolioSubdirectory, photoName, imageSize, imageScalar)
+    getImageUri(photoName: string, imageScalar: number, windowWidth: number) {
+        return this.imageService.getImagePathOfSize(portfolioSubdirectory, photoName, windowWidth, imageScalar)
     }
 
+    getUniqueProductsOfOrders(orders: UserOrder[]) {
+        let uniqueProducts = {};
+        let returnValue = [];
+        orders.forEach((order) => {
+            if (!uniqueProducts[order.product.id])
+                uniqueProducts[order.product.id] = order.product;
+        });
+        for (let id in uniqueProducts)
+            returnValue.push(uniqueProducts[id]);
+        return returnValue;
+    }
 
     create(userOrder: UserOrder): Observable<UserOrder> {
         let copy: UserOrder = Object.assign({}, userOrder);
@@ -95,17 +107,42 @@ export class UserOrderService {
         return options;
     }
 
-    parsePortfolio(userOrders: UserOrder[], domSanitizer:DomSanitizer) {
+    parsePortfolioCroppedImages(userOrders: UserOrder[], domSanitizer: DomSanitizer, tileWidthPrcnt: number, rowWidth: number = window.innerWidth) {
+        let optimalImageSize = this.imageService.getOptimalSize(tileWidthPrcnt, rowWidth);
         userOrders.forEach((portfolio) => {
-            let photoUrl = MyImageService.getImagePathOfSize(
+            let photoUrl = this.imageService.getImageUrlFromImageSize(
                 portfolioSubdirectory,
                 portfolio.cropedUri,
-                window.innerWidth,
-                fortyScalar);
+                optimalImageSize);
             domSanitizer.bypassSecurityTrustUrl(photoUrl);
             domSanitizer.bypassSecurityTrustStyle(photoUrl);
             portfolio.cropedUri = photoUrl;
         });
         return userOrders;
     }
+
+
+    parsePortfolioModalImages(portfolio: Array<UserOrder>) {
+        let optimalImageSize = this.imageService.getOptimalSize(1.0, window.innerWidth);
+        portfolio.forEach((portfolio) => {
+            portfolio.photoUri = this.imageService.getImageUrlFromImageSize(portfolioSubdirectory, portfolio.photoUri, optimalImageSize);
+        });
+    }
+
+    findOrdersOfProduct(id: number, lastPage: number): Observable<GenericResponse<Page<UserOrder>>> {
+        let options = new URLSearchParams();
+        options.set('page', lastPage.toString());
+        options.set('size', '20');
+        options.set('productId', id.toString());
+        return this.http.get(this.resourceUrl, {search: options});
+    }
+
+    findOrdersOfCategory(id: number, page: number = 0, size = 30): Observable<GenericResponse<Page<UserOrder>>> {
+        let options = new URLSearchParams();
+        options.set('page', page.toString());
+        options.set('size', size.toString());
+        options.set('categoryId', id.toString());
+        return this.http.get(this.resourceUrl, {search: options});
+    }
+
 }

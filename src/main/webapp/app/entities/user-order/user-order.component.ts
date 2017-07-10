@@ -1,15 +1,12 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Response} from '@angular/http';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Rx';
-import {EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertService} from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Response} from "@angular/http";
+import {Subscription} from "rxjs/Rx";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import {UserOrder} from './user-order.model';
-import {UserOrderService} from './user-order.service';
-import {ITEMS_PER_PAGE, Principal} from '../../shared';
-import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
+import {UserOrder} from "./user-order.model";
+import {UserOrderService} from "./user-order.service";
+import {Principal} from "../../shared";
 import {MyImageService, portfolioSubdirectory} from "../../shared/image/image.service";
-import {twentyScalar} from "../../shared/image/image-size.model";
 
 @Component({
     selector: 'jhi-user-order',
@@ -24,6 +21,7 @@ export class UserOrderComponent implements OnInit, OnDestroy {
     constructor(private jhiLanguageService: JhiLanguageService,
                 private userOrderService: UserOrderService,
                 private alertService: AlertService,
+                private imageService: MyImageService,
                 private eventManager: EventManager,
                 private principal: Principal) {
         this.jhiLanguageService.setLocations(['userOrder']);
@@ -34,7 +32,11 @@ export class UserOrderComponent implements OnInit, OnDestroy {
             (res: Response) => {
                 let userOrders = <UserOrder[]> res.json();
                 userOrders.forEach((order) => {
-                    order.photoUri = MyImageService.getImagePathOfSize(portfolioSubdirectory, order.photoUri, window.innerWidth, twentyScalar);
+                    order.photoUri = this.imageService.getImagePathOfSize(
+                        portfolioSubdirectory,
+                        order.photoUri,
+                        window.innerWidth,
+                        20);
                 });
                 this.userOrders = userOrders;
             },

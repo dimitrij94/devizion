@@ -58,6 +58,12 @@ $navbar-relative-height: 5em;
     -moz-perspective: $perspective-val;
 }
 
+@mixin borderRadius($val) {
+    -webkit-border-radius: $val;
+    -moz-border-radius: $val;
+    border-radius: $val;
+}
+
 @mixin perspectiveOrigin($val...) {
     perspective-origin: $val;
     -webkit-perspective-origin: $val;

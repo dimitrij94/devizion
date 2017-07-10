@@ -175,14 +175,16 @@
                     $distanceToWallCornerT: $hidden-screen-height * (215/$background-wall-height);
                     $lineWidth: $distanceToWallCornerT/0.43837;
                     $triangleBase: 0;
-                    width: $lineWidth;
+                    width: $lineWidth + 5vw;
+                    height:15px;
                     margin-left: $distanceToWallCornerL - $lineWidth;
                     position: absolute;
-                    top: -3%;
-                    left: 1%;
+                    top: 14%;
+                    left: 21%;
                     transform: rotate(26deg);
                     overflow: visible;
                     lamp {
+                        position: absolute;
                         transform: rotate(-26deg);
                     }
                 }
@@ -190,14 +192,15 @@
                     $distanceToWallCornerR: $hidden-screen-width * (1591/$background-wall-width);
                     $distanceToWallCornerT: $hidden-screen-height * (215/$background-wall-height);
                     $lineWidth: $distanceToWallCornerT/0.43837;
-                    width: $lineWidth;
+                    width: $lineWidth + 5vw;
                     margin-left: -($hidden-screen-width - ($distanceToWallCornerR + $lineWidth));
                     position: absolute;
-                    top: -3%;
-                    right: -3%;
+                    top: 14%;
+                    right: 21%;
                     transform: rotate(-26deg);
                     overflow: visible;
                     lamp {
+                        position: absolute;
                         transform: rotate(26deg);
                     }
                 }

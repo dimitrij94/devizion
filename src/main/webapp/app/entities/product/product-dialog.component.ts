@@ -1,17 +1,17 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Response} from '@angular/http';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Response} from "@angular/http";
 
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {EventManager, AlertService, JhiLanguageService} from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import {Product} from './product.model';
-import {ProductPopupService} from './product-popup.service';
-import {ProductService} from './product.service';
-import {ProductCategory, ProductCategoryService} from '../product-category';
-import {ImageToken} from '../image-token';
+import {Product} from "./product.model";
+import {ProductPopupService} from "./product-popup.service";
+import {ProductService} from "./product.service";
+import {ProductCategory, ProductCategoryService} from "../product-category";
+import {ImageToken} from "../image-token";
 import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
-import {MyImageService} from "../../shared/image/image.service";
+import {MyImageService, productSubdirectory} from "../../shared/image/image.service";
 
 @Component({
     selector: 'jhi-product-dialog',
@@ -23,8 +23,10 @@ export class ProductDialogComponent implements OnInit {
     authorities: any[];
     isSaving: boolean;
     imageToken = {};
-
+    productSubdirectory = productSubdirectory;
     productcategories: ProductCategory[];
+    originalImageToken: ImageToken;
+    croppedImageToken: ImageToken;
 
     constructor(public activeModal: NgbActiveModal,
                 private jhiLanguageService: JhiLanguageService,
@@ -32,7 +34,7 @@ export class ProductDialogComponent implements OnInit {
                 private productService: ProductService,
                 private authServiceProvider: AuthServerProvider,
                 private productCategoryService: ProductCategoryService,
-                private imageService:MyImageService,
+                private imageService: MyImageService,
                 private eventManager: EventManager) {
         this.jhiLanguageService.setLocations(['product']);
     }
@@ -45,6 +47,25 @@ export class ProductDialogComponent implements OnInit {
             });
     }
 
+    onOriginalImageLoad(imageToken: ImageToken) {
+        this.product.productImageUri = imageToken.path;
+        this.originalImageToken = imageToken;
+    }
+
+    onOriginalImageRemove() {
+        this.imageService
+            .imageUploadCancel(this.originalImageToken.id, productSubdirectory);
+    }
+
+    onCroppedImageLoad(imageToken: ImageToken) {
+        this.product.croppedImageUri = imageToken.path;
+        this.croppedImageToken = imageToken;
+    }
+
+    onCroppedImageRemove(i) {
+        this.imageService
+            .imageUploadCancel(this.croppedImageToken.id, productSubdirectory);
+    }
 
     onLoad($event: any) {
         if ($event.serverResponse.status == 200) {

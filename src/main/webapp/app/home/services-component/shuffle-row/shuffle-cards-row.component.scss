@@ -1,8 +1,11 @@
 @import "../../../../content/scss/varibles";
 
+$row-wrapper-width: 90%;
 #wrapper {
     overflow: hidden;
     position: relative;
+    width: $row-wrapper-width;
+    left: (100%-$row-wrapper-width)/2;
     #row-wrapper {
         //animated shadow and Y translate margin
         padding: 37px 0;

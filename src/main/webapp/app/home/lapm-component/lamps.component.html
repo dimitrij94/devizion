@@ -29,19 +29,18 @@
             </div>
 
             <div id="lamps-wrapper">
-                <div class="lamps-container" id="left-lamps-line-container" fxLayout="row"
-                     fxLayoutAlign="space-around top">
-                    <div fxFlex></div>
-                    <lamp *ngFor="let lamp of leftLineLamps" fxFlex
+                <div class="lamps-container" id="left-lamps-line-container">
+                    <lamp *ngFor="let lamp of leftLineLamps; let i = index"
+                          [style.right]="(i * 10) / lamp.distance + 'vw'"
                           [distanceToLampRem]="lamp.distance"
                           [dumpingCoefficient]="lamp.dumpingCoef"
                           [mouseMoveObservable]="mouseSpeedSubject.asObservable()"
                           [enableLampSubscription]="disableEnableComponent.asObservable()">
                     </lamp>
                 </div>
-                <div class="lamps-container" id="right-lamps-line-container" fxLayout="row"
-                     fxLayoutAlign="space-around top">
-                    <lamp *ngFor="let lamp of rightLineLamps" fxFlex
+                <div class="lamps-container" id="right-lamps-line-container">
+                    <lamp *ngFor="let lamp of rightLineLamps"
+                          [style.left]="(i * 10) / lamp.distance + 'vw'"
                           [distanceToLampRem]="lamp.distance"
                           [dumpingCoefficient]="lamp.dumpingCoef"
                           [mouseMoveObservable]="mouseSpeedSubject.asObservable()"

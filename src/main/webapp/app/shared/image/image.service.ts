@@ -1,4 +1,13 @@
-import {ImageScalar, ImageSize, ScreenSize} from "./image-size.model";
+import {
+    eightyScalar,
+    fortyScalar,
+    hundredScalar,
+    ImageScalar,
+    ImageSize,
+    ScreenSize,
+    sixtyScalar,
+    twentyScalar
+} from "./image-size.model";
 import {Injectable} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import {Observable} from "rxjs";
@@ -93,17 +102,17 @@ export class MyImageService {
         return this.http.delete('api/' + subdirectory + '/image', {search: requestParams});
     }
 
-    public static getProductImageUri(fileName: string): string {
-        return '/api/image/products?imageName=' + fileName;
-    }
-
     static getCategoryImage(fileName: string) {
         return '/api/image/categories?imageName=' + fileName;
     }
 
 
-    static getImagePathOfSize(subdirectory: string, fileName: string, windowWidth: number, scalar: ImageScalar) {
-        let imageSize = MyImageService.getImageSize(windowWidth, scalar);
+    getImagePathOfSize(subdirectory: string, fileName: string, windowWidth?: number, scalar?: number) {
+        let imageSize = this.getOptimalSize(scalar, windowWidth);
+        return this.getImageUrlFromImageSize(subdirectory, fileName, imageSize);
+    }
+
+    getImageUrlFromImageSize(subdirectory: string, fileName: string, imageSize: ImageSize) {
         return imageRootPath + '/size' + subdirectory +
             "?imageName=" + fileName +
             "&imageScalarSize=" + imageSize.scalar.toString() +
@@ -126,6 +135,72 @@ export class MyImageService {
             imageSize.screenSize = ScreenSize.lg;
         }
         return imageSize;
+    }
+
+    windowBreakpoints = [600, 960, 1280, 1920];
+    scalars = [0.2, 0.4, 0.6, 0.8, 1.0];
+
+    getOptimalSize(scalar: number, rowWidth = window.innerWidth): ImageSize {
+        let breakpoints = this.windowBreakpoints;
+        let scalars = this.scalars;
+        let containerSize = scalar * rowWidth;
+        //i stands for breakpoints index, j stands for scalar index
+        let minI = this.windowBreakpoints.length - 1, minJ = this.scalars.length - 1;
+        let delta = this.getDelta(containerSize, scalars[minJ], breakpoints[minI]);
+        let minDelta = delta;
+        for (let i = 0; i < this.windowBreakpoints.length; i++) {
+            for (let j = 0; j < this.scalars.length; j++) {
+                delta = this.getDelta(containerSize, scalars[j], breakpoints[i]);
+                if (delta > 0 && delta < minDelta) {
+                    minDelta = delta;
+                    minI = i;
+                    minJ = j;
+                }
+            }
+        }
+        return this.getImageUrlParser(minJ, minI);
+    }
+
+    getDelta(containerWidth, scalar, breakpoint) {
+        let scaledWidth = breakpoint * scalar;
+        return scaledWidth - containerWidth;
+    }
+
+    getImageUrlParser(scalarIndex: number, breakpointIndex: number): ImageSize {
+        let screenSize;
+        let scalar;
+        switch (breakpointIndex) {
+            case 0:
+                screenSize = ScreenSize.xs;
+                break;
+            case 1:
+                screenSize = ScreenSize.sm;
+                break;
+            case 2:
+                screenSize = ScreenSize.md;
+                break;
+            case 3:
+                screenSize = ScreenSize.lg;
+                break;
+        }
+        switch (scalarIndex) {
+            case 0:
+                scalar = twentyScalar;
+                break;
+            case 1:
+                scalar = fortyScalar;
+                break;
+            case 2:
+                scalar = sixtyScalar;
+                break;
+            case 3:
+                scalar = eightyScalar;
+                break;
+            case 4:
+                scalar = hundredScalar;
+                break;
+        }
+        return {scalar: scalar, screenSize: screenSize};
     }
 
 }

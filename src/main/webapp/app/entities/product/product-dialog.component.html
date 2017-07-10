@@ -75,13 +75,20 @@
 
         <div class="foem-group">
             <label>Фото продукту</label>
-            <image-upload [url]="'/api/products/image'"
+            <!--<image-upload [url]="'/api/products/image'"
                           [max]="1"
                           [headers]="[{'header':'Authorization', 'value':'Bearer '+authServiceProvider.getToken()}]"
                           (onFileUploadFinish)="onLoad($event)"
                           (onRemove)="onRemove($event)">
 
-            </image-upload>
+            </image-upload>-->
+            <my-cropped-image-uploader
+                [postDirectory]="productSubdirectory"
+                (originalImageUploaded)="onOriginalImageLoad($event)"
+                (croppedImageUploadCanceled)="onOriginalImageRemove()"
+                (croppedImageUploaded)="onCroppedImageLoad($event)"
+                (originalImageUploadCanceled)="onCroppedImageRemove()">
+            </my-cropped-image-uploader>
         </div>
 
 

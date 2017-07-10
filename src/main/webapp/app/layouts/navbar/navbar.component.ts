@@ -1,5 +1,5 @@
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnInit, Output} from "@angular/core";
+import {Router} from "@angular/router";
 import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {JhiLanguageService} from "ng-jhipster";
 import {ProfileService} from "./../profiles/profile.service";
@@ -7,11 +7,9 @@ import {JhiLanguageHelper, LoginModalService, LoginService, Principal} from "../
 
 import {DEBUG_INFO_ENABLED, VERSION} from "../../app.constants";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {SidenavService} from "../../shared/sidenav.service";
-import {ProductCategoryService} from "../../entities/product-category/product-category.service";
 import {ProductCategory} from "../../entities/product-category/product-category.model";
-import {Observable, Subject} from "rxjs";
-import {MobileNavbarItem, NavbarService} from "./navbar.service";
+import {Subject} from "rxjs";
+import {NavbarService} from "./navbar.service";
 
 
 export class UserMenuOption {
@@ -106,9 +104,6 @@ export class NavbarComponent implements OnInit {
     @Input('categories')
     categories: ProductCategory[];
 
-    @ViewChild('navbarPositionWrapper')
-    navbarPositionWrapper: ElementRef;
-
     @Input('positionSubject')
     positionSubject: Subject<number>;
 
@@ -119,6 +114,16 @@ export class NavbarComponent implements OnInit {
     servicesShadowState = 'inactive';
     portfolioShadowState = 'inactive';
     aboutUsShadowState = 'inactive';
+
+    @Input('isPositionFixed')
+    isPositionFixed = false;
+
+    @Input('isTransparent')
+    isTransparent = true;
+
+    @Input('showLogo')
+    isLogoShown = false;
+
     linkShadows: Array<string> = [
         '',//lamps
         'inactive',//whyUs
@@ -128,7 +133,7 @@ export class NavbarComponent implements OnInit {
     ];
 
 
-    constructor(private navbarService:NavbarService,
+    constructor(private navbarService: NavbarService,
                 private loginService: LoginService,
                 private languageHelper: JhiLanguageHelper,
                 private languageService: JhiLanguageService,
@@ -147,20 +152,13 @@ export class NavbarComponent implements OnInit {
 
 
         this.onResize();
-        if (this.router.url === '/' && !this.showMobileNavbar) {
-            this.toggleRelativeState();
-            this.positionSubject && this.positionSubject.subscribe((position) => {
+        if (this.positionSubject)
+            this.positionSubject.subscribe((position) => {
                 for (let i = 0; i < this.linkShadows.length; i++) {
                     if (i == position) this.linkShadows[i] = 'active';
                     else this.linkShadows[i] = 'inactive';
                 }
             });
-        }
-        else this.toggleFixedState();
-
-        Observable.fromEvent(window, 'resize')
-            .skip(5)
-            .subscribe(this.onResize.bind(this));
 
         this.languageHelper.getAll().then((languages) => {
             this.languages = languages;
@@ -174,13 +172,11 @@ export class NavbarComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
     }
 
-    onResize($event?:any) {
-        this.showMobileNavbar = window.innerWidth <= 599;
+    @HostListener('window:resize', ['$event'])
+    onResize($event?: any) {
+        this.showMobileNavbar = window.innerWidth <= 750;
     }
 
-    afterCategoriesResolved() {
-
-    }
 
     positionItemClicked(index: number) {
         this.scrollTo.emit(index);
@@ -188,19 +184,17 @@ export class NavbarComponent implements OnInit {
 
     toggleFixedState() {
         if (!this.showMobileNavbar) {
-            this.navbarPositionWrapper.nativeElement.classList.remove('relative');
-            this.navbarPositionWrapper.nativeElement.classList.add('fixed');
+            this.isPositionFixed = true;
         }
+        this.isPositionFixed = true;
     }
 
     toggleRelativeState() {
         if (!this.showMobileNavbar) {
-            this.navbarPositionWrapper.nativeElement.classList.remove('fixed');
-            this.navbarPositionWrapper.nativeElement.classList.add('relative');
+            this.isPositionFixed = false;
         }
+        else this.isPositionFixed = true;
     }
-
-
 
 
     hideServicesSubMenu() {

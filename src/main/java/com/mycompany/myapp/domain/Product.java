@@ -5,11 +5,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A Product.
@@ -34,7 +34,7 @@ public class Product implements Serializable {
     private Float productPrice;
 
     @NotNull
-    @Column(name = "product_description", nullable = false)
+    @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 
     @Column(name = "product_image_uri")
@@ -163,6 +163,14 @@ public class Product implements Serializable {
 
     public void setProductCategory(ProductCategory productCategory) {
         this.productCategory = productCategory;
+    }
+
+    public String getCroppedImageUri() {
+        return croppedImageUri;
+    }
+
+    public void setCroppedImageUri(String croppedImageUri) {
+        this.croppedImageUri = croppedImageUri;
     }
 
     @Override

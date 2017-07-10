@@ -7,7 +7,6 @@ import {Product} from "./product.model";
 import {ProductService} from "./product.service";
 import {Principal} from "../../shared";
 import {MyImageService, productSubdirectory} from "../../shared/image/image.service";
-import {fortyScalar, twentyScalar} from "../../shared/image/image-size.model";
 
 @Component({
     selector: 'jhi-product',
@@ -23,6 +22,7 @@ export class ProductComponent implements OnInit, OnDestroy {
                 private productService: ProductService,
                 private alertService: AlertService,
                 private eventManager: EventManager,
+                private imageService:MyImageService,
                 private principal: Principal) {
 
         this.jhiLanguageService.setLocations(['product']);
@@ -34,11 +34,11 @@ export class ProductComponent implements OnInit, OnDestroy {
             (res: Response) => {
                 let products = <Product[]> res.json();
                 products.forEach((product) => {
-                    product.productImageUri = MyImageService.getImagePathOfSize(
+                    product.productImageUri = this.imageService.getImagePathOfSize(
                         productSubdirectory,
                         product.productImageUri,
                         window.innerWidth,
-                        twentyScalar);
+                        15);
                 });
                 this.products = products;
             },

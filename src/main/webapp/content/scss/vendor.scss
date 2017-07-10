@@ -5,9 +5,9 @@ put Sass variables here:
 eg $input-color: red;
 ****************************/
 
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+//@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 //@import '~font-awesome/scss/font-awesome';
-
+@import "./mat-theming";
 $fa-font-path: '~font-awesome/fonts';
 
 @import '~bootstrap/scss/bootstrap';

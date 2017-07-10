@@ -1,10 +1,9 @@
 package com.mycompany.myapp.config;
 
-import com.mycompany.myapp.security.*;
-import com.mycompany.myapp.security.jwt.*;
-
-import io.github.jhipster.security.*;
-
+import com.mycompany.myapp.security.AuthoritiesConstants;
+import com.mycompany.myapp.security.jwt.JWTConfigurer;
+import com.mycompany.myapp.security.jwt.TokenProvider;
+import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -118,6 +117,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/custumers").permitAll()
             .antMatchers(HttpMethod.GET, "/api/portfolio").permitAll()
             .antMatchers(HttpMethod.GET, "/api/user-orders").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/slide").permitAll()
             .antMatchers(HttpMethod.GET, "/api/image/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/portfolio/").permitAll()
             .antMatchers(HttpMethod.DELETE).hasAnyAuthority(AuthoritiesConstants.ADMIN)

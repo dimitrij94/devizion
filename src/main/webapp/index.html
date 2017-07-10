@@ -22,44 +22,52 @@
         }
 
         .index.loader-wrapper {
-            padding: 50vh;
-            position: relative;
+            position: fixed;
             text-align: center;
             font-size: 4rem;
+            height: 100vh;
+            width: 100vw;
+            z-index: 99999;
+            background-color: rgba(255, 255, 255, 0.8);
+            top: 0;
         }
 
         .index.loader-wrapper .spinner-wrapper {
             position: relative;
             display: block;
-            margin: -0.35em auto auto;
-            width: 4em;
-            height: 0.7em;
+            margin: -0.225em auto auto;
+            /* calc(0.45em * 3 + 0.3em * 2)*/;
+            width: 1.95em;
+            top: 50%;
+            height: 0.45em;
         }
 
         .index.loader-wrapper .spinner-wrapper .dot {
-            margin-left: -0.5em;
-            width: 0.7em;
+            width: 0.45em;
             position: absolute;
             top: 0px;
-            height: 100%;
-            border-radius: 0.45em;
+            height: 0.45em;
+            border-radius: 50%;
         }
 
         .index.loader-wrapper .spinner-wrapper .dot:nth-child(1) {
             background-color: #E30070;
-            left: 0.7em;
+            left: 0em;
             animation: bounce 1s ease-in-out infinite;
         }
 
         .index.loader-wrapper .spinner-wrapper .dot:nth-child(2) {
             background-color: #FFDC00;
+            /*calc(0.45em + 0.3em);*/
+            left: 0.75em;
             animation: bounce 1s ease-in-out 0.33s infinite;
         }
 
         .index.loader-wrapper .spinner-wrapper .dot:nth-child(3) {
             animation: bounce 1s ease-in-out infinite;
             background-color: #00A2FF;
-            left: 3.25em;
+            /*    left: calc((0.45em + 0.3em)*2);*/
+            left: 1.5em;
         }
     </style>
 </head>

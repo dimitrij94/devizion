@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from "@angular/router";
 import {UserOrderService} from "./user-order.service";
 import {Injectable} from "@angular/core";
+import {GenericResponse} from "@angular/http/src/static_response";
 @Injectable()
 export class UserOrderResolver implements Resolve<UserOrder> {
 
@@ -18,5 +19,16 @@ export class UserOrderResolver implements Resolve<UserOrder> {
         | Promise<UserOrder>
         | UserOrder {
         return this.userOrderService.query();
+    }
+}
+@Injectable()
+export class UserOrdersOfCategoryByIdResolver implements Resolve<UserOrder> {
+
+    constructor(private userOrderService: UserOrderService) {
+
+    }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<GenericResponse<UserOrder>> {
+        return this.userOrderService.findOrdersOfCategory(route.params['id']);
     }
 }
