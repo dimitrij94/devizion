@@ -174,8 +174,9 @@ public class ProductResource {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         log.debug("REST request to delete Product : {}", id);
         Product product = productService.findOne(id);
-        if (product.getProductImageUri() != null)
-            this.imageService.deleteImage("/product/", product.getProductImageUri());
+        String photoUri = product.getProductImageUri();
+        if (photoUri != null) this.imageService.deleteImage("/product/", photoUri);
+
         productService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

@@ -17,24 +17,7 @@
 }
 
 #why-us {
-    height: 70vh;
-    div.question-bar {
-        .bar-horizontal-line {
-            margin-right: 0.5rem;
-            background-color: black;
-        }
-        h3 {
-            margin-right: 0.8rem;
-            text-align: right;
-            color: black;
-        }
-        background-color: $yellow-accent;
-        text-align: right;
-    }
-    div.answer {
-        text-align: left;
-        margin-left: 1rem;
-    }
+    margin-top: 7em;
 }
 
 .bar-horizontal-line {
@@ -66,7 +49,7 @@
             top: 0;
             background-color: rgba(255, 255, 255, 0.8);
             inter-routes-spinner {
-                font-size: 4em;
+                font-size: 2em;
             }
         }
 

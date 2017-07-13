@@ -14,14 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.RenderingHints;
-import java.util.Map;
-import java.util.HashMap;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Dmitrij on 13.04.2017.
@@ -34,6 +32,7 @@ public class ImageServiceImpl implements ImageService {
     private final Logger log = LoggerFactory.getLogger(ImageServiceImpl.class);
     private String imageRepositoryPath = "D:/Projects/Devizion/src/main/resources/images";
     private ImageTokenService imageTokenService;
+    private final String[] imageDirectories = {"categories", "custumer", "portfolio", "products", "slides"};
 
     public ImageServiceImpl(ImageTokenService imageTokenService) {
         createImageSizesDirectories();
@@ -42,6 +41,10 @@ public class ImageServiceImpl implements ImageService {
 
     private void createImageSizesDirectories() {
         File rootDir = new File(imageRepositoryPath);
+        for (String direcotoryName : this.imageDirectories) {
+            File dir = new File(this.imageRepositoryPath + "/" + direcotoryName);
+            if (!dir.exists()) dir.mkdir();
+        }
         for (File file : rootDir.listFiles()) {
             if (!file.isDirectory()) continue;
             for (ScreenSize screenSize : ScreenSize.values()) {

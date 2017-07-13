@@ -1,6 +1,6 @@
 <div id="wrapper">
     <div class="navigation-bar">
-        <div id="site-logo-wrapper">
+        <a id="site-logo-wrapper" routerLink="/">
             <div id="site-logo"></div>
             <div id="logo-text">
                 <div class="text-wrapper">
@@ -8,7 +8,7 @@
                     <p id="subheader" class="logo-text">рекламно-поліграфічна компанія</p>
                 </div>
             </div>
-        </div>
+        </a>
         <div class="menu-toggle" (click)="toggleMenu()"></div>
     </div>
     <div class="menu" [@menuOpened]="menuStatus">

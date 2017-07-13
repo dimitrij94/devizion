@@ -1,0 +1,188 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="Dmitrij (generated)" id="1493321561728-1">
+        <createTable tableName="custumer">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="custumerPK"/>
+            </column>
+            <column name="custumer_contact_number" type="VARCHAR(255)"/>
+            <column name="custumer_image_uri" type="VARCHAR(255)"/>
+            <column name="custumer_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="custumer_surname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-2">
+        <createTable tableName="image_token">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="image_tokenPK"/>
+            </column>
+            <column name="path" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-3">
+        <createTable tableName="jhi_authority">
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-4">
+        <createTable tableName="jhi_persistent_audit_event">
+            <column autoIncrement="true" name="event_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_persistent_audit_eventPK"/>
+            </column>
+            <column name="event_date" type="BINARY(255)"/>
+            <column name="event_type" type="VARCHAR(255)"/>
+            <column name="principal" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-5">
+        <createTable tableName="jhi_persistent_audit_evt_data">
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-6">
+        <createTable tableName="jhi_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_userPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="BINARY(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="BINARY(255)"/>
+            <column name="activated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activation_key" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="image_url" type="VARCHAR(256)"/>
+            <column name="lang_key" type="VARCHAR(5)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)"/>
+            <column name="reset_date" type="BINARY(255)"/>
+            <column name="reset_key" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-7">
+        <createTable tableName="jhi_user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-8">
+        <createTable tableName="portfolio_entry">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="portfolio_entryPK"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="photo_uri" type="VARCHAR(255)"/>
+            <column name="portfolio_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-9">
+        <createTable tableName="product">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="productPK"/>
+            </column>
+            <column name="product_description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_image_uri" type="VARCHAR(255)"/>
+            <column name="product_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_price" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_self_cost" type="FLOAT"/>
+            <column name="product_category_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-10">
+        <createTable tableName="product_category">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="product_categoryPK"/>
+            </column>
+            <column name="category_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_photo_uri" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-11">
+        <createTable tableName="user_order">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_orderPK"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="ordered_at" type="BINARY(255)"/>
+            <column name="photo_uri" type="VARCHAR(255)"/>
+            <column name="custumer_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-12">
+        <addPrimaryKey columnNames="event_id, name" tableName="jhi_persistent_audit_evt_data"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-13">
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="jhi_user_authority"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-14">
+        <addPrimaryKey columnNames="name" constraintName="jhi_authorityPK" tableName="jhi_authority"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-15">
+        <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-16">
+        <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-17">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FK290okww5jujghp4el5i7mgwu0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-18">
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data" constraintName="FK2ehnyx2si4tjd2nt4q7y40v8m" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="jhi_persistent_audit_event"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-19">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FK4psxl0jtx6nr7rhqbynr6itoc" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="jhi_authority"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-20">
+        <addForeignKeyConstraint baseColumnNames="custumer_id" baseTableName="user_order" constraintName="FKbmxf6memtda64tn4hnagioklf" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="custumer"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-21">
+        <addForeignKeyConstraint baseColumnNames="product_category_id" baseTableName="product" constraintName="FKcwclrqu392y86y0pmyrsi649r" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product_category"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-22">
+        <addForeignKeyConstraint baseColumnNames="portfolio_id" baseTableName="portfolio_entry" constraintName="FKgn929j7915gmkdxykuev3d32m" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product"/>
+    </changeSet>
+    <changeSet author="Dmitrij (generated)" id="1493321561728-23">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="user_order" constraintName="FKlu3lqelhtjtq1g8g5b2jkvc8y" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product"/>
+    </changeSet>
+</databaseChangeLog>

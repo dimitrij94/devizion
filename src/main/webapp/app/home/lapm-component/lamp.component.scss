@@ -13,7 +13,7 @@
         width: $hidden-screen-width;
         left: -(($hidden-screen-width) - 100vw)/2;
         top: -(($hidden-screen-height) - $screen-height)/2;
-        @include transition(transform 0s linear);
+        @include transition(transform 0.5s ease);
         .bg-part {
             position: absolute;
             height: $hidden-screen-height;
@@ -69,30 +69,7 @@
                     top: 50%;
                     margin-left: -$logo-cube-side-size/2;
                     margin-top: - $logo-cube-side-size/2;
-                    /*&:hover {
-                        .front {
-                            transform: translateZ($logo-cube-side-size);
-                        }
-                        .back {
-                            transform: translateZ(0);
-                        }
 
-                        .left {
-                            transform: translateX(-$logo-cube-side-size/2) rotateY(90deg) translateZ($logo-cube-side-size/2);
-                        }
-
-                        .right {
-                            transform: translateX($logo-cube-side-size/2) rotateY(90deg) translateZ($logo-cube-side-size/2);
-                        }
-
-                        .top {
-                            transform: translateY(-$logo-cube-side-size/2) translateZ($logo-cube-side-size/2) rotateX(90deg);
-                        }
-
-                        .bottom {
-                            transform: translateY($logo-cube-side-size/2) translateZ($logo-cube-side-size/2) rotateX(90deg);
-                        }
-                    }*/
                     .side {
                         //@include transition(transform 1s linear);
                         position: absolute;

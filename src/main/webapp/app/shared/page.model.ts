@@ -1,6 +1,7 @@
 /**
  * Created by Dmitrij on 25.04.2017.
  */
+
 export interface Page<T> {
     content: Array<T>;
     last: boolean;
@@ -18,3 +19,4 @@ export interface PageRequest{
     query?:any;
     sort?:any;
 }
+

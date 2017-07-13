@@ -17,7 +17,7 @@ import {MyImageService, productSubdirectory} from "../../shared/image/image.serv
     selector: 'jhi-product-dialog',
     templateUrl: './product-dialog.component.html'
 })
-export class ProductDialogComponent implements OnInit {
+export class ProductDialogComponent implements OnInit, OnDestroy {
 
     product: Product;
     authorities: any[];
@@ -27,6 +27,7 @@ export class ProductDialogComponent implements OnInit {
     productcategories: ProductCategory[];
     originalImageToken: ImageToken;
     croppedImageToken: ImageToken;
+    productSaved = false;
 
     constructor(public activeModal: NgbActiveModal,
                 private jhiLanguageService: JhiLanguageService,
@@ -47,14 +48,26 @@ export class ProductDialogComponent implements OnInit {
             });
     }
 
+
+    ngOnDestroy(): void {
+        if (!this.productSaved) {
+            this.originalImageToken && this.onOriginalImageRemove();
+            this.croppedImageToken && this.onCroppedImageRemove();
+        }
+    }
+
     onOriginalImageLoad(imageToken: ImageToken) {
         this.product.productImageUri = imageToken.path;
         this.originalImageToken = imageToken;
     }
 
     onOriginalImageRemove() {
-        this.imageService
-            .imageUploadCancel(this.originalImageToken.id, productSubdirectory);
+        let originalImageRemovalSubscription = this.imageService
+            .imageUploadCancel(this.originalImageToken.id, productSubdirectory)
+            .subscribe(() => {
+                delete this.originalImageToken;
+                originalImageRemovalSubscription.unsubscribe();
+            });
     }
 
     onCroppedImageLoad(imageToken: ImageToken) {
@@ -62,9 +75,13 @@ export class ProductDialogComponent implements OnInit {
         this.croppedImageToken = imageToken;
     }
 
-    onCroppedImageRemove(i) {
-        this.imageService
-            .imageUploadCancel(this.croppedImageToken.id, productSubdirectory);
+    onCroppedImageRemove(i?) {
+        let croppedImageRemovalSubscription = this.imageService
+            .imageUploadCancel(this.croppedImageToken.id, productSubdirectory)
+            .subscribe(() => {
+                delete this.croppedImageToken;
+                croppedImageRemovalSubscription.unsubscribe();
+            });
     }
 
     onLoad($event: any) {
@@ -104,6 +121,7 @@ export class ProductDialogComponent implements OnInit {
     }
 
     private onSaveSuccess(result: Product) {
+        this.productSaved = true;
         this.eventManager.broadcast({name: 'productListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);

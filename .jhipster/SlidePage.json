@@ -1,0 +1,33 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "photoUri",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "croppedPhotoUri",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "positionedLeft",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20170710083807",
+    "entityTableName": "slide_page",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

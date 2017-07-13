@@ -9,15 +9,15 @@ import {DevizionAdminModule} from "./admin/admin.module";
 import {DevizionAccountModule} from "./account/account.module";
 import {DevizionEntityModule} from "./entities/entity.module";
 import {FlexLayoutModule} from "@angular/flex-layout";
-
 import {ErrorComponent, JhiMainComponent, LayoutRoutingModule, ProfileService} from "./layouts";
 import {customHttpProvider} from "./blocks/interceptor/http.provider";
 import {PaginationConfig} from "./blocks/config/uib-pagination.config";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MdListModule, MdSidenavModule} from "@angular/material";
+import {MdButtonModule, MdDialogModule, MdIconModule, MdMenuModule, MdSidenavModule} from "@angular/material";
 import {NavbarModule} from "./layouts/navbar/navbar.module";
 import "hammerjs";
+import {ContactsDialogComponent} from "./layouts/contacts-dialog/contacts-dialog.component";
 declare var require: WebpackRequire;
 declare var $: any;
 interface WebpackRequireEnsureCallback {
@@ -39,7 +39,10 @@ interface WebpackContext extends WebpackRequire {
     imports: [
         MdSidenavModule,
         NavbarModule,
-        MdListModule,
+        MdButtonModule,
+        MdDialogModule,
+        MdMenuModule,
+        MdIconModule,
         BrowserModule,
         BrowserAnimationsModule,
         LayoutRoutingModule,
@@ -53,9 +56,11 @@ interface WebpackContext extends WebpackRequire {
         DevizionEntityModule
     ],
     declarations: [
+        ContactsDialogComponent,
         JhiMainComponent,
         ErrorComponent
     ],
+    entryComponents: [ContactsDialogComponent],
     providers: [
         ProfileService,
         customHttpProvider(),

@@ -31,6 +31,14 @@ $navbar-relative-height: 5em;
     transition: $transition;
 }
 
+@mixin transform($val...){
+    -webkit-transform: $val;
+    -moz-transform: $val;
+    -ms-transform: $val;
+    -o-transform: $val;
+    transform: $val;
+}
+
 @mixin backgroundSize($value...) {
     -webkit-background-size: $value;
     -moz-background-size: $value;

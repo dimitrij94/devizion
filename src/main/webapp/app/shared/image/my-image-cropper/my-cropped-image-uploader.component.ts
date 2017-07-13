@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {Bounds, CropperSettings, ImageCropperComponent} from "ng2-img-cropper";
 import {AuthServerProvider} from "../../auth/auth-jwt.service";
 import {MyCropBounds, MyImageService} from "../image.service";
@@ -19,8 +19,7 @@ export class CropCoordinates {
     templateUrl: './my-cropped-image-uploader.component.html',
     styleUrls: ['./my-cropped-image-uploader.styles.scss']
 })
-export class MyCroppedImageUploaderComponent {
-
+export class MyCroppedImageUploaderComponent implements OnInit {
     data: any;
 
     imageToken: any = {};
@@ -30,6 +29,12 @@ export class MyCroppedImageUploaderComponent {
 
     @ViewChild('imageInput')
     imageInput: ElementRef;
+
+    @Input('aspectX')
+    aspectX: number = 1;
+
+    @Input('aspectY')
+    aspectY: number = 1;
 
     bounds: Bounds;
 
@@ -66,13 +71,22 @@ export class MyCroppedImageUploaderComponent {
 
     constructor(private myImageService: MyImageService,
                 private authProvider: AuthServerProvider) {
-        this.cropperSettings = new CropperSettings();
-        this.cropperSettings.noFileInput = true;
-        this.cropperSettings.canvasWidth = 798;
-        this.cropperSettings.canvasHeight = 500;
 
         this.data = {};
     }
+
+
+    ngOnInit(): void {
+        this.cropperSettings = new CropperSettings();
+        this.cropperSettings.canvasWidth = 798 - 30;
+        this.cropperSettings.noFileInput = true;
+        this.cropperSettings.canvasHeight = 500;
+        this.cropperSettings.width = this.aspectX;
+        this.cropperSettings.height = this.aspectY;
+        this.cropperSettings.keepAspect = true;
+    }
+
+
 
     fileChangeListener($event) {
         let image: any = new Image();
@@ -124,7 +138,7 @@ export class MyCroppedImageUploaderComponent {
         let coords = new CropCoordinates();
 
         coords.cropX1 = bounds.left / this.imageWidth;
-        coords.cropX2 = (bounds.left + bounds.width)/ this.imageWidth;
+        coords.cropX2 = (bounds.left + bounds.width) / this.imageWidth;
 
         coords.cropY1 = bounds.top / this.imageHeight;
         coords.cropY2 = (bounds.top + bounds.height) / this.imageHeight;

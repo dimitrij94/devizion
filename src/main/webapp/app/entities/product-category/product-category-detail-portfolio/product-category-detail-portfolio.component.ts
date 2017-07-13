@@ -54,7 +54,7 @@ export class ProductCategoryDetailPortfolioComponent implements OnInit, OnDestro
                 @Inject(DOCUMENT) private document: Document,
                 private productCategoryService: ProductCategoryService,
                 private userOrderService: UserOrderService) {
-        this.jhiLanguageService.setLocations(['product']);
+        this.jhiLanguageService.setLocations(['productCategory']);
     }
 
     ngOnInit() {

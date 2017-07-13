@@ -27,8 +27,8 @@ export class NavbarService {
     getStandartNavigationItems(categories) {
         return [
             this.getNavbarItem('Чому саме ми?', []),
-            this.getNavbarItem('Послуги', this.getNavbarSubitemFromCategory(categories, 'products')),
-            this.getNavbarItem('Портфоліо', this.getNavbarSubitemFromCategory(categories, 'portfolio')),
+            this.getNavbarItem('Послуги', this.getNavbarSubitemFromCategory(categories, '/')),
+            this.getNavbarItem('Портфоліо', this.getNavbarSubitemFromCategory(categories, '/portfolio/')),
             this.getNavbarItem('Про нас', [])
         ];
     }
@@ -48,7 +48,7 @@ export class NavbarService {
         return category.map((value) => {
             return (<MobileNavbarSubmenuItem> {
                 label: value.categoryName,
-                routerLink: '/product-category/' + value.id
+                routerLink: `/product-category${routerSubLink}${value.id}`
             });
         })
     }

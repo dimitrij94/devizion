@@ -1,0 +1,24 @@
+{
+    "devizionApp": {
+        "slidePage" : {
+            "home": {
+                "title": "Slide Pages",
+                "createLabel": "Создать новый Slide Page",
+                "createOrEditLabel": "Создать или отредактировать Slide Page"
+            },
+            "created": "Новый Slide Page создан с идентификатором {{ param }}",
+            "updated": "Slide Page обновлен с идентификатором {{ param }}",
+            "deleted": "Slide Page удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Slide Page {{ id }}?"
+            },
+            "detail": {
+                "title": "Slide Page"
+            },
+            "photoUri": "Photo Uri",
+            "description": "Description",
+            "croppedPhotoUri": "Cropped Photo Uri",
+            "positionedLeft": "Positioned Left"
+        }
+    }
+}

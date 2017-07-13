@@ -83,10 +83,10 @@ export class ProductCategoryService {
     categoryImageUploadCancel(category_id: number) {
         let requestParams: URLSearchParams = new URLSearchParams();
         requestParams.set('token_id', category_id.toString());
-        return this.http.delete('api/category/image', {search: requestParams});
+        return this.http.delete(`api${categorySubdirectory}/image`, {search: requestParams});
     }
 
-    findWithProducts(id: number, page = 0, size = 1): Observable<ProductCategoryWithProducts> {
+    findWithProducts(id: number, page = 0, size = 20): Observable<ProductCategoryWithProducts> {
         let requestParams = new URLSearchParams();
         requestParams.set('includeProducts', 'true');
         requestParams.set('page', page.toString());

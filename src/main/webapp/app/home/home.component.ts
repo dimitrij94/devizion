@@ -4,6 +4,7 @@ import {
     ElementRef,
     HostListener,
     Inject,
+    OnDestroy,
     OnInit,
     ViewChild,
     ViewEncapsulation
@@ -14,16 +15,17 @@ import {Account, LoginModalService, Principal} from "../shared";
 import {ProductService} from "../entities/product/product.service";
 import {ProductCategory, ProductCategoryWithProducts} from "../entities/product-category/product-category.model";
 import {DOCUMENT, DomSanitizer} from "@angular/platform-browser";
-import {Observable, Subject} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
 import {UserOrder} from "../entities/user-order/user-order.model";
 import {UserOrderService} from "../entities/user-order/user-order.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {PortfolioComponent} from "../portfolio/portfolio-cards-grid-component/portfolio.component";
 import {LampsComponent, scrollElasticX} from "./lapm-component/lamps.component";
 import {Product} from "../entities/product/product.model";
 import {Page} from "../shared/page.model";
+import {SlidePage} from "../entities/slide-page/slide-page.model";
+import {SliderComponent} from "./slider/slider.component";
 
-const numberOfPages = 5;
 const scrollMaxDuration = 7000;
 export const widthOfServiceCard = 300; //px
 export const widthOfPortfolioCard = 200;
@@ -35,7 +37,9 @@ export const widthOfPortfolioCard = 200;
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+    pagePositionSubscription: Subscription;
+    slidePages: SlidePage[];
     numberOfServices: number;
     showMobileNavbar = false;
     navbarPositionY: any;
@@ -54,6 +58,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     @ViewChild('lampsComponentElementRef')
     lampsComponentElementRef: LampsComponent;
+
+    @ViewChild('sliderElementRef')
+    sliderElementRef: SliderComponent;
 
     @ViewChild('navbarElementRef')
     navbarElementRef: ElementRef;
@@ -79,7 +86,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     @ViewChild('aboutUsWrapperEL')
     aboutUsWrapperEL: ElementRef;
 
-
     navbarIdentifierPosition = 0;
     navbarPositionSubject = new Subject<number>();
 
@@ -93,10 +99,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     isNavbarTransparent = true;
     isNavbarLogoShown = false;
     isNavbarFixed = false;
+    scrollToPositionAfterViewInit: number;
 
     constructor(private jhiLanguageService: JhiLanguageService,
                 private principal: Principal,
                 @Inject(DOCUMENT) private document: Document,
+                private router: Router,
                 private route: ActivatedRoute,
                 private loginModalService: LoginModalService,
                 private productService: ProductService,
@@ -114,8 +122,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
             this.account = account;
         });
         this.registerAuthenticationSuccess();
-        let resolvedData = this.route.snapshot.data;
+        this.pagePositionSubscription = this.route.queryParams.subscribe((params) => {
+            let pagePosition = +params['pagePosition'];
+            if (pagePosition != null) {
+                if (this.navbarPositionBreakpoints != null)
+                    this.scrollToPosition(pagePosition);
+                else
+                    this.scrollToPositionAfterViewInit = pagePosition;
+            }
 
+        });
+        let resolvedData = this.route.snapshot.data;
+        this.slidePages = resolvedData['slides'];
         this.portfolio = this.userOrderService
             .parsePortfolioCroppedImages(resolvedData['portfolio'].json(),
                 this.domSanitizer,
@@ -139,29 +157,29 @@ export class HomeComponent implements OnInit, AfterViewInit {
         let documentHeight = Math.max(body.scrollHeight, body.offsetHeight,
             html.clientHeight, html.scrollHeight, html.offsetHeight);
 
-        let productsOffsetTop = this.servicesElementRef.nativeElement.getBoundingClientRect().top;
-
-        /*let productsHeight = window.innerHeight;
-         let productsWindowHeight = window.innerHeight*0.8;
-         let prodWindowFinalMargin = -(productsHeight - (productsHeight - productsWindowHeight) / 2);
-         let headerHeight = window.innerHeight * 0.1;
-         this.prodWindowPerPxlChange = prodWindowFinalMargin / (productsOffsetTop + headerHeight); */
-
-        this.navbarPositionBreakpoints = [
-            0,//lamps header
-            this.whyUsElement.nativeElement.getBoundingClientRect().top + 20,
-            productsOffsetTop,
-            this.portfolioWrapperEl.nativeElement.getBoundingClientRect().top,
-            this.aboutUsWrapperEL.nativeElement.getBoundingClientRect().top,
-            documentHeight
-        ];
-
-        this.perPxlScrollTime = scrollMaxDuration / this.navbarPositionBreakpoints[this.navbarPositionBreakpoints.length - 1];
-
+        this.navbarPositionBreakpoints = this.getNavbarPositionBreakpoints(documentHeight);
+        if (this.scrollToPositionAfterViewInit != null) this.scrollToPosition(this.scrollToPositionAfterViewInit);
 
         this.perPxlScrollStripsParalllax = (window.innerHeight * 8) / documentHeight;
 
+    }
 
+
+    ngOnDestroy(): void {
+        this.pagePositionSubscription && this.pagePositionSubscription.unsubscribe();
+    }
+
+    getNavbarPositionBreakpoints(documentHeight: number, scrollStart: number = 0) {
+        let breakpoints = [
+            0,//lamps header
+            scrollStart + this.whyUsElement.nativeElement.getBoundingClientRect().top + 20,
+            scrollStart + this.servicesElementRef.nativeElement.getBoundingClientRect().top,
+            scrollStart + this.portfolioWrapperEl.nativeElement.getBoundingClientRect().top,
+            scrollStart + this.aboutUsWrapperEL.nativeElement.getBoundingClientRect().top,
+            documentHeight
+        ];
+        this.perPxlScrollTime = scrollMaxDuration / breakpoints[breakpoints.length - 1];
+        return breakpoints;
     }
 
     @HostListener('window:resize', ['$event'])
@@ -208,6 +226,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                     if (i != this.navbarIdentifierPosition) {
                         this.navbarPositionSubject.next(i);
                         this.navbarIdentifierPosition = i;
+                        if (i == 1) this.sliderElementRef.startTimer();
+                        else this.sliderElementRef.stopTimer();
                         break;
                     }
                 }
@@ -312,13 +332,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
 
     scrollToPosition(position: number) {
-        let finishPageScroll = this.navbarPositionBreakpoints[position] - this.navbarHeight;
+        let breakpointsLength = this.navbarPositionBreakpoints.length;
         let scrollStart = this.document.body.scrollTop;
+        this.navbarPositionBreakpoints =
+            this.getNavbarPositionBreakpoints(this.navbarPositionBreakpoints[breakpointsLength - 1], scrollStart);
+        let finishPageScroll = this.navbarPositionBreakpoints[position] - this.navbarHeight;
         let animationStart = performance.now();
         //true => moving up | false => moving down
         //let direction = scrollStart < finishPageScroll;
-
-        let breakpointsLength = this.navbarPositionBreakpoints.length;
 
         let easingFunction =
             (position < breakpointsLength - 2) ?

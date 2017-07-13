@@ -9,7 +9,7 @@ import {
     twentyScalar
 } from "./image-size.model";
 import {Injectable} from "@angular/core";
-import {Http, Response} from "@angular/http";
+import {Http, Response, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs";
 import {Header} from "angular2-image-upload/lib/image.service";
 import {Bounds} from "ng2-img-cropper";
@@ -22,7 +22,7 @@ export const productSubdirectory = "/products";
 export const categorySubdirectory = "/categories";
 export const portfolioSubdirectory = "/portfolio";
 export const custumerSubdirectory = '/custumer';
-
+export const slidePageSubdirectory = '/slides';
 export const imageRootPath = '/api/image';
 
 export class MyCropBounds {
@@ -97,9 +97,9 @@ export class MyImageService {
     }
 
     imageUploadCancel(tokenId: number, subdirectory: string) {
-        let requestParams: URLSearchParams = new URLSearchParams();
+        let requestParams = new URLSearchParams();
         requestParams.set('token_id', tokenId.toString());
-        return this.http.delete('api/' + subdirectory + '/image', {search: requestParams});
+        return this.http.delete('api' + subdirectory + '/image', {search: requestParams});
     }
 
     static getCategoryImage(fileName: string) {

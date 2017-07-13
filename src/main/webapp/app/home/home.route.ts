@@ -1,13 +1,11 @@
-import {Route} from '@angular/router';
-
-import {UserRouteAccessService} from '../shared';
-import {HomeComponent} from './';
-import {ProductResolver} from "../entities/product/product.resolver";
+import {Route} from "@angular/router";
+import {HomeComponent} from "./";
 import {UserOrderResolver} from "../entities/user-order/user-order.resolver";
 import {
     FirstProductCategoryResolver,
     ProductCategoriesResolver
 } from "../entities/product-category/product-category.resolver";
+import {SlidePageResolver} from "../entities/slide-page/slide-page.resolver";
 
 export const HOME_ROUTE: Route = {
     path: '',
@@ -15,7 +13,8 @@ export const HOME_ROUTE: Route = {
     resolve: {
         categories: ProductCategoriesResolver,
         firstCategory: FirstProductCategoryResolver,
-        portfolio: UserOrderResolver
+        portfolio: UserOrderResolver,
+        slides: SlidePageResolver
     },
     data: {
         authorities: [],

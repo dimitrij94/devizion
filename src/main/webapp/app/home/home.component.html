@@ -1,9 +1,8 @@
 <div class="my-fullpage-container">
     <lamps #lampsComponentElementRef *ngIf="!showMobileNavbar"></lamps>
 
-    <div #navbarElementRef>
-        <jhi-navbar (positionChanged)="scrollToPosition($event)"
-                    [categories]="categories"
+    <div #navbarElementRef style="position:relative;">
+        <jhi-navbar [categories]="categories"
                     [isTransparent]="isNavbarTransparent"
                     [isPositionFixed]="isNavbarFixed"
                     [showLogo]="isNavbarLogoShown"
@@ -12,15 +11,10 @@
         </jhi-navbar>
     </div>
 
-    <div fxLayout.lt-md="column" fxLayout="row"
-         #whyUsElement
+    <div #whyUsElement
          class="page-part"
-         fxLayoutAlign.lt-md="start-stretch" fxLayoutAlign="space-between center"
          id="why-us">
-
-        <div fxFlex.lt-md="100" fxFlex="80" fxFlex="80" class="answer">
-            <span jhiTranslate="home.whyUs.answer"></span>
-        </div>
+        <jhi-slider #sliderElementRef [slidePages]="slidePages"></jhi-slider>
     </div>
 
     <div id="services" #servicesElementRef class="page-part">
@@ -49,6 +43,7 @@
                        id="portfolio"
                        #portfolioElRef
                        [portfolio]="portfolio"
+                       [scrollEnabled]="true"
                        [numOfCols]="numberOfPortfolioCols">
         </jhi-portfolio>
     </div>

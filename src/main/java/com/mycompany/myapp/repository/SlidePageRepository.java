@@ -2,10 +2,14 @@ package com.mycompany.myapp.repository;
 
 import com.mycompany.myapp.domain.SlidePage;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 
 /**
- * Created by Dmitrij on 10.07.2017.
+ * Spring Data JPA repository for the SlidePage entity.
  */
-public interface SlidePageRepository extends JpaRepository<SlidePage, Long> {
+@SuppressWarnings("unused")
+@Repository
+public interface SlidePageRepository extends JpaRepository<SlidePage,Long> {
 
 }

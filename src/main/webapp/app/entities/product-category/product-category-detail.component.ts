@@ -148,7 +148,7 @@ export class ProductCategoryDetailComponent implements OnInit, OnDestroy {
         if (this.productsLoading) return;
         this.productsLoading = true;
         this.lastPageNumber += 1;
-        this.loadMoreProductsSubscription = this.productService.findByCategoryId(this.productCategory.id, this.lastPageNumber, 1)
+        this.loadMoreProductsSubscription = this.productService.findByCategoryId(this.productCategory.id, this.lastPageNumber)
             .subscribe((newProductsPage: Page<Product>) => {
                 let parsedProducts =
                     this.productCategory.categoryProducts.concat(this.parseCategoryProducts(newProductsPage));

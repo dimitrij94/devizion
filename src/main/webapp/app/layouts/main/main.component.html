@@ -1,13 +1,76 @@
 <!--<div>
     <router-outlet name="navbar"></router-outlet>
 </div>-->
-<div>
-    <router-outlet fxLayoutFill></router-outlet>
-    <div class="loader-wrapper" *ngIf="loading" >
+<div class="main-super-wrapper">
+    <router-outlet></router-outlet>
+    <div class="loader-wrapper" *ngIf="loading">
         <div class="spinner-wrapper">
             <span class="dot animated"></span>
             <span class="dot animated"></span>
             <span class="dot animated"></span>
+        </div>
+    </div>
+
+
+    <div class="admin-menu-wrapper" fxLayout="column" fxLayoutAlign="center center">
+        <div class="users-only" *ngIf="isAuthenticated">
+            <div class="menu-item-wrapper">
+                <button md-icon-button [mdMenuTriggerFor]="adminMenu" class="admin-menu-trigger">
+                    <md-icon svgIcon="build"></md-icon>
+                </button>
+                <md-menu #adminMenu="mdMenu">
+                    <a href="/h2-console">
+                        <button md-menu-item>
+                            H2 консоль
+                        </button>
+                    </a>
+                    <a href="javascript:void(0)"
+                       *ngFor="let adminMenuItem of adminMenuItems"
+                       [routerLink]="adminMenuItem.routerLink">
+                        <button md-menu-item>
+                            {{adminMenuItem.title}}
+                        </button>
+                    </a>
+                </md-menu>
+            </div>
+            <div class="menu-item-wrapper">
+                <button md-icon-button [mdMenuTriggerFor]="entetiesMenu" class="entities-menu-trigger">
+                    <md-icon svgIcon="more-vertical"></md-icon>
+                </button>
+                <md-menu #entetiesMenu="mdMenu">
+                    <a href="javascript:void(0)"
+                       *ngFor="let entitiesMenuItem of entitiesMenuItems"
+                       [routerLink]="entitiesMenuItem.routerLink">
+                        <button md-menu-item>
+                            {{entitiesMenuItem.title}}
+                        </button>
+                    </a>
+                </md-menu>
+            </div>
+            <div class="menu-item-wrapper">
+                <button md-icon-button [mdMenuTriggerFor]="profileMenu" class="profile-menu-trigger">
+                    <md-icon svgIcon="user"></md-icon>
+                </button>
+                <md-menu #profileMenu="mdMenu">
+                    <a href="javascript:void(0)"
+                       *ngFor="let profileMenuItem of profileMenuItems"
+                       [routerLink]="profileMenuItem.routerLink">
+                        <button md-menu-item>
+                            {{profileMenuItem.title}}
+                        </button>
+                    </a>
+
+                    <button md-menu-item (click)="logout()">
+                        <span>Вийти</span>
+                    </button>
+
+                </md-menu>
+            </div>
+        </div>
+        <div>
+            <button md-fab (click)="openContactsDialog()" class="open-contacts-dialog">
+                <md-icon style="height:56px" svgIcon="phone"></md-icon>
+            </button>
         </div>
     </div>
     <router-outlet name="popup"></router-outlet>

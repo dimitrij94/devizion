@@ -113,7 +113,6 @@ export class ShuffleCardsRowComponent implements OnInit, AfterViewInit, OnChange
     }
 
 
-
     disableComponent(): void {
         this.pauseTimer();
         this.componentEnabled = false;

@@ -1,0 +1,12 @@
+
+
+entity SlidePage{
+	photoUri String required
+    description String required
+    croppedPhotoUri String
+    positionedLeft Boolean
+}
+
+
+// Set service options to all except few
+service all with serviceImpl

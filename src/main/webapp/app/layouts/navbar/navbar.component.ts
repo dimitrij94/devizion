@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnInit, Output} from "@angular/core";
+import {ChangeDetectorRef, Component, HostListener, Input, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {JhiLanguageService} from "ng-jhipster";
@@ -15,9 +15,10 @@ import {NavbarService} from "./navbar.service";
 export class UserMenuOption {
     name: string;
     id?: string;
+    title?: string;
     routerLink?: string;
     href?: string;
-    translateVar: string;
+    translateVar?: string;
     childNodes?: UserMenuOption[];
 }
 @Component({
@@ -107,9 +108,6 @@ export class NavbarComponent implements OnInit {
     @Input('positionSubject')
     positionSubject: Subject<number>;
 
-    @Output('positionChanged')
-    scrollTo: EventEmitter<number> = new EventEmitter<number>();
-
     whyUsShadowState = 'inactive';
     servicesShadowState = 'inactive';
     portfolioShadowState = 'inactive';
@@ -178,9 +176,7 @@ export class NavbarComponent implements OnInit {
     }
 
 
-    positionItemClicked(index: number) {
-        this.scrollTo.emit(index);
-    }
+
 
     toggleFixedState() {
         if (!this.showMobileNavbar) {

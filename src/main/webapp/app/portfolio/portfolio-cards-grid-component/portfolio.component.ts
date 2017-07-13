@@ -106,11 +106,16 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
 
     @Input('controlsTilePosition')
     controlsTilePosition: number;
+
     @Input('modalVerticalAlign')
     modalVerticalAlign: string = 'middle';
+
     @Input('maxRows')
     maxRows: number = 3;
     private scrollOffsetTop: number = 0;
+
+    @Input('scrollEnabled')
+    scrollEnabled: boolean = false;
 
     constructor(private portfolioEl: ElementRef,
                 private userOrderService: UserOrderService,
@@ -138,8 +143,11 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
         //2 stands for 1 - absent card in  info block and 1 - index 0 base
         this.activePortfolio = this.portfolio.slice(0, (this.numOfCols * this.numOfRows) - 1);
         //this.updateActivePortfolio();
-        this.createFlippingTimer();
-        this.pauseFlippingTimer();
+        //this.createFlippingTimer();
+        if (this.scrollEnabled) {
+            this.flipTimer = new Timer(3000, this.timerScrollForward.bind(this));
+            this.pauseFlippingTimer();
+        }
         this.userOrderService.parsePortfolioModalImages(this.portfolio);
         if (this.modalVerticalAlign == 'top')
             this.scrollingContainerObservable =
@@ -198,7 +206,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
         setTimeout(() => {
             self.tileOfOpenModal.style.display = 'block';
             self.showModal = false;
-            self.flipTimer.resume();
+            this.resumeFlipTimer();
         }, 1000)
     }
 
@@ -206,7 +214,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
         this.vw = this.document.body.clientWidth;
 
         if (this.showModal || this.modalLoading) return;
-        this.flipTimer.pause();
+        this.pauseFlippingTimer();
 
         let rowNum = Math.floor((dto.index >= this.controlsTilePosition ? dto.index + 1 : dto.index) / this.numOfCols);
         this.openModalTileIndex = dto.index;
@@ -264,6 +272,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }
 
     onModalImageLoad($event) {
+        this.modalDescriptionStatus = 'hidden';
         let sidenavMargin = (this.includeSidenavMargin ? 300 : 0);
         let gridHeight = this.portfolioGridWrapper.nativeElement.offsetHeight;
         this.portfolioModalImage.nativeElement.src = $event.target.src;
@@ -296,7 +305,6 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
         this.modalLoading = false;
         this.showModal = true;
         this.showModalDescription();
-
         //hide opened modal original tile
         this.tileOfOpenModal.style.display = 'none';
     }
@@ -346,10 +354,6 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }
 
 
-    createFlippingTimer() {
-        this.flipTimer = new Timer(3000, this.timerScrollForward.bind(this));
-    }
-
     emitNewDto(index) {
         //2 stands for 1 - absent card in  info block and 1 - index 0 base
         let lastCardIndex = this.numOfCols * this.numOfRows - 1;
@@ -386,11 +390,11 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
     }
 
     pauseFlippingTimer() {
-        this.flipTimer.pause();
+        this.flipTimer && this.flipTimer.pause();
     }
 
     resumeFlipTimer() {
-        this.flipTimer.resume();
+        this.flipTimer && this.flipTimer.resume();
     }
 
 }

@@ -19,7 +19,7 @@ import {CropCoordinates} from "../../shared/image/my-image-cropper/my-cropped-im
     selector: 'jhi-user-order-dialog',
     templateUrl: './user-order-dialog.component.html'
 })
-export class UserOrderDialogComponent implements OnInit {
+export class UserOrderDialogComponent implements OnInit, OnDestroy {
 
     userOrder: UserOrder;
     authorities: any[];
@@ -29,6 +29,7 @@ export class UserOrderDialogComponent implements OnInit {
     products: Product[];
     portfolioSubdirectory = portfolioSubdirectory;
     custumers: Custumer[];
+    userOrderSaved = false;
 
     constructor(public activeModal: NgbActiveModal,
                 private jhiLanguageService: JhiLanguageService,
@@ -55,18 +56,35 @@ export class UserOrderDialogComponent implements OnInit {
             }, (res: Response) => this.onError(res.json()));
     }
 
+
+    ngOnDestroy(): void {
+        if (this.userOrderSaved) {
+            this.originalImageToken && this.onOriginalImageRemove();
+            this.croppedImageToken && this.onOriginalImageRemove();
+        }
+    }
+
     clear() {
         this.activeModal.dismiss('cancel');
     }
 
 
     onCroppedImageRemove(i) {
-        this.imageService
-            .imageUploadCancel(this.croppedImageToken.id, portfolioSubdirectory);
+        let croppedImageRemoveSubscription = this.imageService
+            .imageUploadCancel(this.croppedImageToken.id, portfolioSubdirectory)
+            .subscribe(() => {
+                delete this.croppedImageToken;
+                croppedImageRemoveSubscription.unsubscribe();
+            });
     }
 
     onOriginalImageRemove() {
-        this.imageService.imageUploadCancel(this.originalImageToken.id, portfolioSubdirectory)
+        let originalImageRemoveSubscription = this.imageService
+            .imageUploadCancel(this.originalImageToken.id, portfolioSubdirectory)
+            .subscribe(() => {
+                delete this.originalImageToken;
+                originalImageRemoveSubscription.unsubscribe();
+            })
     }
 
     onOriginalImageLoad(imageToken: ImageToken) {
@@ -100,6 +118,7 @@ export class UserOrderDialogComponent implements OnInit {
     }
 
     private onSaveSuccess(result: UserOrder) {
+        this.userOrderSaved = true;
         this.eventManager.broadcast({name: 'userOrderListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);

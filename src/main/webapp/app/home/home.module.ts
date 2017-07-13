@@ -6,7 +6,7 @@ import {DevizionSharedModule} from "../shared";
 import {HOME_ROUTE, HomeComponent} from "./";
 import {CommonModule} from "@angular/common";
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {MdTabsModule, MdTooltipModule} from "@angular/material";
+import {MdButtonModule, MdIconModule, MdTabsModule, MdTooltipModule} from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PortfolioModule} from "../portfolio/portfolio.module";
 import {AboutUsComponent} from "./about-us-component/about-us.component";
@@ -16,6 +16,8 @@ import {LampComponent} from "./lapm-component/lamp/lamp.component";
 import {NavbarModule} from "../layouts/navbar/navbar.module";
 import {SpinnerModule} from "../spinner/spinner.module";
 import {DevizionServicesModule} from "./services-component/services.module";
+import {SliderComponent} from "./slider/slider.component";
+import {DevizionSlidePageModule} from "../entities/slide-page/slide-page.module";
 
 
 @NgModule({
@@ -23,10 +25,13 @@ import {DevizionServicesModule} from "./services-component/services.module";
         DevizionSharedModule,
         BrowserAnimationsModule,
         SpinnerModule,
+        MdButtonModule,
+        MdIconModule,
         MdTooltipModule,
         PortfolioModule,
         MdTabsModule,
         CommonModule,
+        DevizionSlidePageModule,
         NavbarModule,
         FlexLayoutModule,
         DevizionServicesModule,
@@ -39,7 +44,8 @@ import {DevizionServicesModule} from "./services-component/services.module";
         HomeComponent,
         AboutUsComponent,
         LampsComponent,
-        LampComponent
+        LampComponent,
+        SliderComponent
     ],
     entryComponents: [],
     providers: [],

@@ -1,13 +1,13 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Response} from '@angular/http';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Response} from "@angular/http";
 
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {EventManager, AlertService, JhiLanguageService} from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import {Custumer} from './custumer.model';
-import {CustumerPopupService} from './custumer-popup.service';
-import {CustumerService} from './custumer.service';
+import {Custumer} from "./custumer.model";
+import {CustumerPopupService} from "./custumer-popup.service";
+import {CustumerService} from "./custumer.service";
 import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
 import {custumerSubdirectory, MyImageService} from "../../shared/image/image.service";
 import {ImageToken} from "../image-token/image-token.model";
@@ -16,11 +16,12 @@ import {ImageToken} from "../image-token/image-token.model";
     selector: 'jhi-custumer-dialog',
     templateUrl: './custumer-dialog.component.html'
 })
-export class CustumerDialogComponent implements OnInit {
+export class CustumerDialogComponent implements OnInit, OnDestroy {
     custumer: Custumer;
-    imageToken = {};
+    imageToken: ImageToken;
     authorities: any[];
     isSaving: boolean;
+    custumerSaved = false;
 
     constructor(public activeModal: NgbActiveModal,
                 private jhiLanguageService: JhiLanguageService,
@@ -32,11 +33,19 @@ export class CustumerDialogComponent implements OnInit {
         this.jhiLanguageService.setLocations(['custumer']);
     }
 
-    onRemove($event) {
-        this.imageService
-            .imageUploadCancel(this.imageToken[$event.file.name].id, custumerSubdirectory)
+
+    ngOnDestroy(): void {
+        if (!this.custumerSaved) {
+            this.imageToken && this.onRemove();
+        }
+    }
+
+    onRemove($event?: any) {
+        let removeCustumerImageSubscription = this.imageService
+            .imageUploadCancel(this.imageToken.id, custumerSubdirectory)
             .subscribe(() => {
-                delete this.imageToken[$event.file.name];
+                delete this.imageToken;
+                removeCustumerImageSubscription.unsubscribe();
             });
     }
 
@@ -45,7 +54,7 @@ export class CustumerDialogComponent implements OnInit {
         if ($event.serverResponse.status == 200) {
             let imageToken = JSON.parse($event.serverResponse.response);
             this.custumer.custumerImageUri = imageToken.path;
-            this.imageToken[$event.file.name] = imageToken;
+            this.imageToken = imageToken;
         }
         else
             this.onError($event.serverResponse.json());
@@ -74,6 +83,7 @@ export class CustumerDialogComponent implements OnInit {
     }
 
     private onSaveSuccess(result: Custumer) {
+        this.custumerSaved = true;
         this.eventManager.broadcast({name: 'custumerListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);

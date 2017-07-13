@@ -32,7 +32,8 @@
                         <a class="nav-link user-menu-link"
                            id="home-menu-item"
                            [@homeLinkShadowState]="linkShadows[1]"
-                           (click)="positionItemClicked(1)">
+                           [routerLink]="['/']"
+                           [queryParams]="{pagePosition:1}">
                             Чому ми?
                         </a>
                     </li>
@@ -41,10 +42,10 @@
                         id="services-menu-item"
                         class="navbar-menu-item">
                         <a class="nav-link user-menu-link"
-                           href="javascript:void(0)"
                            id="services-link"
                            [@servicesLinkShadowState]="linkShadows[2]"
-                           (click)="positionItemClicked(2)">
+                           [routerLink]="['/']"
+                           [queryParams]="{pagePosition:2}">
                             Послуги
                         </a>
                         <div class="sub-menu">
@@ -58,9 +59,9 @@
                     </li>
                     <li class="navbar-menu-item" id="portfolio-menu-item">
                         <a class="nav-link user-menu-link"
-                           href="javascript:void(0)"
                            id="portfolio-menu-link"
-                           (click)="positionItemClicked(3)"
+                           [routerLink]="['/']"
+                           [queryParams]="{pagePosition:3}"
                            [@portfolioLinkShadowState]="linkShadows[3]">
                             Портфоліо
                         </a>
@@ -77,8 +78,8 @@
                         <a class="nav-link user-menu-link"
                            [@aboutUsLinkShadowState]="linkShadows[4]"
                            id="about-us-menu-item"
-                           (click)="positionItemClicked(4)"
-                           href="javascript:void(0)">
+                           [routerLink]="['/']"
+                           [queryParams]="{pagePosition:4}">
                             Про нас
                         </a>
                     </li>
@@ -87,7 +88,4 @@
 
         </div>
     </div>
-    <a *ngIf="isAuthenticated()" (click)="toggleSidenav()">
-        <div id="navbar-toggler"></div>
-    </a>
 </div>

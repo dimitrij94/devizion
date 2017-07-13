@@ -59,7 +59,7 @@ export class ProductService {
     productImageUploadCancel(tokenId: number) {
         let requestParams: URLSearchParams = new URLSearchParams();
         requestParams.set('token_id', tokenId.toString());
-        return this.http.delete('api/product/image', {search: requestParams});
+        return this.http.delete(`api${productSubdirectory}/image`, {search: requestParams});
     }
 
     update(product: Product): Observable<Product> {

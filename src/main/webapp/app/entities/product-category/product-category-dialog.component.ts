@@ -1,50 +1,60 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Response} from '@angular/http';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Response} from "@angular/http";
 
-import {NgbActiveModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {EventManager, AlertService, JhiLanguageService} from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import {ProductCategory} from './product-category.model';
-import {ProductCategoryPopupService} from './product-category-popup.service';
-import {ProductCategoryService} from './product-category.service';
+import {ProductCategory} from "./product-category.model";
+import {ProductCategoryPopupService} from "./product-category-popup.service";
+import {ProductCategoryService} from "./product-category.service";
 import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
+import {ImageToken} from "../image-token/image-token.model";
+import {categorySubdirectory, MyImageService} from "../../shared/image/image.service";
 
 @Component({
     selector: 'jhi-product-category-dialog',
     templateUrl: './product-category-dialog.component.html'
 })
-export class ProductCategoryDialogComponent implements OnInit {
+export class ProductCategoryDialogComponent implements OnInit, OnDestroy {
 
     productCategory: ProductCategory;
     authorities: any[];
     isSaving: boolean;
-    imageToken = {};
+    imageToken: ImageToken;
+    categorySaved = false;
 
     constructor(public activeModal: NgbActiveModal,
                 private jhiLanguageService: JhiLanguageService,
                 private alertService: AlertService,
                 private productCategoryService: ProductCategoryService,
+                private imageService: MyImageService,
                 private eventManager: EventManager,
                 private authServiceProvider: AuthServerProvider) {
         this.jhiLanguageService.setLocations(['productCategory']);
+    }
+
+
+    ngOnDestroy(): void {
+        if (this.imageToken && !this.categorySaved) this.onRemove();
     }
 
     onLoad($event) {
         if ($event.serverResponse.status == 200) {
             let imageToken = JSON.parse($event.serverResponse.response);
             this.productCategory.categoryPhotoUri = imageToken.path;
-            this.imageToken[$event.file.name] = imageToken;
+            this.imageToken = imageToken;
         }
         else
             this.onError($event.serverResponse.json());
     }
 
-    onRemove($event) {
-        this.productCategoryService
-            .categoryImageUploadCancel(this.imageToken[$event.file.name].id)
+    onRemove($event?) {
+        let imageRemovalSubscription = this.imageService
+            .imageUploadCancel(this.imageToken.id, categorySubdirectory)
             .subscribe(() => {
-                delete this.imageToken[$event.file.name];
+                delete this.imageToken/*[$event.file.name]*/;
+                imageRemovalSubscription.unsubscribe();
             });
     }
 
@@ -71,6 +81,7 @@ export class ProductCategoryDialogComponent implements OnInit {
     }
 
     private onSaveSuccess(result: ProductCategory) {
+        this.categorySaved = true;
         this.eventManager.broadcast({name: 'productCategoryListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);

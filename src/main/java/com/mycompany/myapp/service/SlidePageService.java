@@ -5,14 +5,39 @@ import com.mycompany.myapp.domain.SlidePage;
 import java.util.List;
 
 /**
- * Created by Dmitrij on 10.07.2017.
+ * Service Interface for managing SlidePage.
  */
 public interface SlidePageService {
-    SlidePage find(long id);
 
-    List<SlidePage> query();
+    /**
+     * Save a slidePage.
+     *
+     * @param slidePage the entity to save
+     * @return the persisted entity
+     */
+    SlidePage save(SlidePage slidePage);
 
-    void delete(Long slidePageId);
+    /**
+     *  Get all the slidePages.
+     *
+     *  @return the list of entities
+     */
+    List<SlidePage> findAll();
 
-    SlidePage save(SlidePage pageSlide);
+    /**
+     *  Get the "id" slidePage.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    SlidePage findOne(Long id);
+
+    void deleteImage(String path);
+
+    /**
+     *  Delete the "id" slidePage.
+     *
+     *  @param id the id of the entity
+     */
+    void delete(Long id);
 }

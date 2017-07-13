@@ -46,7 +46,7 @@ public class Product implements Serializable {
     @Column(name = "product_self_cost")
     private Float productSelfCost;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<UserOrder> orderedProducts = new HashSet<>();
