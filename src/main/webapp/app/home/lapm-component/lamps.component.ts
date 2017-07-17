@@ -57,12 +57,6 @@ export class LampsComponent implements OnInit, OnDestroy {
     @ViewChild('stage')
     stageView: ElementRef;
 
-    @ViewChild('hiddenScreen')
-    hiddenScreenElRef: ElementRef;
-
-    @ViewChild('windowBgEl')
-    windowBgElRef: ElementRef;
-
     @ViewChild('cubeWrapperEl')
     cubeWrapperEl: ElementRef;
 
@@ -92,7 +86,7 @@ export class LampsComponent implements OnInit, OnDestroy {
     //hiddenScreenProjectionWidthDeltaY = this.hiddenScreenHalfH * Math.sin(maxHiddenScreenTilt * (Math.PI / 180));
 
     //perPxlChangeY: number = ((this.hiddenScreenH - this.screenH) / this.screenH) / 2;
-    perPxlRotation = (maxHiddenScreenTilt / this.screenW)*2;
+    perPxlRotation = 0.3; //(maxHiddenScreenTilt / this.screenW)*2;
 
     //deltaHeight = this.calculateTrapecyDeltaHeight(0);
 
@@ -120,12 +114,13 @@ export class LampsComponent implements OnInit, OnDestroy {
     private speedSubscription: Subscription;
     private windowBgStyle: { left: string } = {left: "0px"};
     private hiddenScreenStyle: { transform: string } = {transform: 'rotate(0deg)'};
-    private cubeWrapperElStyle: any = {perspectiveOrigin: '50% center'};
+    private cubeWrapperElStyle: any = {};
+
     private disableEnableComponentSubscription: Subscription;
 
     /* MEASURING MOUSE SPEED VARs*/
     constructor() {
-
+        this.setPerspectiveOrigin('50% center');
     }
 
     leftLineLamps: Array<LampDto> = [
@@ -155,17 +150,10 @@ export class LampsComponent implements OnInit, OnDestroy {
     ];
 
     ngOnInit(): void {
-        /* let [hypotenuse, angle] = this.getLeftLampsLineHiphothenuzeAndAngle();
-         this.leftLineLamps.forEach((lamp: LampDto) => {
-         let hSegmentLength = hypotenuse - (hypotenuse / lamp.distance);
-         lamp.top = Math.sin(angle) * hSegmentLength;
-         lamp.left = Math.cos(angle) * hSegmentLength;
-         });
-         */
         this.mouseMove = Observable.fromEvent(this.stageView.nativeElement, 'mousemove');
 
-        this.mouseMoveSubscription = this.mouseMove.map(this.getBackgroundShift.bind(this))
-            .subscribe(this.animateBackgroundShift.bind(this));
+        this.mouseMoveSubscription = this.mouseMove
+            .subscribe(this.getBackgroundShift.bind(this));
 
         //estimate mouse speed
         this.startMouseSpeedometr();
@@ -193,24 +181,6 @@ export class LampsComponent implements OnInit, OnDestroy {
         window.clearInterval(this.mouseTravelDistaceEvaluator);
     }
 
-    getLeftLampsLineHiphothenuzeAndAngle() {
-        //0.196 stands for the percent value of the imageWidth of the original line between wall and ceiling
-        // not accounting for margin to the line itself
-        let leftLampsLineWidth = this.hiddenScreenW * 0.196;
-
-        //0.181 stands for the percent value of the imageHeight of the original line between wall and ceiling
-        // not accounting for margin to the line itself
-        let leftLampLineHeight = this.hiddenScreenH * 0.181;
-
-        let hipothenuze = Math.sqrt(leftLampsLineWidth ** 2 + leftLampLineHeight ** 2);
-        let lineToCeilingAngle = Math.atan(leftLampLineHeight / leftLampsLineWidth);
-        return [hipothenuze, lineToCeilingAngle];
-    }
-
-
-    radians(degrees: number) {
-        return degrees * Math.PI / 180;
-    }
 
     assignMousePosition(mouseEvent: MouseEvent) {
         this.lastMousePosition = {
@@ -265,11 +235,9 @@ export class LampsComponent implements OnInit, OnDestroy {
     }
 
     setPerspectiveOrigin(style: string) {
-        let val: any = {};
-        val.webkitPerspectiveOrigin = style;
-        val.mozPerspectiveOrigin = style;
-        val.perspectiveOrigin = style;
-        this.cubeWrapperElStyle = val;
+        this.cubeWrapperElStyle.webkitPerspectiveOrigin = style;
+        this.cubeWrapperElStyle.mozPerspectiveOrigin = style;
+        this.cubeWrapperElStyle.perspectiveOrigin = style;
     }
 
     bowEaseIn(timeFraction, x) {
@@ -302,7 +270,7 @@ export class LampsComponent implements OnInit, OnDestroy {
         this.lastMousePosition.x = mouseEvent.clientX;
         this.lastMousePosition.y = mouseEvent.clientY;
 
-        return {deltaX: deltaX, deltaY: deltaY};
+        this.animateBackgroundShift({deltaX: deltaX, deltaY: deltaY});
     }
 
 
@@ -315,6 +283,7 @@ export class LampsComponent implements OnInit, OnDestroy {
                 this.hiddenScreenTilt = rotation;
                 let rotationPrcnt = (rotation / maxHiddenScreenTilt) * 100;
                 this.setPerspectiveOrigin(50 - (rotationPrcnt / 4) + '% center');
+
                 let changeX = this.windowBgPerPxlChange * shift.deltaX;
                 this.windowBgX = this.windowBgX + changeX;
                 this.changeHiddenScreenPosition();
@@ -322,17 +291,4 @@ export class LampsComponent implements OnInit, OnDestroy {
         }
     }
 
-
-    /*
-     calculateTrapecyDeltaHeight(hiddenScreenTilt: number) {
-     let A = Math.sqrt((perspective ** 2 + (this.hiddenScreenHalfW) ** 2)); //perspective piramid side imageHeight
-     let B = Math.sqrt(A ** 2 + (this.hiddenScreenHalfH) ** 2); //perspective piramid edge
-     //perspective piramid side part from base to slice created by tilted hidden screen
-     let x1 = this.hiddenScreenHalfH ** 2 + this.hiddenScreenHalfW ** 2 - 2 * this.hiddenScreenHalfH * this.hiddenScreenHalfW * Math.cos(hiddenScreenTilt);
-     //angle beatween piramid foundation and it`s edge
-     let cosAlpha = this.hiddenScreenHalfH / B;
-     //difference between the shrinked part of the trapecy after rotation and normal rectangle of the hidden screen
-     return cosAlpha * x1;
-     }
-     */
 }
