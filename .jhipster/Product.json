@@ -1,0 +1,57 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "orderedProduct",
+            "otherEntityName": "userOrder",
+            "otherEntityRelationshipName": "product"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "productCategory",
+            "otherEntityName": "productCategory",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "productName",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "productPrice",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "productDescription",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "productImageUri",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "croppedImageUri",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "productSelfCost",
+            "fieldType": "Float"
+        }
+    ],
+    "changelogDate": "20170717155156",
+    "entityTableName": "product",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

@@ -1,0 +1,56 @@
+<div>
+    <h2>
+        <span jhiTranslate="devizionApp.imageToken.home.title">Image Tokens</span>
+        <button class="btn btn-primary float-right create-image-token" [routerLink]="['/', { outlets: { popup: ['image-token-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span  jhiTranslate="devizionApp.imageToken.home.createLabel">
+            Create new Image Token
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="imageTokens">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="devizionApp.imageToken.path">Path</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let imageToken of imageTokens ;trackBy: trackId">
+                <td><a [routerLink]="['../image-token', imageToken.id ]">{{imageToken.id}}</a></td>
+                <td>{{imageToken.path}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../image-token', imageToken.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'image-token/'+ imageToken.id + '/edit'} }]"
+                                replaceUrl="true"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'image-token/'+ imageToken.id + '/delete'} }]"
+                                replaceUrl="true"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="hidden-md-down" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

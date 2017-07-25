@@ -1,0 +1,21 @@
+{
+    "devizionApp": {
+        "imageToken" : {
+            "home": {
+                "title": "Image Tokens",
+                "createLabel": "Создать новый Image Token",
+                "createOrEditLabel": "Создать или отредактировать Image Token"
+            },
+            "created": "Новый Image Token создан с идентификатором {{ param }}",
+            "updated": "Image Token обновлен с идентификатором {{ param }}",
+            "deleted": "Image Token удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Image Token {{ id }}?"
+            },
+            "detail": {
+                "title": "Image Token"
+            },
+            "path": "Path"
+        }
+    }
+}

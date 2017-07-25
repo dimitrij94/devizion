@@ -1,0 +1,25 @@
+{
+    "devizionApp": {
+        "custumer" : {
+            "home": {
+                "title": "Custumers",
+                "createLabel": "Создать новый Custumer",
+                "createOrEditLabel": "Создать или отредактировать Custumer"
+            },
+            "created": "Новый Custumer создан с идентификатором {{ param }}",
+            "updated": "Custumer обновлен с идентификатором {{ param }}",
+            "deleted": "Custumer удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Custumer {{ id }}?"
+            },
+            "detail": {
+                "title": "Custumer"
+            },
+            "custumerName": "Custumer Name",
+            "custumerSurname": "Custumer Surname",
+            "custumerContactNumber": "Custumer Contact Number",
+            "custumerImageUri": "Custumer Image Uri",
+            "custumerOrders": "Custumer Orders"
+        }
+    }
+}

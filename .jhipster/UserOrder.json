@@ -1,0 +1,40 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "custumer",
+            "otherEntityName": "custumer",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "product",
+            "otherEntityName": "product",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "photoUri",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "cropedUri",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "orderedAt",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20170717155158",
+    "entityTableName": "user_order",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

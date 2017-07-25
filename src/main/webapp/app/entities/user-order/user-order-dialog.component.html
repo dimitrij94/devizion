@@ -1,0 +1,67 @@
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myUserOrderLabel" jhiTranslate="devizionApp.userOrder.home.createOrEditLabel">Create or edit a User Order</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!userOrder.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="userOrder.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="devizionApp.userOrder.photoUri" for="field_photoUri">Photo Uri</label>
+            <input type="text" class="form-control" name="photoUri" id="field_photoUri"
+                [(ngModel)]="userOrder.photoUri"
+             />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="devizionApp.userOrder.cropedUri" for="field_cropedUri">Croped Uri</label>
+            <input type="text" class="form-control" name="cropedUri" id="field_cropedUri"
+                [(ngModel)]="userOrder.cropedUri"
+             />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="devizionApp.userOrder.description" for="field_description">Description</label>
+            <input type="text" class="form-control" name="description" id="field_description"
+                [(ngModel)]="userOrder.description"
+             />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="devizionApp.userOrder.orderedAt" for="field_orderedAt">Ordered At</label>
+            <div class="input-group">
+                <input id="field_orderedAt" type="text" class="form-control" name="orderedAt" ngbDatepicker  #orderedAtDp="ngbDatepicker" [(ngModel)]="userOrder.orderedAt"
+                />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" (click)="orderedAtDp.toggle()"><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label jhiTranslate="devizionApp.userOrder.custumer" for="field_custumer">Custumer</label>
+            <select class="form-control" id="field_custumer" name="custumer" [(ngModel)]="userOrder.custumer" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="custumerOption.id === userOrder.custumer?.id ? userOrder.custumer : custumerOption" *ngFor="let custumerOption of custumers; trackBy: trackCustumerById">{{custumerOption.id}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label jhiTranslate="devizionApp.userOrder.product" for="field_product">Product</label>
+            <select class="form-control" id="field_product" name="product" [(ngModel)]="userOrder.product" >
+                <option [ngValue]="null"></option>
+                <option [ngValue]="productOption.id === userOrder.product?.id ? userOrder.product : productOption" *ngFor="let productOption of products; trackBy: trackProductById">{{productOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

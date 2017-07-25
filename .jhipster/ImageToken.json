@@ -1,0 +1,18 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "path",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20170717155157",
+    "entityTableName": "image_token",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

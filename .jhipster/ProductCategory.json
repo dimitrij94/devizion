@@ -1,0 +1,29 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "categoryProducts",
+            "otherEntityName": "product",
+            "otherEntityRelationshipName": "productCategory"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "categoryName",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "categoryPhotoUri",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170717155200",
+    "entityTableName": "product_category",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl"
+}
