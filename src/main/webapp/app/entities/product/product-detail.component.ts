@@ -11,10 +11,10 @@ import {ProductCategory} from "../product-category/product-category.model";
 import {UserOrderService} from "../user-order/user-order.service";
 import {widthOfPortfolioCard} from "../../home/home.component";
 import {PortfolioComponent} from "../../portfolio/portfolio-cards-grid-component/portfolio.component";
-import {GenericResponse} from "@angular/http/src/static_response";
 import {UserOrder} from "../user-order/user-order.model";
 import {Page} from "../../shared/page.model";
 
+import {GenericResponse} from "../../app.module";
 @Component({
     selector: 'jhi-product-detail',
     templateUrl: './product-detail.component.html',

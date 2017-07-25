@@ -18,8 +18,14 @@ import {MdButtonModule, MdDialogModule, MdIconModule, MdMenuModule, MdSidenavMod
 import {NavbarModule} from "./layouts/navbar/navbar.module";
 import "hammerjs";
 import {ContactsDialogComponent} from "./layouts/contacts-dialog/contacts-dialog.component";
+import {Response} from "@angular/http";
+
 declare var require: WebpackRequire;
 declare var $: any;
+
+export interface GenericResponse<T> extends Response {
+    json(): T;
+}
 interface WebpackRequireEnsureCallback {
     (req: WebpackRequire): void
 }
@@ -43,12 +49,12 @@ interface WebpackContext extends WebpackRequire {
         MdDialogModule,
         MdMenuModule,
         MdIconModule,
-        BrowserModule,
         BrowserAnimationsModule,
+        FlexLayoutModule,
+        BrowserModule,
         LayoutRoutingModule,
         Ng2Webstorage.forRoot({prefix: 'jhi', separator: '-'}),
         NgbModule.forRoot(),
-        FlexLayoutModule,
         DevizionSharedModule,
         DevizionHomeModule,
         DevizionAdminModule,

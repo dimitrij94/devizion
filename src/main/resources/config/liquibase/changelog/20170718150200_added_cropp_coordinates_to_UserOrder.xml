@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!--
+        Altered the entity UserOrder.
+        Added crop coordinates
+    -->
+    <changeSet id="20170718150500-1" author="DmitrijKostiushko">
+        <addColumn tableName="user_order">
+            <column name="cropp_coordinate_X1" type="float"/>
+            <column name="cropp_coordinate_Y1" type="float"/>
+            <column name="cropp_coordinate_X2" type="float"/>
+            <column name="cropp_coordinate_Y2" type="float"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

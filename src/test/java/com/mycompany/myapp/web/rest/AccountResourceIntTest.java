@@ -23,7 +23,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyObject;
@@ -147,7 +150,7 @@ public class AccountResourceIntTest {
             "joe@example.com",      // email
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
-            "ru",                   // langKey
+            "ua",                   // langKey
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -176,7 +179,7 @@ public class AccountResourceIntTest {
             "funky@example.com",    // email
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
-            "ru",                   // langKey
+            "ua",                   // langKey
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -205,7 +208,7 @@ public class AccountResourceIntTest {
             "invalid",          // email <-- invalid
             true,               // activated
             "http://placehold.it/50x50", //imageUrl
-            "ru",                   // langKey
+            "ua",                   // langKey
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -234,7 +237,7 @@ public class AccountResourceIntTest {
             "bob@example.com",  // email
             true,               // activated
             "http://placehold.it/50x50", //imageUrl
-            "ru",                   // langKey
+            "ua",                   // langKey
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -264,7 +267,7 @@ public class AccountResourceIntTest {
             "alice@example.com",    // email
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
-            "ru",                   // langKey
+            "ua",                   // langKey
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -306,7 +309,7 @@ public class AccountResourceIntTest {
             "john@example.com",     // email
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
-            "ru",                   // langKey
+            "ua",                   // langKey
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -347,7 +350,7 @@ public class AccountResourceIntTest {
             "badguy@example.com",   // email
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
-            "ru",                   // langKey
+            "ua",                   // langKey
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -377,7 +380,7 @@ public class AccountResourceIntTest {
             "funky@example.com",    // email
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
-            "ru",                   // langKey
+            "ua",                   // langKey
             null,                   // createdBy
             null,                   // createdDate
             null,                   // lastModifiedBy

@@ -141,6 +141,10 @@
     magic-string "^0.19.0"
     source-map "^0.5.6"
 
+"@types/detect-browser@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@types/detect-browser/-/detect-browser-1.6.0.tgz#6889f786d23b6f9bedd06ef7b201db929d31acde"
+
 "@types/jasmine@2.5.45":
   version "2.5.45"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.45.tgz#58928a621d014ce6ab59c5a9c41071f7328b0ca9"

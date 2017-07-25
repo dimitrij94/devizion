@@ -3,18 +3,12 @@
     "relationships": [],
     "fields": [
         {
-            "fieldName": "photoUri",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldName": "photoUrl",
+            "fieldType": "String"
         },
         {
             "fieldName": "description",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldType": "String"
         },
         {
             "fieldName": "croppedPhotoUri",
@@ -25,7 +19,7 @@
             "fieldType": "Boolean"
         }
     ],
-    "changelogDate": "20170710083807",
+    "changelogDate": "20170717155201",
     "entityTableName": "slide_page",
     "dto": "no",
     "pagination": "no",

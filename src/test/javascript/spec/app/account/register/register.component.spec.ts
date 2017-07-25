@@ -1,12 +1,12 @@
-import { ComponentFixture, TestBed, async, inject, tick, fakeAsync } from '@angular/core/testing';
-import { Renderer, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { JhiLanguageService } from 'ng-jhipster';
-import { MockLanguageService } from '../../../helpers/mock-language.service';
-import { DevizionTestModule } from '../../../test.module';
-import { LoginModalService } from '../../../../../../main/webapp/app/shared';
-import { Register } from '../../../../../../main/webapp/app/account/register/register.service';
-import { RegisterComponent } from '../../../../../../main/webapp/app/account/register/register.component';
+import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from "@angular/core/testing";
+import {ElementRef, Renderer} from "@angular/core";
+import {Observable} from "rxjs/Rx";
+import {JhiLanguageService} from "ng-jhipster";
+import {MockLanguageService} from "../../../helpers/mock-language.service";
+import {DevizionTestModule} from "../../../test.module";
+import {LoginModalService} from "../../../../../../main/webapp/app/shared";
+import {Register} from "../../../../../../main/webapp/app/account/register/register.service";
+import {RegisterComponent} from "../../../../../../main/webapp/app/account/register/register.component";
 
 
 describe('Component Tests', () => {
@@ -67,10 +67,10 @@ describe('Component Tests', () => {
 
                     expect(service.save).toHaveBeenCalledWith({
                         password: 'password',
-                        langKey: 'ru'
+                        langKey: 'ua'
                     });
                     expect(comp.success).toEqual(true);
-                    expect(comp.registerAccount.langKey).toEqual('ru');
+                    expect(comp.registerAccount.langKey).toEqual('ua');
                     expect(mockTranslate.getCurrentSpy).toHaveBeenCalled();
                     expect(comp.errorUserExists).toBeNull();
                     expect(comp.errorEmailExists).toBeNull();

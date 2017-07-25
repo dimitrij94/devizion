@@ -2,7 +2,7 @@
   "generator-jhipster": {
     "promptValues": {
       "packageName": "com.mycompany.myapp",
-      "nativeLanguage": "ru"
+      "nativeLanguage": "ua"
     },
     "jhipsterVersion": "4.2.0",
     "baseName": "Devizion",
@@ -21,16 +21,17 @@
     "serviceDiscoveryType": false,
     "buildTool": "maven",
     "enableSocialSignIn": false,
-    "jwtSecretKey": "b3db8eb9fbd45d4c3da0454c53069707d14c2539",
-    "clientFramework": "angular2",
+    "jwtSecretKey": "12f63ca4445cdd4550b06a8c235bdf9acbc77425",
+    "clientFramework": "angularX",
     "useSass": true,
     "clientPackageManager": "yarn",
     "applicationType": "monolith",
     "testFrameworks": [],
     "jhiPrefix": "jhi",
     "enableTranslation": true,
-    "nativeLanguage": "ru",
+    "nativeLanguage": "ua",
     "languages": [
+      "en",
       "ru"
     ]
   }

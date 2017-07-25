@@ -32,9 +32,9 @@
             "fieldType": "String"
         }
     ],
-    "changelogDate": "20170406065253",
+    "changelogDate": "20170717155159",
     "entityTableName": "custumer",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "pagination": "no",
     "service": "serviceImpl"
 }

@@ -31,9 +31,9 @@ import {MyImageService} from "./image/image.service";
         HasAnyAuthorityDirective,
     ],
     providers: [
-        CookieService,
         LoginService,
         LoginModalService,
+        CookieService,
         AccountService,
         StateStorageService,
         Principal,

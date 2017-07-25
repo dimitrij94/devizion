@@ -32,9 +32,9 @@
             "fieldType": "LocalDate"
         }
     ],
-    "changelogDate": "20170406065252",
+    "changelogDate": "20170717155158",
     "entityTableName": "user_order",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "pagination": "no",
     "service": "serviceImpl"
 }

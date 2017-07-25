@@ -17,4 +17,3 @@ TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicT
 declare let require: any;
 const testsContext: any = require.context('./', true, /\.spec/);
 testsContext.keys().forEach(testsContext);
-

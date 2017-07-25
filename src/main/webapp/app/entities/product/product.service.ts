@@ -8,7 +8,8 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {widthOfServiceCard} from "../../home/home.component";
 import {Page, PageRequest} from "../../shared/page.model";
 import {servicesRowWidthPrcnt} from "../../home/services-component/shuffle-row/shuffle-cards-row.component";
-import {GenericResponse} from "@angular/http/src/static_response";
+
+import {GenericResponse} from "../../app.module";
 
 @Injectable()
 export class ProductService {

@@ -2,9 +2,9 @@ import {Injectable} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {SlidePage} from "./slide-page.model";
-import {GenericResponse} from "@angular/http/src/static_response";
 import {MyImageService, slidePageSubdirectory} from "../../shared/image/image.service";
 import {ImageSize} from "../../shared/image/image-size.model";
+import {GenericResponse} from "../../app.module";
 
 @Injectable()
 export class SlidePageService {

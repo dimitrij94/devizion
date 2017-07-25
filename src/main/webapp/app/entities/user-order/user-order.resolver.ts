@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from "@angular/router";
 import {UserOrderService} from "./user-order.service";
 import {Injectable} from "@angular/core";
-import {GenericResponse} from "@angular/http/src/static_response";
+import {GenericResponse} from "../../app.module";
 @Injectable()
 export class UserOrderResolver implements Resolve<UserOrder> {
 

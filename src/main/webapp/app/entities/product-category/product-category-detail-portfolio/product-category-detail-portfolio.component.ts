@@ -12,8 +12,8 @@ import {Observable} from "rxjs/Observable";
 import {PortfolioComponent} from "../../../portfolio/portfolio-cards-grid-component/portfolio.component";
 import {Product} from "../../product/product.model";
 import {FormControl} from "@angular/forms";
-import {GenericResponse} from "@angular/http/src/static_response";
 import {JhiLanguageService} from "ng-jhipster";
+import {GenericResponse} from "../../../app.module";
 @Component({
     selector: 'jhi-product-category-detail-portfolio',
     templateUrl: './product-category-detail-portfolio.component.html',

@@ -34,7 +34,7 @@ spring:
     jpa:
         open-in-view: false
         hibernate:
-            ddl-auto: update
+            ddl-auto: none
             naming:
                 physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
                 implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -45,9 +45,6 @@ spring:
             enabled: false
     thymeleaf:
         mode: XHTML
-    http:
-      multipart:
-        enabled: true
 
 security:
     basic:
@@ -105,4 +102,5 @@ jhipster:
 # More documentation is available at:
 # https://jhipster.github.io/common-application-properties/
 # ===================================================================
+
 application:

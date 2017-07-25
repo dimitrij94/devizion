@@ -6,8 +6,8 @@ import {UserOrder} from "./user-order.model";
 import {DateUtils} from "ng-jhipster";
 import {MyImageService, portfolioSubdirectory} from "../../shared/image/image.service";
 import {DomSanitizer} from "@angular/platform-browser/src/security/dom_sanitization_service";
-import {GenericResponse} from "@angular/http/src/static_response";
 import {Page} from "../../shared/page.model";
+import {GenericResponse} from "../../app.module";
 @Injectable()
 export class UserOrderService {
 

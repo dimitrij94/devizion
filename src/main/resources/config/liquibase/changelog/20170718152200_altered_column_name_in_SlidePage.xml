@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!--
+        Altered the entity UserOrder.
+        Added crop coordinates
+    -->
+    <changeSet id="20170718152200-1" author="DmitrijKostiushko">
+        <renameColumn tableName="slide_page" oldColumnName="photo_url" newColumnName="photo_uri"/>
+    </changeSet>
+</databaseChangeLog>
