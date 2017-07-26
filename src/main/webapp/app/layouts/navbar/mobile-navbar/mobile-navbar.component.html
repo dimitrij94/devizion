@@ -1,0 +1,37 @@
+<div id="wrapper">
+    <div class="navigation-bar">
+        <a id="site-logo-wrapper" routerLink="/">
+            <div id="site-logo"></div>
+            <div id="logo-text">
+                <div class="text-wrapper">
+                    <p id="header" class="logo-text">МІСЬКА ДРУКАРНЯ</p>
+                    <p id="subheader" class="logo-text">рекламно-поліграфічна компанія</p>
+                </div>
+            </div>
+        </a>
+        <div class="menu-toggle" (click)="toggleMenu()"></div>
+    </div>
+    <div class="menu" [@menuOpened]="menuStatus">
+        <div class="menu-item"
+             *ngFor="let item of navigationItems; let i = index">
+
+            <div class="panel">
+                <div class="title">{{item.label}}</div>
+                <div class="toggler" *ngIf="item.hasSubmenu" (click)="toggleSubmenu(item)"></div>
+            </div>
+
+            <div class="accordion-content" [style.zIndex]="-1-i" [@menuOpened]="item.opened">
+                <div class="item" *ngFor="let submenuItem of item.submenu">
+                    <div class="label" (click)="submenuItem.clickCallback">
+                        <a [routerLink]="submenuItem.routerLink">{{submenuItem.label}}</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="placeholder"
+                 [ngStyle]="{height:item.submenuHeight, maxHeight:item.submenuMaxHeight, zIndex:-2-i}">
+            </div>
+
+        </div>
+    </div>
+</div>

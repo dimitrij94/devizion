@@ -40,6 +40,19 @@ public class UserOrder implements Serializable {
     @ManyToOne
     private Product product;
 
+    @Column(name = "cropp_coordinate_X_1")
+    private float croppCoordinateX1;
+
+    @Column(name = "cropp_coordinate_X_2")
+    private float croppCoordinateX2;
+
+    @Column(name = "cropp_coordinate_Y_1")
+    private float croppCoordinateY1;
+
+    @Column(name = "cropp_coordinate_Y_2")
+    private float croppCoordinateY2;
+
+
     public Long getId() {
         return id;
     }
@@ -121,6 +134,43 @@ public class UserOrder implements Serializable {
         this.product = product;
         return this;
     }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public float getCroppCoordinateX1() {
+        return croppCoordinateX1;
+    }
+
+    public void setCroppCoordinateX1(float croppCoordinateX1) {
+        this.croppCoordinateX1 = croppCoordinateX1;
+    }
+
+    public float getCroppCoordinateX2() {
+        return croppCoordinateX2;
+    }
+
+    public void setCroppCoordinateX2(float croppCoordinateX2) {
+        this.croppCoordinateX2 = croppCoordinateX2;
+    }
+
+    public float getCroppCoordinateY1() {
+        return croppCoordinateY1;
+    }
+
+    public void setCroppCoordinateY1(float croppCoordinateY1) {
+        this.croppCoordinateY1 = croppCoordinateY1;
+    }
+
+    public float getCroppCoordinateY2() {
+        return croppCoordinateY2;
+    }
+
+    public void setCroppCoordinateY2(float croppCoordinateY2) {
+        this.croppCoordinateY2 = croppCoordinateY2;
+    }
+
 
     public void setProduct(Product product) {
         this.product = product;

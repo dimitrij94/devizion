@@ -1,0 +1,29 @@
+<md-sidenav-container id="wrapper">
+    <md-sidenav #mySidenav [mode]="sidenavMode" [opened]="sidenavOpened"
+                (open)="onSidenavOpen()" (close)="onSidenavClose()"
+                id="controls-wrapper">
+        <!-- SIDENAV TRANSCLUDING CONTENT GOES HERE-->
+        <ng-content select="[position=sidenav-content]"></ng-content>
+    </md-sidenav>
+
+    <div id="container-content">
+        <div id="sidenav-toggle" *ngIf="showSidenavToggler" (click)="openSidenav()">
+            <div id="toggler-button"></div>
+        </div>
+        <jhi-navbar id="navbar"
+                    [showLogo]="true"
+                    [isPositionFixed]="false"
+                    [isTransparent]="false"
+                    [categories]="allCategories">
+        </jhi-navbar>
+        <div id="content-wrapper">
+            <div id="scrolling-content" #scrollingContentElRef>
+                <!-- TRANSCLUDING CONTENT GOES HERE -->
+                <div id="transcluded-content">
+                    <ng-content select="[position=scrolling-content]"></ng-content>
+                </div>
+                <jhi-footer></jhi-footer>
+            </div>
+        </div>
+    </div>
+</md-sidenav-container>

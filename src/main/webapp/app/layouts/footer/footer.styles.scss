@@ -1,0 +1,88 @@
+@import "../../../content/scss/varibles";
+
+@media screen and (min-width: 960px) {
+    #footer {
+        #info {
+            text-align: left;
+            height: 60%;
+        }
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 959px) {
+    #footer {
+        text-align: left;
+        #info {
+            text-align: center;
+            height: 100%;
+        }
+    }
+}
+
+@media screen and (max-width: 599px) {
+    #footer {
+        #info {
+            text-align: center;
+            height: 100%;
+        }
+    }
+}
+
+#footer {
+    padding:20px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: $about-us-accent-border;
+    color: whitesmoke;
+    margin: 0;
+    font-size: 0.7rem;
+    line-height: 1.2rem;
+    #site-logo-wrapper {
+        overflow: hidden;
+        display: inline-block;
+        float: left;
+        #transform-wrapper {
+            #site-logo {
+                background: url("../../../content/images/md_logo.svg") no-repeat center center;
+                background-size: contain;
+                height: 7em;
+                position: relative;
+                top: 5%;
+                float: left;
+                display: inline-block;
+                width: 10em;
+            }
+            #logo-text {
+                color: white;
+                text-align: center;
+                float: right;
+                position: relative;
+                margin-left: 15px;
+                display: table;
+                font-family: Roboto, "Helvetica Neue", sans-serif;
+                font-size:1.45em;
+                height: 100%;
+                #text {
+                    display: table-cell;
+                    vertical-align: middle;
+                    * {
+                        margin-bottom: 0;
+                    }
+                }
+                #header {
+                    font-size: 1em;
+                }
+                #subheader {
+                    font-size: 0.55em;
+                }
+            }
+        }
+    }
+    #info {
+        height: 60%;
+        div {
+            p {
+                vertical-align: baseline;
+            }
+        }
+    }
+}

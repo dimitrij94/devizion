@@ -1,42 +1,74 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Response} from "@angular/http";
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EventManager, AlertService, JhiLanguageService } from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { Custumer } from './custumer.model';
-import { CustumerPopupService } from './custumer-popup.service';
-import { CustumerService } from './custumer.service';
+import {Custumer} from "./custumer.model";
+import {CustumerPopupService} from "./custumer-popup.service";
+import {CustumerService} from "./custumer.service";
+import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
+import {custumerSubdirectory, MyImageService} from "../../shared/image/image.service";
+import {ImageToken} from "../image-token/image-token.model";
 
 @Component({
     selector: 'jhi-custumer-dialog',
     templateUrl: './custumer-dialog.component.html'
 })
-export class CustumerDialogComponent implements OnInit {
-
+export class CustumerDialogComponent implements OnInit, OnDestroy {
     custumer: Custumer;
+    imageToken: ImageToken;
     authorities: any[];
     isSaving: boolean;
-    constructor(
-        public activeModal: NgbActiveModal,
-        private jhiLanguageService: JhiLanguageService,
-        private alertService: AlertService,
-        private custumerService: CustumerService,
-        private eventManager: EventManager
-    ) {
+    custumerSaved = false;
+
+    constructor(public activeModal: NgbActiveModal,
+                private jhiLanguageService: JhiLanguageService,
+                private alertService: AlertService,
+                private custumerService: CustumerService,
+                private eventManager: EventManager,
+                private imageService: MyImageService,
+                private authServiceProvider: AuthServerProvider) {
         this.jhiLanguageService.setLocations(['custumer']);
+    }
+
+
+    ngOnDestroy(): void {
+        if (!this.custumerSaved) {
+            this.imageToken && this.onRemove();
+        }
+    }
+
+    onRemove($event?: any) {
+        let removeCustumerImageSubscription = this.imageService
+            .imageUploadCancel(this.imageToken.id, custumerSubdirectory)
+            .subscribe(() => {
+                delete this.imageToken;
+                removeCustumerImageSubscription.unsubscribe();
+            });
+    }
+
+    onLoad($event: any) {
+        if ($event.serverResponse.status == 200) {
+            let imageToken = JSON.parse($event.serverResponse._body);
+            this.custumer.custumerImageUri = imageToken.path;
+            this.imageToken = imageToken;
+        }
+        else
+            this.onError($event.serverResponse.json());
     }
 
     ngOnInit() {
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
     }
-    clear () {
+
+    clear() {
         this.activeModal.dismiss('cancel');
     }
 
-    save () {
+    save() {
         this.isSaving = true;
         if (this.custumer.id !== undefined) {
             this.custumerService.update(this.custumer)
@@ -49,13 +81,14 @@ export class CustumerDialogComponent implements OnInit {
         }
     }
 
-    private onSaveSuccess (result: Custumer) {
-        this.eventManager.broadcast({ name: 'custumerListModification', content: 'OK'});
+    private onSaveSuccess(result: Custumer) {
+        this.custumerSaved = true;
+        this.eventManager.broadcast({name: 'custumerListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
 
-    private onSaveError (error) {
+    private onSaveError(error) {
         try {
             error.json();
         } catch (exception) {
@@ -65,7 +98,7 @@ export class CustumerDialogComponent implements OnInit {
         this.onError(error);
     }
 
-    private onError (error) {
+    private onError(error) {
         this.alertService.error(error.message, null, null);
     }
 }
@@ -79,14 +112,13 @@ export class CustumerPopupComponent implements OnInit, OnDestroy {
     modalRef: NgbModalRef;
     routeSub: any;
 
-    constructor (
-        private route: ActivatedRoute,
-        private custumerPopupService: CustumerPopupService
-    ) {}
+    constructor(private route: ActivatedRoute,
+                private custumerPopupService: CustumerPopupService) {
+    }
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe(params => {
-            if ( params['id'] ) {
+            if (params['id']) {
                 this.modalRef = this.custumerPopupService
                     .open(CustumerDialogComponent, params['id']);
             } else {

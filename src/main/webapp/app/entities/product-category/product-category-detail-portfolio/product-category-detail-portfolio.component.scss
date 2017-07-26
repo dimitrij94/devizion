@@ -1,0 +1,70 @@
+@import "../../../../content/scss/varibles";
+
+#sidenav-content {
+    height: 100vh;
+    #category-photo {
+        width: 100%;
+        height: auto;
+    }
+    #controls {
+        background-color: $about-us-accent-border;
+        overflow: auto;
+        padding: 20px;
+        & > * {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        md-input-container {
+            color: white;
+            .input-prefix {
+                margin-right: 20px;
+                .search-icon {
+                    background: url('../../../../content/images/icons/ic_search_white_24px.svg') no-repeat center center;
+                    @include backgroundSize(contain);
+                    height: 1em;
+                    width: 1em;
+                    float: left;
+                }
+            }
+
+        }
+        .selected-products-chips {
+            md-chip {
+                float: left;
+                margin-bottom: 7px;
+                background-color: #0264d8;
+                background-color: $cyan-accent-border-hover;
+
+                .delete-chip {
+                    cursor: pointer;
+                    background: url('../../../../content/images/icons/ic_clear_white_24px.svg') no-repeat center center;
+                    @include backgroundSize(contain);
+                    height: 1em;
+                    width: 1em;
+                }
+            }
+        }
+    }
+}
+
+.alert {
+    text-align: center;
+    padding: 0.75rem 1.25rem;
+    .no-orders {
+        padding: 24px;
+        background: #efefef;
+        text-align: center;
+        display: inline-block;
+        span {
+            color: black;
+        }
+    }
+    .load-more-orders {
+        display: inline-block;
+        padding: 24px;
+        text-align: center;
+        background: #efefef;
+    }
+}
+

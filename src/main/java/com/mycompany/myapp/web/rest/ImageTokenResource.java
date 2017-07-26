@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -42,7 +41,7 @@ public class ImageTokenResource {
      */
     @PostMapping("/image-tokens")
     @Timed
-    public ResponseEntity<ImageToken> createImageToken(@Valid @RequestBody ImageToken imageToken) throws URISyntaxException {
+    public ResponseEntity<ImageToken> createImageToken(@RequestBody ImageToken imageToken) throws URISyntaxException {
         log.debug("REST request to save ImageToken : {}", imageToken);
         if (imageToken.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new imageToken cannot already have an ID")).body(null);
@@ -64,7 +63,7 @@ public class ImageTokenResource {
      */
     @PutMapping("/image-tokens")
     @Timed
-    public ResponseEntity<ImageToken> updateImageToken(@Valid @RequestBody ImageToken imageToken) throws URISyntaxException {
+    public ResponseEntity<ImageToken> updateImageToken(@RequestBody ImageToken imageToken) throws URISyntaxException {
         log.debug("REST request to update ImageToken : {}", imageToken);
         if (imageToken.getId() == null) {
             return createImageToken(imageToken);

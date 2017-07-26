@@ -1,20 +1,22 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
+import {RouterModule} from "@angular/router";
 
-import { DevizionSharedModule } from '../../shared';
+import {DevizionSharedModule} from "../../shared";
 
 import {
-    UserOrderService,
-    UserOrderPopupService,
     UserOrderComponent,
+    UserOrderDeleteDialogComponent,
+    UserOrderDeletePopupComponent,
     UserOrderDetailComponent,
     UserOrderDialogComponent,
     UserOrderPopupComponent,
-    UserOrderDeletePopupComponent,
-    UserOrderDeleteDialogComponent,
-    userOrderRoute,
     userOrderPopupRoute,
-} from './';
+    UserOrderPopupService,
+    userOrderRoute,
+    UserOrderService
+} from "./";
+import {MyCroppedImageUploaderModule} from "../../shared/image/my-image-cropper/my-cropped-image-uploader.module";
+import {UserOrderResolver, UserOrdersOfCategoryByIdResolver} from "./user-order.resolver";
 
 let ENTITY_STATES = [
     ...userOrderRoute,
@@ -24,7 +26,8 @@ let ENTITY_STATES = [
 @NgModule({
     imports: [
         DevizionSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
+        MyCroppedImageUploaderModule,
+        RouterModule.forRoot(ENTITY_STATES, {useHash: true})
     ],
     declarations: [
         UserOrderComponent,
@@ -42,9 +45,12 @@ let ENTITY_STATES = [
         UserOrderDeletePopupComponent,
     ],
     providers: [
+        UserOrderResolver,
+        UserOrdersOfCategoryByIdResolver,
         UserOrderService,
         UserOrderPopupService,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DevizionUserOrderModule {}
+export class DevizionUserOrderModule {
+}

@@ -1,13 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Response} from "@angular/http";
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EventManager, AlertService, JhiLanguageService } from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { ImageToken } from './image-token.model';
-import { ImageTokenPopupService } from './image-token-popup.service';
-import { ImageTokenService } from './image-token.service';
+import {ImageToken} from "./image-token.model";
+import {ImageTokenPopupService} from "./image-token-popup.service";
+import {ImageTokenService} from "./image-token.service";
 
 @Component({
     selector: 'jhi-image-token-dialog',

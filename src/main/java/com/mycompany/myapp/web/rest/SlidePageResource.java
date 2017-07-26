@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -25,7 +26,7 @@ public class SlidePageResource {
     private final Logger log = LoggerFactory.getLogger(SlidePageResource.class);
 
     private static final String ENTITY_NAME = "slidePage";
-        
+
     private final SlidePageService slidePageService;
 
     public SlidePageResource(SlidePageService slidePageService) {
@@ -41,7 +42,7 @@ public class SlidePageResource {
      */
     @PostMapping("/slide-pages")
     @Timed
-    public ResponseEntity<SlidePage> createSlidePage(@RequestBody SlidePage slidePage) throws URISyntaxException {
+    public ResponseEntity<SlidePage> createSlidePage(@Valid @RequestBody SlidePage slidePage) throws URISyntaxException {
         log.debug("REST request to save SlidePage : {}", slidePage);
         if (slidePage.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new slidePage cannot already have an ID")).body(null);
@@ -58,16 +59,20 @@ public class SlidePageResource {
      * @param slidePage the slidePage to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated slidePage,
      * or with status 400 (Bad Request) if the slidePage is not valid,
-     * or with status 500 (Internal Server Error) if the slidePage couldnt be updated
+     * or with status 500 (Internal Server Error) if the slidePage couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/slide-pages")
     @Timed
-    public ResponseEntity<SlidePage> updateSlidePage(@RequestBody SlidePage slidePage) throws URISyntaxException {
+    public ResponseEntity<SlidePage> updateSlidePage(@Valid @RequestBody SlidePage slidePage) throws URISyntaxException {
         log.debug("REST request to update SlidePage : {}", slidePage);
         if (slidePage.getId() == null) {
             return createSlidePage(slidePage);
         }
+        SlidePage oldSlide = this.slidePageService.findOne(slidePage.getId());
+        String oldPhotoUri = oldSlide.getPhotoUri();
+        if (oldPhotoUri != null && !oldPhotoUri.equals(slidePage.getPhotoUri()))
+            this.slidePageService.deleteImage(oldPhotoUri);
         SlidePage result = slidePageService.save(slidePage);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, slidePage.getId().toString()))
@@ -113,5 +118,4 @@ public class SlidePageResource {
         slidePageService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
 }

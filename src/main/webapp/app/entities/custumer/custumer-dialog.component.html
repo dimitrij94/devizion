@@ -1,52 +1,40 @@
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
     <div class="modal-header">
-        <h4 class="modal-title" id="myCustumerLabel" jhiTranslate="devizionApp.custumer.home.createOrEditLabel">Create or edit a Custumer</h4>
+        <h4 class="modal-title" id="myCustumerLabel" jhiTranslate="devizionApp.custumer.home.createOrEditLabel">Create
+            or edit a Custumer</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                (click)="clear()">&times;</button>
+                (click)="clear()">&times;
+        </button>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" [hidden]="!custumer.id">
             <label for="id" jhiTranslate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
-                   [(ngModel)]="custumer.id" readonly />
+                   [(ngModel)]="custumer.id" readonly/>
         </div>
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.custumer.custumerName" for="field_custumerName">Custumer Name</label>
+            <label class="form-control-label" jhiTranslate="devizionApp.custumer.custumerName" for="field_custumerName">
+                Им`я замовника</label>
             <input type="text" class="form-control" name="custumerName" id="field_custumerName"
-                [(ngModel)]="custumer.custumerName"
-            required />
-            <div [hidden]="!(editForm.controls.custumerName?.dirty && editForm.controls.custumerName?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.custumerName?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
-                </small>
-            </div>
+                   [(ngModel)]="custumer.custumerName"/>
         </div>
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.custumer.custumerSurname" for="field_custumerSurname">Custumer Surname</label>
+            <label class="form-control-label" jhiTranslate="devizionApp.custumer.custumerSurname"
+                   for="field_custumerSurname">Призвище замовника</label>
             <input type="text" class="form-control" name="custumerSurname" id="field_custumerSurname"
-                [(ngModel)]="custumer.custumerSurname"
-            required />
-            <div [hidden]="!(editForm.controls.custumerSurname?.dirty && editForm.controls.custumerSurname?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.custumerSurname?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
-                </small>
-            </div>
+                   [(ngModel)]="custumer.custumerSurname"/>
         </div>
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.custumer.custumerContactNumber" for="field_custumerContactNumber">Custumer Contact Number</label>
-            <input type="text" class="form-control" name="custumerContactNumber" id="field_custumerContactNumber"
-                [(ngModel)]="custumer.custumerContactNumber"
-             />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.custumer.custumerImageUri" for="field_custumerImageUri">Custumer Image Uri</label>
-            <input type="text" class="form-control" name="custumerImageUri" id="field_custumerImageUri"
-                [(ngModel)]="custumer.custumerImageUri"
-             />
+            <label>Фото замовника</label>
+            <image-upload [url]="'/api/custumer/image'"
+                          [max]="1"
+                          [headers]="{'Authorization':'Bearer '+authServiceProvider.getToken()}"
+                          (onFileUploadFinish)="onLoad($event)"
+                          (onRemove)="onRemove($event)">
+
+            </image-upload>
         </div>
 
     </div>

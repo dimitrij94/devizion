@@ -1,4 +1,4 @@
-import { UserOrder } from '../user-order';
+import {UserOrder} from "../user-order";
 export class Custumer {
     constructor(
         public id?: number,

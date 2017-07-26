@@ -1,40 +1,49 @@
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
 
     <div class="modal-header">
-        <h4 class="modal-title" id="mySlidePageLabel" jhiTranslate="devizionApp.slidePage.home.createOrEditLabel">Create or edit a Slide Page</h4>
+        <h4 class="modal-title" id="mySlidePageLabel" jhiTranslate="devizionApp.slidePage.home.createOrEditLabel">Create
+            or edit a Slide Page</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                (click)="clear()">&times;</button>
+                (click)="clear()">&times;
+        </button>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" [hidden]="!slidePage.id">
             <label for="id" jhiTranslate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
-                   [(ngModel)]="slidePage.id" readonly />
+                   [(ngModel)]="slidePage.id" readonly/>
         </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.slidePage.photoUrl" for="field_photoUrl">Photo Url</label>
-            <input type="text" class="form-control" name="photoUrl" id="field_photoUrl"
-                [(ngModel)]="slidePage.photoUrl"
-             />
-        </div>
+
         <div class="form-group">
             <label class="form-control-label" jhiTranslate="devizionApp.slidePage.description" for="field_description">Description</label>
             <input type="text" class="form-control" name="description" id="field_description"
-                [(ngModel)]="slidePage.description"
-             />
+                   [(ngModel)]="slidePage.description" required/>
+            <div [hidden]="!(editForm.controls.description?.dirty && editForm.controls.description?.invalid)">
+                <small class="form-text text-danger"
+                       [hidden]="!editForm.controls.description?.errors?.required"
+                       jhiTranslate="entity.validation.required">
+                    This field is required.
+                </small>
+            </div>
         </div>
+
+        <my-cropped-image-uploader [postDirectory]="slidePageSubdirectory"
+                                   style="width:100%"
+                                   [aspectX]="21"
+                                   [aspectY]="9"
+                                   (originalImageUploaded)="onOriginalImageLoad($event)"
+                                   (originalImageUploadCanceled)="onOriginalImageRemove()"
+                                   (croppedImageUploaded)="onCroppedImageLoad($event)"
+                                   (croppedImageUploadCanceled)="onCroppedImageRemove()">
+
+        </my-cropped-image-uploader>
+
         <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.slidePage.croppedPhotoUri" for="field_croppedPhotoUri">Cropped Photo Uri</label>
-            <input type="text" class="form-control" name="croppedPhotoUri" id="field_croppedPhotoUri"
-                [(ngModel)]="slidePage.croppedPhotoUri"
-             />
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.slidePage.positionedLeft" for="field_positionedLeft">Positioned Left</label>
+            <label class="form-control-label" jhiTranslate="devizionApp.slidePage.positionedLeft"
+                   for="field_positionedLeft">Positioned Left</label>
             <input type="checkbox" class="form-control" name="positionedLeft" id="field_positionedLeft"
-                [(ngModel)]="slidePage.positionedLeft"
-             />
+                   [(ngModel)]="slidePage.positionedLeft"/>
         </div>
 
     </div>
@@ -42,7 +51,8 @@
         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
             <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
-        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving || photosNotUploaded"
+                class="btn btn-primary">
             <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
         </button>
     </div>

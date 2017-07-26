@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.ImageToken;
+
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface ImageTokenService {
 
     /**
      *  Get all the imageTokens.
-     *  
+     *
      *  @return the list of entities
      */
     List<ImageToken> findAll();

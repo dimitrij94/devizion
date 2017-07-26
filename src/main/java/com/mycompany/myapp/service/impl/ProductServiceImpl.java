@@ -1,28 +1,36 @@
 package com.mycompany.myapp.service.impl;
 
-import com.mycompany.myapp.service.ProductService;
+import com.mycompany.myapp.domain.ImageToken;
 import com.mycompany.myapp.domain.Product;
 import com.mycompany.myapp.repository.ProductRepository;
+import com.mycompany.myapp.service.ImageTokenService;
+import com.mycompany.myapp.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service Implementation for managing Product.
  */
 @Service
 @Transactional
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
+
+    private ImageTokenService imageTokenService;
 
     private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
-    
+
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ImageTokenService imageTokenService) {
         this.productRepository = productRepository;
+        this.imageTokenService = imageTokenService;
     }
 
     /**
@@ -39,9 +47,9 @@ public class ProductServiceImpl implements ProductService{
     }
 
     /**
-     *  Get all the products.
-     *  
-     *  @return the list of entities
+     * Get all the products.
+     *
+     * @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
@@ -53,10 +61,10 @@ public class ProductServiceImpl implements ProductService{
     }
 
     /**
-     *  Get one product by id.
+     * Get one product by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Override
     @Transactional(readOnly = true)
@@ -67,13 +75,30 @@ public class ProductServiceImpl implements ProductService{
     }
 
     /**
-     *  Delete the  product by id.
+     * Delete the  product by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Product : {}", id);
         productRepository.delete(id);
+    }
+
+    @Override
+    public ImageToken saveImageToken(String fileName) {
+        String filePath = "/products/" + fileName;
+        ImageToken token = new ImageToken(filePath);
+        return this.imageTokenService.save(token);
+    }
+
+    @Override
+    public Set<Product> findByCategoryId(Long id) {
+        return productRepository.findByProductCategoryId(id);
+    }
+
+    @Override
+    public Page<Product> findByCategoryId(Long categoryId, Pageable pageRequest) {
+        return productRepository.findByProductCategoryId(categoryId, pageRequest);
     }
 }

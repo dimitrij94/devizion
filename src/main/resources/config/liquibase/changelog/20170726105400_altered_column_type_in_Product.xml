@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <property name="textType" value="CLOB" dbms="h2"/>
+    <property name="textType" value="TEXT" dbms="mysql"/>
+
+    <!--
+        Added the entity SlidePage.
+    -->
+    <changeSet id="20170726105400-1" author="DmitrijKostiushko">
+        <modifyDataType tableName="product" columnName="product_description" newDataType="TEXT"/>
+    </changeSet>
+</databaseChangeLog>

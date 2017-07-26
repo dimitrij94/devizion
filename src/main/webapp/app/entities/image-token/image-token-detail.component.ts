@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { EventManager , JhiLanguageService  } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Subscription} from "rxjs/Rx";
+import {EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { ImageToken } from './image-token.model';
-import { ImageTokenService } from './image-token.service';
+import {ImageToken} from "./image-token.model";
+import {ImageTokenService} from "./image-token.service";
 
 @Component({
     selector: 'jhi-image-token-detail',

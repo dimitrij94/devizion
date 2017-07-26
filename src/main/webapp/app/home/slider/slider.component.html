@@ -1,0 +1,41 @@
+<div class="slider-wrapper">
+    <inter-routes-spinner class="spinner" *ngIf="isLoading"></inter-routes-spinner>
+    <div class="scroller left" mdTooltip="Попередній слайд" (click)="backward()"></div>
+
+    <div class="slider-page" *ngFor="let page of activeSlide" [@shiftSlides]="direction">
+        <div class="slider-content">
+            <img class="page-image" [src]="page.croppedPhotoUri"/>
+            <div class="description-wrapper"
+                 [ngClass]="{
+                    'positioned-left':page.positionedLeft,
+                    'positioned-right':!page.positionedLeft,
+                    'closed':page.showDescription
+                }">
+
+                <div class="description-toggler" [mdTooltip]="page.showDescription?'Показати опис':'Сховати опис'">
+                    <button md-icon-button (click)="page.showDescription = !page.showDescription">
+                        <md-icon svgIcon="clear"></md-icon>
+                    </button>
+                </div>
+
+                <div class="description">
+                    <p class="description-text">{{page.description}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroller right" mdTooltip="Наступний слайд" (click)="forward()"></div>
+
+    <div class="slider-controls-wrapper">
+        <div class="dot-wrapper">
+            <div *ngFor="let controlls of slidePages; let j = index"
+                 class="dot" [ngClass]="{'active':controlls.isActive}"
+                 (click)="manual(j)"
+                 [attr.data-content]="j">
+            </div>
+        </div>
+    </div>
+
+
+</div>

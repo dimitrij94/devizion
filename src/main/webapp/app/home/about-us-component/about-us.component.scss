@@ -1,0 +1,141 @@
+@import '../../../content/scss/_varibles';
+
+.map-baloon-image {
+    width: 10em;
+    top: 0;
+    margin-left: -5em;
+    left: 50%;
+    height: 7em;
+    position: absolute;
+    background: url('../../../content/images/md_logo.svg') no-repeat center center;
+}
+
+.map-baloon-image-holder {
+    width: 10em;
+    height: 7em;
+    margin: auto;
+}
+
+#about-us-wrapper {
+    height: 89vh;
+    background-color: $about-us-accent;
+    .map-wrapper {
+        height: 85%;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 24px;
+        .map {
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            .map-baloon {
+                .map-baloon-image {
+                    width: 70%;
+                    height: 20%;
+                    margin: auto;
+                    background: url('../../../content/images/md_logo.svg') no-repeat center center;
+                }
+            }
+        }
+    }
+    #departments-info {
+        height: 85%;
+        #logo-wrapper {
+            #logo {
+                height: 6em;
+                width: 24em;
+                margin: auto;
+                margin-bottom: 0.6em;
+                background: url('../../../content/images/md_logo.svg') no-repeat center center;
+                background-size: contain;
+            }
+            #header {
+                font-size: 1.5em;
+                margin-bottom: 0;
+            }
+            #subheader {
+                font-size: 0.8em;
+            }
+            .logo-text {
+                color: white;
+                text-align: center;
+                font-family: Roboto, "Helvetica Neue", sans-serif;
+            }
+        }
+        .department-list-wrapper {
+            .departments-list {
+                color: white;
+                .department-list-link {
+                    cursor: default !important;
+                    .department-list-item {
+                        padding: 1em 3.5em 1em 1em;
+                        position: relative;
+
+                        .department-name {
+                            color: whitesmoke;
+                            cursor: pointer;
+                            display: inline;
+                            &:hover {
+                                color: white;
+                            }
+                        }
+                        a {
+                            text-decoration: none;
+                            color: #f0f0f0;
+                            &:hover {
+                                color: white;
+                            }
+                        }
+                        p {
+                            display: inline;
+                            margin-bottom: 0.45em;
+                        }
+                        &.active {
+                            background-color: rgba(255, 255, 255, 0.1) !important;
+                            .map-link {
+                                opacity: 0.8;
+                                &:hover {
+                                    opacity: 1;
+                                }
+                                .activation-ripple {
+                                    width: 2em;
+                                    height: 2em;
+                                    background-color: rgba(255, 255, 255, 0.3);
+                                }
+                            }
+                        }
+                        &:hover {
+                            background-color: rgba(255, 255, 255, 0.05);
+                        }
+                        .map-link {
+                            cursor: pointer;
+                            width: 2em;
+                            height: 2em;
+                            position: absolute;
+                            display: table;
+                            text-align: center;
+                            top: 50%;
+                            right: 4px;
+                            border-radius: 50%;
+                            margin-top: -1em;
+                            opacity: 0.5;
+                            @include backgroundSize(contain);
+                            background: url('../../../content/images/icons/ic_public_24px.svg') no-repeat center center;
+                            z-index: 2;
+                            .activation-ripple {
+                                border-radius: 50%;
+                                z-index: 1;
+                                display: table-cell;
+                                vertical-align: middle;
+                                background-color: transparent;
+                                @include transition(width 0.25s, height 0.25s)
+                            }
+                        }
+                        p:last-child {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

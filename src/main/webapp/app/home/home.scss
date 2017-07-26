@@ -1,26 +1,120 @@
+@import "../../content/scss/varibles";
 
-/* ==========================================================================
-Main page styles
-========================================================================== */
-
-.hipster {
-    display: inline-block;
-    width: 347px;
-    height: 497px;
-    background: url("../../content/images/hipster.png") no-repeat center top;
-    background-size: contain;
+#navbar-position-wrapper {
+    width: 100%;
+    z-index: 10;
+    top: 0;
 }
 
-/* wait autoprefixer update to allow simple generation of high pixel density media query */
-@media
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (   min--moz-device-pixel-ratio: 2),
-only screen and (     -o-min-device-pixel-ratio: 2/1),
-only screen and (        min-device-pixel-ratio: 2),
-only screen and (                min-resolution: 192dpi),
-only screen and (                min-resolution: 2dppx) {
-    .hipster {
-        background: url("../../content/images/hipster2x.png") no-repeat center top;
-        background-size: contain;
+.my-fullpage-container {
+    overflow-x: hidden;
+    .page-part {
+        margin: 24px 0;
+        &#about-us {
+            margin: 0;
+        }
     }
 }
+
+#why-us {
+    margin-top: 7em;
+}
+
+.bar-horizontal-line {
+    display: inline-block;
+    height: 80%;
+    width: 5px;
+}
+
+.theme-block {
+    height: 15rem;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.md-ink-bar {
+    background-color: $magenta-accent;
+}
+
+.mat-tab-label {
+    width: 20%;
+}
+
+#services {
+    #services-tabs-container-wrapper {
+        position: relative;
+        #loader {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            top: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            inter-routes-spinner {
+                font-size: 2em;
+            }
+        }
+
+        #services-tab-container {
+            width: 100%;
+            height: 100%;
+
+            .mat-tab-label {
+                //width: 20%;
+                //height: 7.1vh;
+            }
+            .tab-label-template {
+                h5 {
+
+                }
+            }
+            md-ink-bar {
+                background-color: $magenta-accent !important;
+            }
+
+        }
+    }
+}
+
+#parallax-strips {
+    z-index: -2;
+    position: fixed;
+    background-size: contain;
+    width: 100vw;
+    height: 100vh;
+    top: $screen-height;
+    @include transition(margin-top 0.5s ease);
+
+    #wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        opacity: 0.3;
+        .strips {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: url("../../content/images/md_logo.svg") no-repeat center center;
+        }
+        #left {
+            top: 0;
+            left: -50%;
+            transform: rotate(90deg);
+        }
+        #right {
+            top: 75vh;
+            right: -50%;
+            transform: rotateY(180deg) rotateX(180deg) rotate(90deg);
+        }
+    }
+}
+
+.window-parallax {
+    position: fixed;
+    z-index: -1;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    top: 100vh;
+    &#products-window {
+        height: 80vh;
+    }
+}
+

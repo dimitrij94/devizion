@@ -1,41 +1,52 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Response } from '@angular/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertService } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Response} from "@angular/http";
+import {Subscription} from "rxjs/Rx";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { Product } from './product.model';
-import { ProductService } from './product.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import {Product} from "./product.model";
+import {ProductService} from "./product.service";
+import {Principal} from "../../shared";
+import {MyImageService, productSubdirectory} from "../../shared/image/image.service";
 
 @Component({
     selector: 'jhi-product',
-    templateUrl: './product.component.html'
+    templateUrl: './product.component.html',
+    styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit, OnDestroy {
-products: Product[];
+    products: Product[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
-    constructor(
-        private jhiLanguageService: JhiLanguageService,
-        private productService: ProductService,
-        private alertService: AlertService,
-        private eventManager: EventManager,
-        private principal: Principal
-    ) {
+    constructor(private jhiLanguageService: JhiLanguageService,
+                private productService: ProductService,
+                private alertService: AlertService,
+                private eventManager: EventManager,
+                private imageService:MyImageService,
+                private principal: Principal) {
+
         this.jhiLanguageService.setLocations(['product']);
     }
 
     loadAll() {
+        let directory = '/content/images/products';
         this.productService.query().subscribe(
             (res: Response) => {
-                this.products = res.json();
+                let products = <Product[]> res.json();
+                products.forEach((product) => {
+                    product.productImageUri = this.imageService.getImagePathOfSize(
+                        productSubdirectory,
+                        product.productImageUri,
+                        window.innerWidth,
+                        0.15);
+                });
+                this.products = products;
             },
             (res: Response) => this.onError(res.json())
         );
     }
+
+
     ngOnInit() {
         this.loadAll();
         this.principal.identity().then((account) => {
@@ -48,10 +59,9 @@ products: Product[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId (index: number, item: Product) {
+    trackId(index: number, item: Product) {
         return item.id;
     }
-
 
 
     registerChangeInProducts() {
@@ -59,7 +69,7 @@ products: Product[];
     }
 
 
-    private onError (error) {
+    private onError(error) {
         this.alertService.error(error.message, null, null);
     }
 }

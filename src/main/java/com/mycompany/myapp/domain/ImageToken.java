@@ -4,7 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -36,6 +36,13 @@ public class ImageToken implements Serializable {
 
     public String getPath() {
         return path;
+    }
+
+    public ImageToken(String path) {
+        this.path = path;
+    }
+
+    public ImageToken() {
     }
 
     public ImageToken path(String path) {

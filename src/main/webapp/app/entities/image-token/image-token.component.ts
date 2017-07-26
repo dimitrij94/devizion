@@ -1,13 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Response } from '@angular/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertService } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Response} from "@angular/http";
+import {Subscription} from "rxjs/Rx";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { ImageToken } from './image-token.model';
-import { ImageTokenService } from './image-token.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import {ImageToken} from "./image-token.model";
+import {ImageTokenService} from "./image-token.service";
+import {Principal} from "../../shared";
 
 @Component({
     selector: 'jhi-image-token',

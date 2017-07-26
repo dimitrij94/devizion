@@ -1,20 +1,21 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
+import {RouterModule} from "@angular/router";
 
-import { DevizionSharedModule } from '../../shared';
+import {DevizionSharedModule} from "../../shared";
 
 import {
-    CustumerService,
-    CustumerPopupService,
     CustumerComponent,
+    CustumerDeleteDialogComponent,
+    CustumerDeletePopupComponent,
     CustumerDetailComponent,
     CustumerDialogComponent,
     CustumerPopupComponent,
-    CustumerDeletePopupComponent,
-    CustumerDeleteDialogComponent,
-    custumerRoute,
     custumerPopupRoute,
-} from './';
+    CustumerPopupService,
+    custumerRoute,
+    CustumerService
+} from "./";
+import {ImageUploadModule} from "angular2-image-upload";
 
 let ENTITY_STATES = [
     ...custumerRoute,
@@ -24,6 +25,7 @@ let ENTITY_STATES = [
 @NgModule({
     imports: [
         DevizionSharedModule,
+        ImageUploadModule.forRoot(),
         RouterModule.forRoot(ENTITY_STATES, { useHash: true })
     ],
     declarations: [

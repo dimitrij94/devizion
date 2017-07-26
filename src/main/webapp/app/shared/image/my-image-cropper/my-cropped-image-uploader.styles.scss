@@ -1,0 +1,46 @@
+@import "../../../../content/scss/varibles";
+
+.file-upload {
+    display: inline-block;
+    margin: 2rem 4rem 2rem 2rem;
+    height: 6rem;
+}
+
+.result {
+    display: inline-block;
+    margin-left: 1em;
+    position: relative;
+    border: 0.2em solid $cyan-accent-border;
+
+    #progress-spinner{
+        position:absolute;
+        top:20%;
+        height: 80%;
+        left:10%;
+        width:80%;
+    }
+
+    .crop-menu {
+        position: relative;
+        background-color: $cyan-accent-border;
+        height: 2em;
+        width: 100%;
+        .cancel-button {
+            background: url('../../../../content/images/icons/ic_clear_black_24px.svg') no-repeat center top;
+        }
+        .crop-button {
+            background: url('../../../../content/images/icons/ic_crop_black_24px.svg') no-repeat center top;
+        }
+        .disabled{
+            cursor:default;
+        }
+        & > div {
+            cursor: pointer;
+            display: inline-block;
+            height: 1.5em;
+            width: 50%;
+            margin-top: 0.25em;
+            float: right;
+        }
+    }
+}

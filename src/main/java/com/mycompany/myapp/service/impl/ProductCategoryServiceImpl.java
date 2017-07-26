@@ -1,12 +1,12 @@
 package com.mycompany.myapp.service.impl;
 
-import com.mycompany.myapp.service.ProductCategoryService;
 import com.mycompany.myapp.domain.ProductCategory;
 import com.mycompany.myapp.repository.ProductCategoryRepository;
+import com.mycompany.myapp.service.ProductCategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class ProductCategoryServiceImpl implements ProductCategoryService{
 
     private final Logger log = LoggerFactory.getLogger(ProductCategoryServiceImpl.class);
-    
+
     private final ProductCategoryRepository productCategoryRepository;
 
     public ProductCategoryServiceImpl(ProductCategoryRepository productCategoryRepository) {
@@ -40,7 +40,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService{
 
     /**
      *  Get all the productCategories.
-     *  
+     *
      *  @return the list of entities
      */
     @Override
@@ -75,5 +75,10 @@ public class ProductCategoryServiceImpl implements ProductCategoryService{
     public void delete(Long id) {
         log.debug("Request to delete ProductCategory : {}", id);
         productCategoryRepository.delete(id);
+    }
+
+    @Override
+    public ProductCategory getFirst() {
+        return productCategoryRepository.findTop1By();
     }
 }

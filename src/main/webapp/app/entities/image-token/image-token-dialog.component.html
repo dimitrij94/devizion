@@ -16,13 +16,7 @@
             <label class="form-control-label" jhiTranslate="devizionApp.imageToken.path" for="field_path">Path</label>
             <input type="text" class="form-control" name="path" id="field_path"
                 [(ngModel)]="imageToken.path"
-            required />
-            <div [hidden]="!(editForm.controls.path?.dirty && editForm.controls.path?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.path?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
-                </small>
-            </div>
+             />
         </div>
 
     </div>

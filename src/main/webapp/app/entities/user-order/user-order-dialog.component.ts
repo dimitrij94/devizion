@@ -1,54 +1,110 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Response } from '@angular/http';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Response} from "@angular/http";
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EventManager, AlertService, JhiLanguageService } from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { UserOrder } from './user-order.model';
-import { UserOrderPopupService } from './user-order-popup.service';
-import { UserOrderService } from './user-order.service';
-import { Custumer, CustumerService } from '../custumer';
-import { Product, ProductService } from '../product';
+import {UserOrder} from "./user-order.model";
+import {UserOrderPopupService} from "./user-order-popup.service";
+import {UserOrderService} from "./user-order.service";
+import {Product, ProductService} from "../product";
+import {Custumer, CustumerService} from "../custumer";
+import {ImageToken} from "../image-token";
+import {MyImageService, portfolioSubdirectory} from "../../shared/image/image.service";
+import {AuthServerProvider} from "../../shared/auth/auth-jwt.service";
+import {CropCoordinates} from "../../shared/image/my-image-cropper/my-cropped-image-uploader.component";
 
 @Component({
     selector: 'jhi-user-order-dialog',
     templateUrl: './user-order-dialog.component.html'
 })
-export class UserOrderDialogComponent implements OnInit {
+export class UserOrderDialogComponent implements OnInit, OnDestroy {
 
     userOrder: UserOrder;
     authorities: any[];
     isSaving: boolean;
-
-    custumers: Custumer[];
-
+    originalImageToken: ImageToken;
+    croppedImageToken: ImageToken;
     products: Product[];
-    constructor(
-        public activeModal: NgbActiveModal,
-        private jhiLanguageService: JhiLanguageService,
-        private alertService: AlertService,
-        private userOrderService: UserOrderService,
-        private custumerService: CustumerService,
-        private productService: ProductService,
-        private eventManager: EventManager
-    ) {
+    portfolioSubdirectory = portfolioSubdirectory;
+    custumers: Custumer[];
+    userOrderSaved = false;
+
+    constructor(public activeModal: NgbActiveModal,
+                private jhiLanguageService: JhiLanguageService,
+                private alertService: AlertService,
+                private userOrderService: UserOrderService,
+                private productService: ProductService,
+                private custumerService: CustumerService,
+                private eventManager: EventManager,
+                private authServiceProvider: AuthServerProvider,
+                private imageService: MyImageService) {
         this.jhiLanguageService.setLocations(['userOrder']);
     }
 
     ngOnInit() {
         this.isSaving = false;
         this.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-        this.custumerService.query().subscribe(
-            (res: Response) => { this.custumers = res.json(); }, (res: Response) => this.onError(res.json()));
         this.productService.query().subscribe(
-            (res: Response) => { this.products = res.json(); }, (res: Response) => this.onError(res.json()));
+            (res: Response) => {
+                this.products = res.json();
+            }, (res: Response) => this.onError(res.json()));
+        this.custumerService.query().subscribe(
+            (res: Response) => {
+                this.custumers = res.json();
+            }, (res: Response) => this.onError(res.json()));
     }
-    clear () {
+
+
+    ngOnDestroy(): void {
+        if (this.userOrderSaved) {
+            this.originalImageToken && this.onOriginalImageRemove();
+            this.croppedImageToken && this.onOriginalImageRemove();
+        }
+    }
+
+    clear() {
         this.activeModal.dismiss('cancel');
     }
 
-    save () {
+
+    onCroppedImageRemove(i) {
+        let croppedImageRemoveSubscription = this.imageService
+            .imageUploadCancel(this.croppedImageToken.id, portfolioSubdirectory)
+            .subscribe(() => {
+                delete this.croppedImageToken;
+                croppedImageRemoveSubscription.unsubscribe();
+            });
+    }
+
+    onOriginalImageRemove() {
+        let originalImageRemoveSubscription = this.imageService
+            .imageUploadCancel(this.originalImageToken.id, portfolioSubdirectory)
+            .subscribe(() => {
+                delete this.originalImageToken;
+                originalImageRemoveSubscription.unsubscribe();
+            })
+    }
+
+    onOriginalImageLoad(imageToken: ImageToken) {
+        this.userOrder.photoUri = imageToken.path;
+        this.originalImageToken = imageToken;
+    }
+
+    onCroppedImageLoad(imageToken: ImageToken) {
+        this.userOrder.cropedUri = imageToken.path;
+        this.croppedImageToken = imageToken;
+    }
+
+    assignCropBounds($event: CropCoordinates) {
+        this.userOrder.croppCoordinateX1 = $event.cropX1;
+        this.userOrder.croppCoordinateX2 = $event.cropX2;
+        this.userOrder.croppCoordinateY1 = $event.cropY1;
+        this.userOrder.croppCoordinateY2 = $event.cropY2;
+    }
+
+    save() {
         this.isSaving = true;
         if (this.userOrder.id !== undefined) {
             this.userOrderService.update(this.userOrder)
@@ -61,13 +117,14 @@ export class UserOrderDialogComponent implements OnInit {
         }
     }
 
-    private onSaveSuccess (result: UserOrder) {
-        this.eventManager.broadcast({ name: 'userOrderListModification', content: 'OK'});
+    private onSaveSuccess(result: UserOrder) {
+        this.userOrderSaved = true;
+        this.eventManager.broadcast({name: 'userOrderListModification', content: 'OK'});
         this.isSaving = false;
         this.activeModal.dismiss(result);
     }
 
-    private onSaveError (error) {
+    private onSaveError(error) {
         try {
             error.json();
         } catch (exception) {
@@ -77,15 +134,15 @@ export class UserOrderDialogComponent implements OnInit {
         this.onError(error);
     }
 
-    private onError (error) {
+    private onError(error) {
         this.alertService.error(error.message, null, null);
     }
 
-    trackCustumerById(index: number, item: Custumer) {
+    trackProductById(index: number, item: Product) {
         return item.id;
     }
 
-    trackProductById(index: number, item: Product) {
+    trackCustumerById(index: number, item: Custumer) {
         return item.id;
     }
 }
@@ -99,14 +156,13 @@ export class UserOrderPopupComponent implements OnInit, OnDestroy {
     modalRef: NgbModalRef;
     routeSub: any;
 
-    constructor (
-        private route: ActivatedRoute,
-        private userOrderPopupService: UserOrderPopupService
-    ) {}
+    constructor(private route: ActivatedRoute,
+                private userOrderPopupService: UserOrderPopupService) {
+    }
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe(params => {
-            if ( params['id'] ) {
+            if (params['id']) {
                 this.modalRef = this.userOrderPopupService
                     .open(UserOrderDialogComponent, params['id']);
             } else {

@@ -1,9 +1,10 @@
 <div>
     <h2>
         <span jhiTranslate="devizionApp.custumer.home.title">Custumers</span>
-        <button class="btn btn-primary float-right create-custumer" [routerLink]="['/', { outlets: { popup: ['custumer-new'] } }]">
+        <button class="btn btn-primary float-right create-custumer"
+                [routerLink]="['/', { outlets: { popup: ['custumer-new'] } }]">
             <span class="fa fa-plus"></span>
-            <span  jhiTranslate="devizionApp.custumer.home.createLabel">
+            <span jhiTranslate="devizionApp.custumer.home.createLabel">
             Create new Custumer
             </span>
         </button>
@@ -16,12 +17,12 @@
         <table class="table table-striped">
             <thead>
             <tr>
-            <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="devizionApp.custumer.custumerName">Custumer Name</span></th>
-            <th><span jhiTranslate="devizionApp.custumer.custumerSurname">Custumer Surname</span></th>
-            <th><span jhiTranslate="devizionApp.custumer.custumerContactNumber">Custumer Contact Number</span></th>
-            <th><span jhiTranslate="devizionApp.custumer.custumerImageUri">Custumer Image Uri</span></th>
-            <th></th>
+                <th><span jhiTranslate="global.field.id">ID</span></th>
+                <th><span jhiTranslate="devizionApp.custumer.custumerName">Custumer Name</span></th>
+                <th><span jhiTranslate="devizionApp.custumer.custumerSurname">Custumer Surname</span></th>
+                <th><span jhiTranslate="devizionApp.custumer.custumerContactNumber">Custumer Contact Number</span></th>
+                <th><span jhiTranslate="devizionApp.custumer.custumerPhoto">Customer photo</span></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -30,7 +31,7 @@
                 <td>{{custumer.custumerName}}</td>
                 <td>{{custumer.custumerSurname}}</td>
                 <td>{{custumer.custumerContactNumber}}</td>
-                <td>{{custumer.custumerImageUri}}</td>
+                <td><img [src]="custumer.custumerImageUri" class="custumer-image"/></td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

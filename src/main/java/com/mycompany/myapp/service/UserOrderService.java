@@ -1,6 +1,10 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.UserOrder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 /**
@@ -17,24 +21,31 @@ public interface UserOrderService {
     UserOrder save(UserOrder userOrder);
 
     /**
-     *  Get all the userOrders.
-     *  
-     *  @return the list of entities
+     * Get all the userOrders.
+     *
+     * @return the list of entities
      */
     List<UserOrder> findAll();
 
+
+    Page<UserOrder> findAll(Pageable pageable);
+
     /**
-     *  Get the "id" userOrder.
+     * Get the "id" userOrder.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     UserOrder findOne(Long id);
 
     /**
-     *  Delete the "id" userOrder.
+     * Delete the "id" userOrder.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     void delete(Long id);
+
+    Page<UserOrder> findAllByProductId(Pageable pageable, Long productId);
+
+    Page<UserOrder> findAllByCategoryId(Long id, PageRequest pageRequest);
 }

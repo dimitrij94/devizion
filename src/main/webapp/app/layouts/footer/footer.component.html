@@ -1,3 +1,36 @@
-<div class="footer">
-    <p jhiTranslate="footer">This is your footer</p>
+<div fxLayout.gt-sm="row" fxLayout="column" fxLayoutAlign.gt-sm="space-around center" fxLayoutAlign="start stretch"
+     id="footer">
+    <div id="site-logo-wrapper" fxFlex.xs="33" fxFlex.sm="50" fxFlex.gt-sm="55" fxLayout="row"
+         fxLayoutAlign="center center">
+
+        <div id="transform-wrapper" fxLayout="row" fxLayoutAlign="center center">
+            <div id="site-logo"></div>
+            <div id="logo-text">
+                <div id="text">
+                    <p id="header" class="logo-text">МІСЬКА ДРУКАРНЯ</p>
+                    <p id="subheader" class="logo-text">рекламно-поліграфічна компанія</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="info" fxFlex.xs="66" fxFlex.sm="50" fxFlex.gt-sm="55"
+         fxLayout.sm="row" fxLayout.gt-sm="row" fxLayout.xs="column"
+         fxLayoutAlign="space-around end"
+         fxLayoutAlign.xs="start stretch">
+        <div fxFlex="50">
+            <p>
+                <span jhiTranslate="footer.mainOffice.main">Головний офіс</span><br>
+                <span jhiTranslate="footer.mainOffice.address"></span><br>
+                <span jhiTranslate="footer.mainOffice.phoneNumber"></span><br>
+                <span>e-mail: devizion@ukr.net</span>
+            </p>
+        </div>
+        <div fxFlex="50">
+            <p>
+                <span jhiTranslate="footer.filial.main"></span><br>
+                <span jhiTranslate="footer.filial.address"></span><br>
+                <span jhiTranslate="footer.filial.phoneNumber"></span>
+            </p>
+        </div>
+    </div>
 </div>

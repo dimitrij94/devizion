@@ -1,51 +1,40 @@
-
-<div *ngIf="product">
-    <h2><span jhiTranslate="devizionApp.product.detail.title">Product</span> {{product.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="devizionApp.product.productName">Product Name</span></dt>
-        <dd>
-            <span>{{product.productName}}</span>
-        </dd>
-        <dt><span jhiTranslate="devizionApp.product.productPrice">Product Price</span></dt>
-        <dd>
-            <span>{{product.productPrice}}</span>
-        </dd>
-        <dt><span jhiTranslate="devizionApp.product.productDescription">Product Description</span></dt>
-        <dd>
-            <span>{{product.productDescription}}</span>
-        </dd>
-        <dt><span jhiTranslate="devizionApp.product.productImageUri">Product Image Uri</span></dt>
-        <dd>
-            <span>{{product.productImageUri}}</span>
-        </dd>
-        <dt><span jhiTranslate="devizionApp.product.croppedImageUri">Cropped Image Uri</span></dt>
-        <dd>
-            <span>{{product.croppedImageUri}}</span>
-        </dd>
-        <dt><span jhiTranslate="devizionApp.product.productSelfCost">Product Self Cost</span></dt>
-        <dd>
-            <span>{{product.productSelfCost}}</span>
-        </dd>
-        <dt><span jhiTranslate="devizionApp.product.productCategory">Product Category</span></dt>
-        <dd>
-            <div *ngIf="product.productCategory">
-                <a [routerLink]="['/product-category', product.productCategory?.id]">{{product.productCategory?.id}}</a>
+<jhi-my-sidenav [allCategories]="allCategories">
+    <div id="sidenav-controlls" position="sidenav-content" fxLayout="column">
+        <img id="product-photo" [src]="product.croppedImageUri"/>
+        <div class="head" fxFlex>
+            <h4 id="product-title">{{product.productName}}</h4>
+            <div class="search-input-wrapper query">
+                <md-input-container class="devizion-dark-theme">
+                    <input [(ngModel)]="searchQuery" mdInput class="search-input" placeholder="Пошук">
+                </md-input-container>
             </div>
-        </dd>
-    </dl>
+            <p class="product-description">
+                {{product.productDescription}}
+            </p>
+            <div class="price-tag">
+                <span>{{product.productPrice | currency:'UAH':true:'2.2-2'}}</span>
+            </div>
+        </div>
+    </div>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
-
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'product/'+ product.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
-</div>
+    <div id="portfolio-content" position="scrolling-content">
+        <jhi-portfolio [includeSidenavMargin]="sidenavOpened"
+                       modalVerticalAlign="top"
+                       [portfolio]="(product.orderedProduct | ordersPassQuery:searchQuery)"
+                       [numOfCols]="numberOfPortfolioCards"
+                       [controlsTilePosition]="0"
+                       [title]="portfolioGridTitle"
+                       *ngIf="showPortfolio">
+        </jhi-portfolio>
+        <div class="alert">
+            <div class="no-orders" *ngIf="isNothingToLoad">
+                <span>Нажаль портфоліо цього продукту доки порожне</span>
+            </div>
+            <div class="load-more-orders" *ngIf="loadMoreAlert">
+                <button md-raised-button (click)="loadMoreOrders()"
+                        class="devizion-dark-theme" color="primary">Завантажити більше замовлень
+                </button>
+            </div>
+        </div>
+    </div>
+</jhi-my-sidenav>

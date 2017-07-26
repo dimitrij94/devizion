@@ -1,0 +1,43 @@
+<div id="about-us-wrapper" fxLayout="row" fxLayoutAlign="center center">
+    <div class="map-wrapper" fxFlex="70" *ngIf="showMap">
+        <agm-map [latitude]="lat" [longitude]="lng"
+                         [zoom]="17"
+                         [draggable]="false"
+                         [disableDoubleClickZoom]="true"
+                         class="map">
+            <agm-marker *ngFor="let m of departments; let i=index"
+                                    [label]="m.label"
+                                    [latitude]="m.lat" [longitude]="m.lng">
+                <agm-info-window class="map-baloon">
+                    <div class="map-baloon-image-holder"></div>
+                    <div class="map-baloon-image"></div>
+                    <p>{{m.address}}</p>
+                    <p>{{m.phoneNumber}}</p>
+                </agm-info-window>
+            </agm-marker>
+        </agm-map>
+    </div>
+    <div id="departments-info">
+        <div id="logo-wrapper">
+            <div id="logo"></div>
+            <p id="header" class="logo-text">МІСЬКА ДРУКАРНЯ</p>
+            <p id="subheader" class="logo-text">рекламно-поліграфічна компанія</p>
+        </div>
+        <div class="department-list-wrapper">
+            <md-list class="departments-list">
+                <a md-list-item *ngFor="let department of departments; let i = index" class="department-list-link">
+                    <div class="department-list-item"
+                         [ngClass]="{active:department.isActive}">
+                        <h5 md-line (click)="goToDepartment(departments[i])" class="department-name">{{department.name}}</h5><br>
+                        <p md-line>{{department.address}}</p><br>
+                        <p md-line><a href="tel:">{{department.phoneNumber}}</a></p><br>
+                        <p md-line><a href="mailto:">{{department.email}}</a></p>
+                        <div class="map-link" (click)="openDepartmentLink(department)" mdTooltip="Показати на карті">
+                            <div class="activation-ripple"></div>
+                        </div>
+                    </div>
+                </a>
+            </md-list>
+        </div>
+    </div>
+</div>

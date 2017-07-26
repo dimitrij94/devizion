@@ -1,12 +1,10 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.DevizionApp;
-
 import com.mycompany.myapp.domain.SlidePage;
 import com.mycompany.myapp.repository.SlidePageRepository;
 import com.mycompany.myapp.service.SlidePageService;
 import com.mycompany.myapp.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,7 +88,7 @@ public class SlidePageResourceIntTest {
      */
     public static SlidePage createEntity(EntityManager em) {
         SlidePage slidePage = new SlidePage()
-            .photoUrl(DEFAULT_PHOTO_URL)
+            .photoUri(DEFAULT_PHOTO_URL)
             .description(DEFAULT_DESCRIPTION)
             .croppedPhotoUri(DEFAULT_CROPPED_PHOTO_URI)
             .positionedLeft(DEFAULT_POSITIONED_LEFT);
@@ -117,7 +115,7 @@ public class SlidePageResourceIntTest {
         List<SlidePage> slidePageList = slidePageRepository.findAll();
         assertThat(slidePageList).hasSize(databaseSizeBeforeCreate + 1);
         SlidePage testSlidePage = slidePageList.get(slidePageList.size() - 1);
-        assertThat(testSlidePage.getPhotoUrl()).isEqualTo(DEFAULT_PHOTO_URL);
+        assertThat(testSlidePage.getPhotoUri()).isEqualTo(DEFAULT_PHOTO_URL);
         assertThat(testSlidePage.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testSlidePage.getCroppedPhotoUri()).isEqualTo(DEFAULT_CROPPED_PHOTO_URI);
         assertThat(testSlidePage.isPositionedLeft()).isEqualTo(DEFAULT_POSITIONED_LEFT);
@@ -195,7 +193,7 @@ public class SlidePageResourceIntTest {
         // Update the slidePage
         SlidePage updatedSlidePage = slidePageRepository.findOne(slidePage.getId());
         updatedSlidePage
-            .photoUrl(UPDATED_PHOTO_URL)
+            .photoUri(UPDATED_PHOTO_URL)
             .description(UPDATED_DESCRIPTION)
             .croppedPhotoUri(UPDATED_CROPPED_PHOTO_URI)
             .positionedLeft(UPDATED_POSITIONED_LEFT);
@@ -209,7 +207,7 @@ public class SlidePageResourceIntTest {
         List<SlidePage> slidePageList = slidePageRepository.findAll();
         assertThat(slidePageList).hasSize(databaseSizeBeforeUpdate);
         SlidePage testSlidePage = slidePageList.get(slidePageList.size() - 1);
-        assertThat(testSlidePage.getPhotoUrl()).isEqualTo(UPDATED_PHOTO_URL);
+        assertThat(testSlidePage.getPhotoUri()).isEqualTo(UPDATED_PHOTO_URL);
         assertThat(testSlidePage.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testSlidePage.getCroppedPhotoUri()).isEqualTo(UPDATED_CROPPED_PHOTO_URI);
         assertThat(testSlidePage.isPositionedLeft()).isEqualTo(UPDATED_POSITIONED_LEFT);

@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -21,10 +22,12 @@ public class SlidePage implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "photo_url")
-    private String photoUrl;
+    @NotNull
+    @Column(name = "photo_uri", nullable = false)
+    private String photoUri;
 
-    @Column(name = "description")
+    @NotNull
+    @Column(name = "description", nullable = false)
     private String description;
 
     @Column(name = "cropped_photo_uri")
@@ -41,17 +44,17 @@ public class SlidePage implements Serializable {
         this.id = id;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getPhotoUri() {
+        return photoUri;
     }
 
-    public SlidePage photoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public SlidePage photoUri(String photoUri) {
+        this.photoUri = photoUri;
         return this;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhotoUri(String photoUri) {
+        this.photoUri = photoUri;
     }
 
     public String getDescription() {
@@ -102,25 +105,25 @@ public class SlidePage implements Serializable {
             return false;
         }
         SlidePage slidePage = (SlidePage) o;
-        if (slidePage.id == null || id == null) {
+        if (slidePage.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, slidePage.id);
+        return Objects.equals(getId(), slidePage.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "SlidePage{" +
-            "id=" + id +
-            ", photoUrl='" + photoUrl + "'" +
-            ", description='" + description + "'" +
-            ", croppedPhotoUri='" + croppedPhotoUri + "'" +
-            ", positionedLeft='" + positionedLeft + "'" +
-            '}';
+            "id=" + getId() +
+            ", photoUri='" + getPhotoUri() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", croppedPhotoUri='" + getCroppedPhotoUri() + "'" +
+            ", positionedLeft='" + isPositionedLeft() + "'" +
+            "}";
     }
 }

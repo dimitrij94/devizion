@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { EventManager , JhiLanguageService  } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Subscription} from "rxjs/Rx";
+import {EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { UserOrder } from './user-order.model';
-import { UserOrderService } from './user-order.service';
+import {UserOrder} from "./user-order.model";
+import {UserOrderService} from "./user-order.service";
 
 @Component({
     selector: 'jhi-user-order-detail',

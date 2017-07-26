@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.SlidePage;
+
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface SlidePageService {
 
     /**
      *  Get all the slidePages.
-     *  
+     *
      *  @return the list of entities
      */
     List<SlidePage> findAll();
@@ -30,6 +31,8 @@ public interface SlidePageService {
      *  @return the entity
      */
     SlidePage findOne(Long id);
+
+    void deleteImage(String path);
 
     /**
      *  Delete the "id" slidePage.

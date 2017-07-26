@@ -1,8 +1,8 @@
-import { Injectable, Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { UserOrder } from './user-order.model';
-import { UserOrderService } from './user-order.service';
+import {Component, Injectable} from "@angular/core";
+import {Router} from "@angular/router";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {UserOrder} from "./user-order.model";
+import {UserOrderService} from "./user-order.service";
 @Injectable()
 export class UserOrderPopupService {
     private isOpen = false;

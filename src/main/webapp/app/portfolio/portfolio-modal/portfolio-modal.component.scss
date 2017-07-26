@@ -1,0 +1,29 @@
+#portfolio-modal-wrapper {
+    z-index: 5;
+    height: 96%;
+    width: 90%;
+    margin: 2% 0 2% 5%;
+    position: absolute;
+    #portfolio-modal-position-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        #portfolio-modal {
+            position: absolute;
+            #modal-content-wrapper {
+                position: relative;
+                #portfolio-image {
+                    position: absolute;
+                }
+                #preloader {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 100%;
+                    height: 100%;
+                    font-size: 2rem;
+                }
+            }
+        }
+    }
+}

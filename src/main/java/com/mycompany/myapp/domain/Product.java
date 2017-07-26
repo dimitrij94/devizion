@@ -5,11 +5,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A Product.
@@ -34,7 +34,7 @@ public class Product implements Serializable {
     private Float productPrice;
 
     @NotNull
-    @Column(name = "product_description", nullable = false)
+    @Column(name = "product_description", columnDefinition = "TEXT", nullable = false)
     private String productDescription;
 
     @Column(name = "product_image_uri")
@@ -46,12 +46,12 @@ public class Product implements Serializable {
     @Column(name = "product_self_cost")
     private Float productSelfCost;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<UserOrder> orderedProducts = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ProductCategory productCategory;
 
     public Long getId() {
@@ -84,6 +84,11 @@ public class Product implements Serializable {
         return this;
     }
 
+    public Product croppedImageUri(String croppedImageUri) {
+        this.croppedImageUri = croppedImageUri;
+        return this;
+    }
+
     public void setProductPrice(Float productPrice) {
         this.productPrice = productPrice;
     }
@@ -112,19 +117,6 @@ public class Product implements Serializable {
 
     public void setProductImageUri(String productImageUri) {
         this.productImageUri = productImageUri;
-    }
-
-    public String getCroppedImageUri() {
-        return croppedImageUri;
-    }
-
-    public Product croppedImageUri(String croppedImageUri) {
-        this.croppedImageUri = croppedImageUri;
-        return this;
-    }
-
-    public void setCroppedImageUri(String croppedImageUri) {
-        this.croppedImageUri = croppedImageUri;
     }
 
     public Float getProductSelfCost() {
@@ -178,6 +170,14 @@ public class Product implements Serializable {
         this.productCategory = productCategory;
     }
 
+    public String getCroppedImageUri() {
+        return croppedImageUri;
+    }
+
+    public void setCroppedImageUri(String croppedImageUri) {
+        this.croppedImageUri = croppedImageUri;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -206,7 +206,6 @@ public class Product implements Serializable {
             ", productPrice='" + productPrice + "'" +
             ", productDescription='" + productDescription + "'" +
             ", productImageUri='" + productImageUri + "'" +
-            ", croppedImageUri='" + croppedImageUri + "'" +
             ", productSelfCost='" + productSelfCost + "'" +
             '}';
     }

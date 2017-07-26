@@ -1,0 +1,81 @@
+@import "../../../../content/scss/_varibles.scss";
+
+$card-content-padding: 24px;
+
+md-card {
+    .service-card-image {
+        width: 100%;
+        height: auto;
+    }
+    .product-description {
+        .product-price {
+            background-color: $magenta-accent-border;
+            color: white;
+            margin-right: -$card-content-padding;
+            padding: 5px 24px 5px 5px;
+            margin-bottom: -1em;
+        }
+        .card-subtitle {
+            position: relative;
+            .description {
+                height: 140px;
+                .toggler-wrapper {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    .desc-toggler {
+                        cursor: pointer;
+                        background: white url('../../../../content/images/icons/ic_more_horiz_24px.svg') no-repeat center center;
+                        height: 1em;
+                        width: 3em;
+
+                        &:hover {
+                            border-bottom: 2px solid black;
+                        }
+                    }
+                }
+            }
+
+            .long-description {
+                position: absolute;
+                top: 0;
+                left: 0;
+                margin: -12px;
+                padding: 12px;
+                height: 170%;
+                overflow-y: scroll;
+                background-color: white;
+                color: black;
+                border: 1px solid #ccc;
+                box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
+                .close {
+                    position: relative;
+                    float:right;
+                    width: 1em;
+                    height: 1em;
+                    z-index: 2;
+                    @include backgroundSize(cover);
+                    background: url('../../../../content/images/icons/ic_clear_black_24px.svg') no-repeat center center;
+                }
+            }
+            &:hover {
+                .long-description {
+                }
+            }
+        }
+    }
+}
+
+.my-card-content {
+    padding: $card-content-padding;
+    .card-title{
+        a{
+            color: black;
+        }
+    }
+}
+
+.mat-card {
+    padding: 0 !important;
+}
+

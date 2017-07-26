@@ -1,10 +1,9 @@
 package com.mycompany.myapp.config;
 
-import com.mycompany.myapp.security.*;
-import com.mycompany.myapp.security.jwt.*;
-
-import io.github.jhipster.security.*;
-
+import com.mycompany.myapp.security.AuthoritiesConstants;
+import com.mycompany.myapp.security.jwt.JWTConfigurer;
+import com.mycompany.myapp.security.jwt.TokenProvider;
+import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,9 +37,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
 
-    public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,
-            TokenProvider tokenProvider,
-        CorsFilter corsFilter) {
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder,
+                                 UserDetailsService userDetailsService,
+                                 TokenProvider tokenProvider,
+                                 CorsFilter corsFilter) {
 
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDetailsService = userDetailsService;
@@ -53,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         try {
             authenticationManagerBuilder
                 .userDetailsService(userDetailsService)
-                    .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder());
         } catch (Exception e) {
             throw new BeanInitializationException("Security configuration failed", e);
         }
@@ -88,30 +89,40 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
             .authenticationEntryPoint(http401UnauthorizedEntryPoint())
-        .and()
-            .csrf()
-            .disable()
+            .and()
+            .csrf().disable()
             .headers()
             .frameOptions()
             .disable()
-        .and()
+            .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+            .and()
             .authorizeRequests()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/api/account/reset_password/init").permitAll()
             .antMatchers("/api/account/reset_password/finish").permitAll()
+            .antMatchers("/api/account").authenticated()
             .antMatchers("/api/profile-info").permitAll()
-            .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/v2/api-docs/**").permitAll()
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
             .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
-        .and()
+            .antMatchers(HttpMethod.GET, "/api/product-categories").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/product").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/custumers").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/portfolio").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/user-orders").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/slide").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/image/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/portfolio/").permitAll()
+            .antMatchers(HttpMethod.DELETE).hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
+            .antMatchers(HttpMethod.POST).hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
+            .antMatchers(HttpMethod.PATCH).hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
+            .and()
             .apply(securityConfigurerAdapter());
 
     }

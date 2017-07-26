@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EventManager, JhiLanguageService } from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { ProductCategory } from './product-category.model';
-import { ProductCategoryPopupService } from './product-category-popup.service';
-import { ProductCategoryService } from './product-category.service';
+import {ProductCategory} from "./product-category.model";
+import {ProductCategoryPopupService} from "./product-category-popup.service";
+import {ProductCategoryService} from "./product-category.service";
 
 @Component({
     selector: 'jhi-product-category-delete-dialog',

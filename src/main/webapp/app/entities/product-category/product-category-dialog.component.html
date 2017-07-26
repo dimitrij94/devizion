@@ -16,19 +16,18 @@
             <label class="form-control-label" jhiTranslate="devizionApp.productCategory.categoryName" for="field_categoryName">Category Name</label>
             <input type="text" class="form-control" name="categoryName" id="field_categoryName"
                 [(ngModel)]="productCategory.categoryName"
-            required />
-            <div [hidden]="!(editForm.controls.categoryName?.dirty && editForm.controls.categoryName?.invalid)">
-                <small class="form-text text-danger"
-                   [hidden]="!editForm.controls.categoryName?.errors?.required" jhiTranslate="entity.validation.required">
-                   This field is required.
-                </small>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-control-label" jhiTranslate="devizionApp.productCategory.categoryPhotoUri" for="field_categoryPhotoUri">Category Photo Uri</label>
-            <input type="text" class="form-control" name="categoryPhotoUri" id="field_categoryPhotoUri"
-                [(ngModel)]="productCategory.categoryPhotoUri"
              />
+        </div>
+
+        <div class="foem-group">
+            <label>Фото категорії</label>
+            <image-upload [url]="'/api/categories/image'"
+                          [max]="1"
+                          [headers]="{'Authorization':'Bearer '+ authServiceProvider.getToken()}"
+                          (onFileUploadFinish)="onLoad($event)"
+                          (onRemove)="onRemove($event)">
+
+            </image-upload>
         </div>
 
     </div>

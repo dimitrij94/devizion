@@ -1,36 +1,39 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
+import {DatePipe} from "@angular/common";
 
-import { CookieService } from 'angular2-cookie/services/cookies.service';
+import {CookieService} from "angular2-cookie/services/cookies.service";
 import {
-    DevizionSharedLibsModule,
-    DevizionSharedCommonModule,
-    CSRFService,
-    AuthService,
-    AuthServerProvider,
     AccountService,
-    UserService,
-    StateStorageService,
-    LoginService,
-    LoginModalService,
-    Principal,
+    AuthServerProvider,
+    AuthService,
+    CSRFService,
+    DevizionSharedCommonModule,
+    DevizionSharedLibsModule,
     HasAnyAuthorityDirective,
-    JhiLoginModalComponent
-} from './';
+    JhiLoginModalComponent,
+    LoginModalService,
+    LoginService,
+    Principal,
+    StateStorageService,
+    UserService
+} from "./";
+import {SidenavService} from "./sidenav.service";
+import {MyImageService} from "./image/image.service";
 
 @NgModule({
     imports: [
+
         DevizionSharedLibsModule,
         DevizionSharedCommonModule
     ],
     declarations: [
         JhiLoginModalComponent,
-        HasAnyAuthorityDirective
+        HasAnyAuthorityDirective,
     ],
     providers: [
-        CookieService,
         LoginService,
         LoginModalService,
+        CookieService,
         AccountService,
         StateStorageService,
         Principal,
@@ -38,7 +41,9 @@ import {
         AuthServerProvider,
         AuthService,
         UserService,
-        DatePipe
+        DatePipe,
+        SidenavService,
+        MyImageService
     ],
     entryComponents: [JhiLoginModalComponent],
     exports: [
@@ -50,4 +55,5 @@ import {
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
 })
-export class DevizionSharedModule {}
+export class DevizionSharedModule {
+}

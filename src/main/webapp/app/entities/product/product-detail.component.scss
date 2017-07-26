@@ -1,0 +1,70 @@
+@import "../../../content/scss/varibles";
+
+#sidenav-controlls {
+    height: 100vh;
+    width: 100%;
+    background-color: $about-us-accent-border;
+
+    #product-photo {
+        width: 100%;
+        height: auto;
+    }
+    .head {
+        overflow-y: auto;
+        #product-title {
+            padding: 0 20px;
+            color: white;
+            margin: 14px 0;
+        }
+
+        .search-input-wrapper {
+            padding: 0 20px;
+            width: 100%;
+            .search-input {
+                color: white;
+            }
+            & > * {
+                width: 100%;
+            }
+        }
+
+        .product-description {
+            color: white;
+            padding: 0 20px;
+        }
+
+        .price-tag {
+            position: relative;
+            right: 0;
+            display: inline-block;
+            float: right;
+            background: $magenta-accent;
+            padding: 7px 14px;
+            color: white;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    }
+}
+
+#portfolio-content {
+    .alert {
+        text-align: center;
+        padding: 0.75rem 1.25rem;
+        .no-orders {
+            padding: 24px;
+            background: #efefef;
+            text-align: center;
+            display: inline-block;
+            span {
+                color: black;
+            }
+        }
+        .load-more-orders {
+            display: inline-block;
+            padding: 24px;
+            text-align: center;
+            background: #efefef;
+        }
+    }
+}

@@ -1,0 +1,32 @@
+<md-card>
+    <img [src]="productCroppedUrl" class="service-card-image">
+    <div class="my-card-content" fxLayout="column" fxLayoutAlign="start center">
+
+        <md-card-header>
+            <md-card-title>
+                <h4 class="card-title"><a [routerLink]="serviceUrl">{{service.productName}}</a></h4>
+            </md-card-title>
+        </md-card-header>
+
+        <md-card-content fxLayout="row" fxLayoutAlign="space-between end" class="product-description">
+
+            <md-card-subtitle class="card-subtitle">
+                <div class="description">
+                    {{descriptionText}}
+                    <div class="toggler-wrapper">
+                        <div class="desc-toggler" (click)="showLongDescription = true" mdTooltip="Повний опис"></div>
+                    </div>
+                </div>
+                <div class="long-description" *ngIf="showLongDescription">
+                    <div class="close" (click)="showLongDescription = false"></div>
+                    <p>{{service.productDescription}}</p>
+                </div>
+            </md-card-subtitle>
+
+            <div class="product-price">
+                <span>{{service.productPrice | currency:'UAH':true:'2.2-2'}}</span>
+            </div>
+
+        </md-card-content>
+    </div>
+</md-card>

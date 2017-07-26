@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
 
-import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EventManager, JhiLanguageService } from 'ng-jhipster';
+import {NgbActiveModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {EventManager, JhiLanguageService} from "ng-jhipster";
 
-import { UserOrder } from './user-order.model';
-import { UserOrderPopupService } from './user-order-popup.service';
-import { UserOrderService } from './user-order.service';
+import {UserOrder} from "./user-order.model";
+import {UserOrderPopupService} from "./user-order-popup.service";
+import {UserOrderService} from "./user-order.service";
 
 @Component({
     selector: 'jhi-user-order-delete-dialog',

@@ -1,0 +1,63 @@
+<div id="main-grid" #portfolioGridWrapper>
+    <div id="main-grid-wrapper">
+        <md-grid-list [cols]="numOfCols">
+            <div *ngFor="let entry of activePortfolio; let i = index">
+
+                <md-grid-tile *ngIf="i==controlsTilePosition"
+                              id="controls_tile">
+                    <div id="cards-controlls" fxLayout="row" fxLayoutAlign="space-around center"
+                         [ngSwitch]="scrollEnabled">
+
+                        <div class="scroller-wrapper backward"
+                             *ngSwitchCase="true"
+                             (click)="manualScrollBackward()" fxFlex="15"
+                             mdTooltip="Попереднье замовлення">
+                            <div class="scroller"></div>
+                        </div>
+
+                        <div class="caption" fxFlex="55">{{title}}</div>
+
+                        <div class="scroller-wrapper forward"
+                             *ngSwitchCase="true"
+                             fxFlex="15" (click)="manualScrollForward()"
+                             mdTooltip="Наступне замовлення">
+                            <div class="scroller"></div>
+                        </div>
+                    </div>
+                </md-grid-tile>
+
+                <md-grid-tile [id]="'tile_'+i">
+                    <portfolio-flipping-card class="my-grid-tile"
+                                             (modalSwitch)="openPortfolioModal($event)"
+                                             [index]="i"
+                                             [togglingObservable]="flipCardToggle"
+                                             [showTileSubject]="showSubject"
+                                             [initialValue]="entry">
+
+                    </portfolio-flipping-card>
+                    <!-- Info block occupy place in the end of the second row -->
+                </md-grid-tile>
+            </div>
+        </md-grid-list>
+    </div>
+    <div id="modal-window"
+         [@modalShadowStatus]="modalDescriptionStatus"
+         *ngIf="modalLoading || showModal"
+         #modalWindow
+         [ngStyle]="modalWindowStyle">
+        <img id="portfolio-image"
+             [ngStyle]="modalImageStyle"
+             #portfolioModalImage/>
+
+        <inter-routes-spinner *ngIf="modalLoading && !showModal" id="preloader"></inter-routes-spinner>
+
+        <div id="modal-controls" [@modalDescriptionStatus]="modalDescriptionStatus" *ngIf="!modalLoading && showModal">
+            <div id="close-switch-wrapper" (click)="closeModal()">
+                <div id="close-switch"></div>
+            </div>
+            <h3 id="product-name" class="controls-text">{{modalPortfolio.product.productName}}</h3>
+            <p id="product-description" class="controls-text">{{modalPortfolio.description}}</p>
+            <small id="order-date" class="controls-text">{{modalPortfolio.orderedAt|date}}</small>
+        </div>
+    </div>
+</div>

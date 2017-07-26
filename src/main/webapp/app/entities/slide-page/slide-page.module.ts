@@ -1,22 +1,23 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
+import {RouterModule} from "@angular/router";
 
-import { DevizionSharedModule } from '../../shared';
-
+import {DevizionSharedModule} from "../../shared";
 import {
-    SlidePageService,
-    SlidePagePopupService,
     SlidePageComponent,
+    SlidePageDeleteDialogComponent,
+    SlidePageDeletePopupComponent,
     SlidePageDetailComponent,
     SlidePageDialogComponent,
     SlidePagePopupComponent,
-    SlidePageDeletePopupComponent,
-    SlidePageDeleteDialogComponent,
-    slidePageRoute,
     slidePagePopupRoute,
-} from './';
+    SlidePagePopupService,
+    slidePageRoute,
+    SlidePageService
+} from "./";
+import {MyCroppedImageUploaderModule} from "../../shared/image/my-image-cropper/my-cropped-image-uploader.module";
+import {SlidePageResolver} from "./slide-page.resolver";
 
-let ENTITY_STATES = [
+const ENTITY_STATES = [
     ...slidePageRoute,
     ...slidePagePopupRoute,
 ];
@@ -24,7 +25,8 @@ let ENTITY_STATES = [
 @NgModule({
     imports: [
         DevizionSharedModule,
-        RouterModule.forRoot(ENTITY_STATES, { useHash: true })
+        MyCroppedImageUploaderModule,
+        RouterModule.forRoot(ENTITY_STATES, {useHash: true})
     ],
     declarations: [
         SlidePageComponent,
@@ -42,9 +44,11 @@ let ENTITY_STATES = [
         SlidePageDeletePopupComponent,
     ],
     providers: [
+        SlidePageResolver,
         SlidePageService,
         SlidePagePopupService,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DevizionSlidePageModule {}
+export class DevizionSlidePageModule {
+}

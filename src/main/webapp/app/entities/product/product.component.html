@@ -1,9 +1,10 @@
 <div>
     <h2>
         <span jhiTranslate="devizionApp.product.home.title">Products</span>
-        <button class="btn btn-primary float-right create-product" [routerLink]="['/', { outlets: { popup: ['product-new'] } }]">
+        <button class="btn btn-primary float-right create-product"
+                [routerLink]="['/', { outlets: { popup: ['product-new'] } }]">
             <span class="fa fa-plus"></span>
-            <span  jhiTranslate="devizionApp.product.home.createLabel">
+            <span jhiTranslate="devizionApp.product.home.createLabel">
             Create new Product
             </span>
         </button>
@@ -16,15 +17,13 @@
         <table class="table table-striped">
             <thead>
             <tr>
-            <th><span jhiTranslate="global.field.id">ID</span></th>
-            <th><span jhiTranslate="devizionApp.product.productName">Product Name</span></th>
-            <th><span jhiTranslate="devizionApp.product.productPrice">Product Price</span></th>
-            <th><span jhiTranslate="devizionApp.product.productDescription">Product Description</span></th>
-            <th><span jhiTranslate="devizionApp.product.productImageUri">Product Image Uri</span></th>
-            <th><span jhiTranslate="devizionApp.product.croppedImageUri">Cropped Image Uri</span></th>
-            <th><span jhiTranslate="devizionApp.product.productSelfCost">Product Self Cost</span></th>
-            <th><span jhiTranslate="devizionApp.product.productCategory">Product Category</span></th>
-            <th></th>
+                <th><span jhiTranslate="global.field.id">ID</span></th>
+                <th><span jhiTranslate="devizionApp.product.productName">Product Name</span></th>
+                <th><span jhiTranslate="devizionApp.product.productPrice">Product Price</span></th>
+                <th><span jhiTranslate="devizionApp.product.productDescription">Product Description</span></th>
+                <th><span jhiTranslate="devizionApp.product.productImageUri">Product Image</span></th>
+                <th><span jhiTranslate="devizionApp.product.productCategory">Product Category</span></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -33,12 +32,12 @@
                 <td>{{product.productName}}</td>
                 <td>{{product.productPrice}}</td>
                 <td>{{product.productDescription}}</td>
-                <td>{{product.productImageUri}}</td>
-                <td>{{product.croppedImageUri}}</td>
-                <td>{{product.productSelfCost}}</td>
+                <td>
+                    <img class="product-photo" [src]="product.productImageUri"/>
+                </td>
                 <td>
                     <div *ngIf="product.productCategory">
-                        <a [routerLink]="['../product-category', product.productCategory?.id ]" >{{product.productCategory?.id}}</a>
+                        <a [routerLink]="['../product-category', product.productCategory?.id ]">{{product.productCategory?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">

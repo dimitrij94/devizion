@@ -1,41 +1,44 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Response } from '@angular/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertService } from 'ng-jhipster';
-
-import { ProductCategory } from './product-category.model';
-import { ProductCategoryService } from './product-category.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
-import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Response} from "@angular/http";
+import {Subscription} from "rxjs/Rx";
+import {AlertService, EventManager, JhiLanguageService} from "ng-jhipster";
+import {ProductCategory} from "./product-category.model";
+import {ProductCategoryService} from "./product-category.service";
+import {Principal} from "../../shared";
+import {MyImageService} from "../../shared/image/image.service";
 
 @Component({
     selector: 'jhi-product-category',
-    templateUrl: './product-category.component.html'
+    templateUrl: './product-category.component.html',
+    styleUrls:['./product-category.component.scss']
 })
 export class ProductCategoryComponent implements OnInit, OnDestroy {
-productCategories: ProductCategory[];
+    productCategories: ProductCategory[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
-    constructor(
-        private jhiLanguageService: JhiLanguageService,
-        private productCategoryService: ProductCategoryService,
-        private alertService: AlertService,
-        private eventManager: EventManager,
-        private principal: Principal
-    ) {
+    constructor(private jhiLanguageService: JhiLanguageService,
+                private productCategoryService: ProductCategoryService,
+                private alertService: AlertService,
+                private eventManager: EventManager,
+                private principal: Principal) {
         this.jhiLanguageService.setLocations(['productCategory']);
     }
 
     loadAll() {
         this.productCategoryService.query().subscribe(
             (res: Response) => {
-                this.productCategories = res.json();
+                let productCategories = <ProductCategory[]> res.json();
+                productCategories.forEach((productCategory)=> {
+                    productCategory.categoryPhotoUri = MyImageService.getCategoryImage(productCategory.categoryPhotoUri);
+                });
+                this.productCategories = productCategories;
             },
             (res: Response) => this.onError(res.json())
         );
     }
+
+
     ngOnInit() {
         this.loadAll();
         this.principal.identity().then((account) => {
@@ -48,10 +51,9 @@ productCategories: ProductCategory[];
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId (index: number, item: ProductCategory) {
+    trackId(index: number, item: ProductCategory) {
         return item.id;
     }
-
 
 
     registerChangeInProductCategories() {
@@ -59,7 +61,7 @@ productCategories: ProductCategory[];
     }
 
 
-    private onError (error) {
+    private onError(error) {
         this.alertService.error(error.message, null, null);
     }
 }

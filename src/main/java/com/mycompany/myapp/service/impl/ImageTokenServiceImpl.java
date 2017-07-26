@@ -1,12 +1,12 @@
 package com.mycompany.myapp.service.impl;
 
-import com.mycompany.myapp.service.ImageTokenService;
 import com.mycompany.myapp.domain.ImageToken;
 import com.mycompany.myapp.repository.ImageTokenRepository;
+import com.mycompany.myapp.service.ImageTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class ImageTokenServiceImpl implements ImageTokenService{
 
     private final Logger log = LoggerFactory.getLogger(ImageTokenServiceImpl.class);
-    
+
     private final ImageTokenRepository imageTokenRepository;
 
     public ImageTokenServiceImpl(ImageTokenRepository imageTokenRepository) {
@@ -40,7 +40,7 @@ public class ImageTokenServiceImpl implements ImageTokenService{
 
     /**
      *  Get all the imageTokens.
-     *  
+     *
      *  @return the list of entities
      */
     @Override

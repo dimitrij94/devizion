@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -42,7 +41,7 @@ public class CustumerResource {
      */
     @PostMapping("/custumers")
     @Timed
-    public ResponseEntity<Custumer> createCustumer(@Valid @RequestBody Custumer custumer) throws URISyntaxException {
+    public ResponseEntity<Custumer> createCustumer(@RequestBody Custumer custumer) throws URISyntaxException {
         log.debug("REST request to save Custumer : {}", custumer);
         if (custumer.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new custumer cannot already have an ID")).body(null);
@@ -64,7 +63,7 @@ public class CustumerResource {
      */
     @PutMapping("/custumers")
     @Timed
-    public ResponseEntity<Custumer> updateCustumer(@Valid @RequestBody Custumer custumer) throws URISyntaxException {
+    public ResponseEntity<Custumer> updateCustumer(@RequestBody Custumer custumer) throws URISyntaxException {
         log.debug("REST request to update Custumer : {}", custumer);
         if (custumer.getId() == null) {
             return createCustumer(custumer);

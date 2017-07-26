@@ -1,24 +1,41 @@
-import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams, BaseRequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import {Injectable} from "@angular/core";
+import {Http, Response} from "@angular/http";
+import {Observable} from "rxjs/Rx";
+import {SlidePage} from "./slide-page.model";
+import {MyImageService, slidePageSubdirectory} from "../../shared/image/image.service";
+import {ImageSize} from "../../shared/image/image-size.model";
+import {GenericResponse} from "../../app.module";
 
-import { SlidePage } from './slide-page.model';
 @Injectable()
 export class SlidePageService {
 
     private resourceUrl = 'api/slide-pages';
 
-    constructor(private http: Http) { }
+    constructor(private http: Http,
+                private imageService: MyImageService) {
+    }
+
+    parseSlidePagePhoto(slidePage: SlidePage, scalar: number, rowWidth: number = window.innerWidth) {
+        let optimalSize: ImageSize = this.imageService.getOptimalSize(scalar, rowWidth);
+        slidePage.photoUri = this.imageService
+            .getImageUrlFromImageSize(slidePageSubdirectory, slidePage.photoUri, optimalSize);
+        slidePage.croppedPhotoUri = this.imageService
+            .getImageUrlFromImageSize(slidePageSubdirectory, slidePage.croppedPhotoUri, optimalSize);
+    }
+
+    parseAllSlidePagePhoto(slidePages: SlidePage[], scalar: number, rowWidth: number = window.innerWidth) {
+        slidePages.forEach((val) => this.parseSlidePagePhoto(val, scalar, rowWidth));
+    }
 
     create(slidePage: SlidePage): Observable<SlidePage> {
-        let copy: SlidePage = Object.assign({}, slidePage);
+        const copy = this.convert(slidePage);
         return this.http.post(this.resourceUrl, copy).map((res: Response) => {
             return res.json();
         });
     }
 
     update(slidePage: SlidePage): Observable<SlidePage> {
-        let copy: SlidePage = Object.assign({}, slidePage);
+        const copy = this.convert(slidePage);
         return this.http.put(this.resourceUrl, copy).map((res: Response) => {
             return res.json();
         });
@@ -30,10 +47,9 @@ export class SlidePageService {
         });
     }
 
-    query(req?: any): Observable<Response> {
-        let options = this.createRequestOption(req);
-        return this.http.get(this.resourceUrl, options)
-        ;
+    query(req?: any): Observable<SlidePage[]> {
+        return this.http.get(this.resourceUrl)
+            .map((res: GenericResponse<SlidePage[]>) => res.json());
     }
 
     delete(id: number): Observable<Response> {
@@ -41,20 +57,9 @@ export class SlidePageService {
     }
 
 
-
-    private createRequestOption(req?: any): BaseRequestOptions {
-        let options: BaseRequestOptions = new BaseRequestOptions();
-        if (req) {
-            let params: URLSearchParams = new URLSearchParams();
-            params.set('page', req.page);
-            params.set('size', req.size);
-            if (req.sort) {
-                params.paramsMap.set('sort', req.sort);
-            }
-            params.set('query', req.query);
-
-            options.search = params;
-        }
-        return options;
+    private convert(slidePage: SlidePage): SlidePage {
+        const copy: SlidePage = Object.assign({}, slidePage);
+        return copy;
     }
+
 }
