@@ -196,9 +196,6 @@ $window-bg-h: ($window-bg-w * $window-bg-orig-h)/$window-bg-orig-w;
 
 $logo-cube-side-size: $hidden-screen-width/5;
 
-
-//@import '~@angular/material/prebuilt-themes/indigo-pink.css';
-//@import '~font-awesome/scss/font-awesome';
 @import "./mat-theming";
 $fa-font-path: '~font-awesome/fonts';
 

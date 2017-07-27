@@ -1,4 +1,4 @@
-@import '../../../content/scss/vendor';
+@import '../../../content/scss/vendor.scss';
 
 :host /deep/ .flip-container .flipper .back .portfolio-image-wrapper {
     transform: rotateY(-180deg);
