@@ -196,8 +196,8 @@ $window-bg-h: ($window-bg-w * $window-bg-orig-h)/$window-bg-orig-w;
 
 $logo-cube-side-size: $hidden-screen-width/5;
 
-@import "./mat-theming";
-$fa-font-path: '~font-awesome/fonts';
+@import "./mat-theming.scss";
+$fa-font-path: './../../../../../node-modules/font-awesome/fonts';
 
-@import '~bootstrap/scss/bootstrap';
-@import '~font-awesome/scss/font-awesome';
+@import './../../../../../node_modules/bootstrap/scss/bootstrap.scss';
+@import './../../../../../node_modules/font-awesome/scss/font-awesome.scss';

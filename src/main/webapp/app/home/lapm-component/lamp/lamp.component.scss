@@ -41,7 +41,7 @@ $lamp-bolb-size: 1em;
             position: absolute;
             bottom: 0;
             left: 50%;
-            margin-bottom: -$lamp-bolb-size + 0.1;
+            margin-bottom: -$lamp-bolb-size;
             margin-left: -$lamp-bolb-size/2 - 0.0016;
         }
     }
