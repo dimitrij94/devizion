@@ -51,7 +51,7 @@ export class ProductCategoryDetailPortfolioComponent implements OnInit, OnDestro
                 private domSanitizer: DomSanitizer,
                 private router: Router,
                 private jhiLanguageService: JhiLanguageService,
-                @Inject(DOCUMENT) private document: Document,
+                @Inject(DOCUMENT) private document: any,
                 private productCategoryService: ProductCategoryService,
                 private userOrderService: UserOrderService) {
         this.jhiLanguageService.setLocations(['productCategory']);

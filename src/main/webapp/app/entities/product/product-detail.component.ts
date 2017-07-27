@@ -44,7 +44,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
                 private jhiLanguageService: JhiLanguageService,
                 private productService: ProductService,
                 private route: ActivatedRoute,
-                @Inject(DOCUMENT) private document: Document,
+                @Inject(DOCUMENT) private document: any,
                 private domSanitizer: DomSanitizer,
                 private userOrderService: UserOrderService,
                 private authServiceProvider: AuthServerProvider) {

@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,gHAAgH;AA8BhH;;;6BAG6B;AAE7B;;;;EAIE;ACpCE,kBAAE;EACE,OAAO,EAAE,IAAI;EACb,OAAO,EAAE,YAAY;EACrB,KAAK,EAAE,IAAI;EACX,gBAAgB,EDLE,OAAO;ACO7B,8CAA8B;EAC1B,OAAO,EAAE,MAAM;EACf,YAAY,EAAE,IAAI;EAClB,gBAAgB,EDTO,KAAK",
-"sources": ["../../../content/scss/vendor.scss","navbar-admin-menu-item.scss"],
-"names": [],
-"file": "navbar-admin-menu-item.css"
-}

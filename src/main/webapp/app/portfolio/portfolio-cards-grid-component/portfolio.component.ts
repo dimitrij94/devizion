@@ -120,7 +120,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnChanges, OnD
     constructor(private portfolioEl: ElementRef,
                 private userOrderService: UserOrderService,
                 private mySidenavWrapperService: MySidenavWrapperService,
-                @Inject(DOCUMENT) private document: Document) {
+                @Inject(DOCUMENT) private document: any) {
 
     }
 

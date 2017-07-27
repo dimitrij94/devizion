@@ -2,7 +2,6 @@ import "./vendor.ts";
 import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {Ng2Webstorage} from "ng2-webstorage";
-
 import {DevizionSharedModule, UserRouteAccessService} from "./shared";
 import {DevizionHomeModule} from "./home/home.module";
 import {DevizionAdminModule} from "./admin/admin.module";

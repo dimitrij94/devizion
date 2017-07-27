@@ -6,7 +6,6 @@ import {DevizionSharedModule} from "../../shared/shared.module";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MobileNavbarComponent} from "./mobile-navbar/mobile-navbar.component";
 import {NavbarService} from "./navbar.service";
-import {HomePageNavbarComponent} from "./home-page-navbar/home-page-navbar.component";
 @NgModule({
     imports: [
         CommonModule,
@@ -16,7 +15,7 @@ import {HomePageNavbarComponent} from "./home-page-navbar/home-page-navbar.compo
     ],
     providers: [NavbarService],
     exports: [NavbarComponent, MobileNavbarComponent],
-    declarations: [NavbarComponent, MobileNavbarComponent, HomePageNavbarComponent]
+    declarations: [NavbarComponent, MobileNavbarComponent]
 })
 export class NavbarModule {
 

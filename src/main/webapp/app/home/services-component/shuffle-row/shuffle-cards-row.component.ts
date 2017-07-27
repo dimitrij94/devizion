@@ -80,7 +80,7 @@ export class ShuffleCardsRowComponent implements OnInit, AfterViewInit, OnChange
     private onRowLoaded: EventEmitter<boolean> = new EventEmitter();
 
 
-    constructor(private elRef: ElementRef, @Inject(DOCUMENT) private document: Document) {
+    constructor(private elRef: ElementRef, @Inject(DOCUMENT) private document: any) {
 
     }
 

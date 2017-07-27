@@ -103,7 +103,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private jhiLanguageService: JhiLanguageService,
                 private principal: Principal,
-                @Inject(DOCUMENT) private document: Document,
+                @Inject(DOCUMENT) private document: any,
                 private router: Router,
                 private route: ActivatedRoute,
                 private loginModalService: LoginModalService,
