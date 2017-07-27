@@ -4,6 +4,198 @@
 put Sass variables here:
 eg $input-color: red;
 ****************************/
+$fa-font-path: '~font-awesome/fonts';
+$admin-menu-main-item-bc: #f7f7f9;
+$admin-menu-secondary-item-bc: white;
+
+$nav-menu-link-item: #f7f7f9;
+$dropdown-menu-sub-links-background: white;
+
+$about-us-accent: #696969;
+$about-us-accent-border: #4b4b4b;
+$about-us-accent-border-hover: #373737;
+
+$magenta-accent: #e30070;
+$magenta-accent-border: #b90062;
+$magenta-accent-border-hover: #b9053c;
+
+$cyan-accent: #00a2ff;
+$cyan-accent-border: #088fff;
+$cyan-accent-border-hover: #0d72ff;
+
+$yellow-accent: #ffdc00;
+$yellow-accent-border: #fcc30a;
+$yellow-accent-border-hover: #faaf1f;
+
+$navbar-fixed-height: 4em;
+$navbar-relative-height: 5em;
+
+@mixin transition($transition...) {
+    -moz-transition: $transition;
+    -o-transition: $transition;
+    -webkit-transition: $transition;
+    transition: $transition;
+}
+
+@mixin transform($val...){
+    -webkit-transform: $val;
+    -moz-transform: $val;
+    -ms-transform: $val;
+    -o-transform: $val;
+    transform: $val;
+}
+
+@mixin backgroundSize($value...) {
+    -webkit-background-size: $value;
+    -moz-background-size: $value;
+    -o-background-size: $value;
+    background-size: $value;
+}
+
+@mixin transformOrigin($value...) {
+    -webkit-transform-origin: $value;
+    -moz-transform-origin: $value;
+    -ms-transform-origin: $value;
+    -o-transform-origin: $value;
+    transform-origin: $value;
+}
+
+@mixin box-shadow($shadows...) {
+    -moz-box-shadow: $shadows;
+    -webkit-box-shadow: $shadows;
+    box-shadow: $shadows;
+}
+
+@mixin perspective($perspective-val) {
+    perspective: $perspective-val;
+    -webkit-perspective: $perspective-val;
+    -moz-perspective: $perspective-val;
+}
+
+@mixin borderRadius($val) {
+    -webkit-border-radius: $val;
+    -moz-border-radius: $val;
+    border-radius: $val;
+}
+
+@mixin perspectiveOrigin($val...) {
+    perspective-origin: $val;
+    -webkit-perspective-origin: $val;
+    -moz-perspective-origin: $val;
+}
+
+@mixin transform-style($val) {
+    transform-style: $val;
+    -webkit-transform-style: $val;
+    -moz-transform-style: $val;
+}
+
+@function pow($number, $exp) {
+    $value: 1;
+    @if $exp > 0 {
+        @for $i from 1 through $exp {
+            $value: $value * $number;
+        }
+    } @else if $exp < 0 {
+        @for $i from 1 through -$exp {
+            $value: $value / $number;
+        }
+    }
+    @return $value;
+}
+
+@function fact($number) {
+    $value: 1;
+    @if $number > 0 {
+        @for $i from 1 through $number {
+            $value: $value * $i;
+        }
+    }
+    @return $value;
+}
+
+@function pi() {
+    @return 3.14159265359;
+}
+
+@function rad($angle) {
+    $unit: unit($angle);
+    $unitless: $angle / ($angle * 0 + 1);
+    // If the angle has 'deg' as unit, convert to radians.
+    @if $unit == deg {
+        $unitless: $unitless / 180 * pi();
+    }
+    @return $unitless;
+}
+
+@function sin($angle) {
+    $sin: 0;
+    $angle: rad($angle);
+    // Iterate a bunch of times.
+    @for $i from 0 through 10 {
+        $sin: $sin + pow(-1, $i) * pow($angle, (2 * $i + 1)) / fact(2 * $i + 1);
+    }
+    @return $sin;
+}
+
+@function cos($angle) {
+    $cos: 0;
+    $angle: rad($angle);
+    // Iterate a bunch of times.
+    @for $i from 0 through 10 {
+        $cos: $cos + pow(-1, $i) * pow($angle, 2 * $i) / fact(2 * $i);
+    }
+    @return $cos;
+}
+
+@function tan($angle) {
+    @return sin($angle) / cos($angle);
+}
+
+$hidden-screen-scalar: 1.5;
+
+$background-wall-max-tilt: 10;
+$background-wall-max-tilt-tan: 0.17632698070846497347109038686862;
+
+$hidden-screen-left: 576;
+$hidden-screen-center: 1749;
+$hidden-screen-right: 575;
+
+$background-wall-width: $hidden-screen-left + $hidden-screen-center + $hidden-screen-right;
+$background-wall-height: 1409;
+
+//window backgorund should always be larger than main backgorund
+$window-bg-orig-w: 3325px;
+$window-bg-orig-h: 1100px;
+
+$max-room-tilt: 15;
+$max-room-tilt-cos: 0.965925;
+//stage imageHeight
+$screen-height: 100vw * ($background-wall-height / $background-wall-width);
+
+//moving background size
+$hidden-screen-width-tilts-projection: (100vw/2)* $max-room-tilt-cos;
+$hidden-screen-width-tilts-margin: (100vw/2 - $hidden-screen-width-tilts-projection)*18;
+
+$hidden-screen-width: 100vw + $hidden-screen-width-tilts-margin;
+$h-s-l-p: $hidden-screen-left/$background-wall-width;
+$h-s-r-p: $hidden-screen-right/$background-wall-width;
+$h-s-c-p: $hidden-screen-center/$background-wall-width;
+
+$hidden-screen-left-w: (100vw * $h-s-l-p) + ($h-s-l-p*$hidden-screen-width-tilts-margin);
+
+$hidden-screen-center-w: ( 100vw * $h-s-c-p) + ($h-s-c-p*$hidden-screen-width-tilts-margin);
+
+$hidden-screen-right-w: (100vw * $h-s-r-p) + ($h-s-r-p*$hidden-screen-width-tilts-margin);
+
+$hidden-screen-height: $background-wall-height/$background-wall-width * $hidden-screen-width;
+
+//window background sizes
+$window-bg-w: $hidden-screen-width +$hidden-screen-width-tilts-margin;
+$window-bg-h: ($window-bg-w * $window-bg-orig-h)/$window-bg-orig-w;
+
+$logo-cube-side-size: $hidden-screen-width/5;
+
 
 //@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 //@import '~font-awesome/scss/font-awesome';
